@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/index.dart';
 import '../../data/model/index.dart';
+import '../../domain/entity/player/player_entity.dart';
 import '../bloc/example_bloc.dart';
 
 class ExamplePage extends StatefulWidget {
@@ -26,7 +27,6 @@ class _ExamplePageState
         ),
       ),
     );
-    showModalBottomSheet(context: context, builder: (c) => Container());
   }
 
   @override
@@ -67,7 +67,7 @@ class HeaderWidget extends StatelessWidget {
 }
 
 class PlayerItem extends StatelessWidget {
-  final Player data;
+  final PlayerEntity data;
   const PlayerItem({Key? key, required this.data}) : super(key: key);
 
   @override

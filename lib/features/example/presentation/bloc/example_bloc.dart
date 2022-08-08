@@ -10,6 +10,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../base/network/errors/error.dart';
 import '../../data/model/index.dart';
+import '../../domain/entity/player/player_entity.dart';
 
 part 'example_bloc.freezed.dart';
 part 'example_bloc.g.dart';
@@ -24,7 +25,7 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
       await event.when(
         getData: () => onGetData(emit),
         showMessage: () => onShowMessage(emit),
-        getPlayers: (List<Player> players, int offset) =>
+        getPlayers: (List<PlayerEntity> players, int offset) =>
             onGetPlayers(emit, players, offset),
       );
     });
@@ -36,7 +37,7 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
 
   Future onGetData(Emitter<ExampleState> emit) async {
     emit(state.copyWith(attribute: none()));
-    final Either<BaseError, List<Player>> result =
+    final Either<BaseError, List<PlayerEntity>> result =
         await _coreUseCase.getData(limit: 25, offset: 0);
     emit(
       result.fold(
@@ -50,8 +51,8 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
     emit(state.copyWith(message: "Error"));
   }
 
-  Future onGetPlayers(
-      Emitter<ExampleState> emit, List<Player> players, int offset) async {
+  Future onGetPlayers(Emitter<ExampleState> emit, List<PlayerEntity> players,
+      int offset) async {
     final res = await _coreUseCase.getData(offset: offset, limit: 25);
     pagingControllerOnLoad(offset, pagingController, res, onSuccess: () {
       emit(state.copyWith(players: pagingController.itemList));

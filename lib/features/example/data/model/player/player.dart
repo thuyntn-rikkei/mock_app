@@ -1,10 +1,11 @@
+import 'package:base_bloc_3/features/example/domain/entity/player/player_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'player.freezed.dart';
 part 'player.g.dart';
 
 @freezed
-class Player with _$Player {
+class Player extends PlayerEntity with _$Player {
   const factory Player({
     final int? id,
     final String? firstName,
@@ -20,7 +21,7 @@ class Player with _$Player {
 }
 
 @freezed
-class Team with _$Team {
+class Team extends TeamEntity with _$Team {
   const factory Team({
     final int? id,
     final String? abbreviation,

@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
-import '../model/index.dart';
+import '../../domain/entity/player/player_entity.dart';
 
 @Injectable(as: ExampleRepo)
 class ExampleRepoImpl implements ExampleRepo {
@@ -15,7 +15,7 @@ class ExampleRepoImpl implements ExampleRepo {
   final DataSource _remoteDataSource;
 
   @override
-  Future<Either<BaseError, List<Player>>> getData({
+  Future<Either<BaseError, List<PlayerEntity>>> getData({
     required int offset,
     required int limit,
   }) async {
