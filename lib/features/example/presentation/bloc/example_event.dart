@@ -5,7 +5,7 @@ class ExampleEvent with _$ExampleEvent {
   const factory ExampleEvent.getData() = GetData;
   const factory ExampleEvent.showMessage() = ShowMessage;
   const factory ExampleEvent.getPlayers({
-    required List<Player> players,
+    required List<PlayerEntity> players,
     required int offset,
   }) = GetPlayers;
 }
