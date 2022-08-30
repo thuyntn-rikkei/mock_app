@@ -44,6 +44,18 @@ abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
     }
   }
 
+  bool listenWhen(S previous, S current) {
+    return previous != current ||
+        previous.status != current.status ||
+        previous.message != current.message;
+  }
+
+  void listener(BuildContext context, S state) {
+    if (state.status == BaseStateStatus.failed) {
+      showMessage(state.message ?? "");
+    }
+  }
+
   @required
   Widget renderUI(BuildContext context);
 
@@ -52,14 +64,8 @@ abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
     return BlocProvider(
       create: (context) => bloc,
       child: BlocListener<B, S>(
-        listenWhen: (S previous, S current) {
-          return previous != current || previous.message != current.message;
-        },
-        listener: (BuildContext context, S state) {
-          if (state.status == BaseStateStatus.failed) {
-            showMessage(state.message ?? "");
-          }
-        },
+        listenWhen: listenWhen,
+        listener: listener,
         child: renderUI(context),
       ),
     );
