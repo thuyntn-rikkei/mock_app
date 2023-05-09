@@ -12,3 +12,8 @@ class NotificationConfig {
   static const highChannelDescription = "Floating notification with sound";
   static const notificationIconPath = 'ic_notification';
 }
+
+class Config {
+  static const memCacheHeight = 150;
+  static const memCacheWidth = 150;
+}
