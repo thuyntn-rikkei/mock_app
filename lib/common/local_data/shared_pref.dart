@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 abstract class LocalStorage {
   Future<T?> get<T>(String key);
 
@@ -9,6 +10,8 @@ abstract class LocalStorage {
   Future<bool> remove(String key);
 
   Future<bool> clearSession();
+
+  Future<bool> clearExceptSomeKeys();
 
   Future<void> reload();
 
@@ -48,6 +51,19 @@ class LocalStorageImpl extends LocalStorage {
   Future<bool> clearSession() async {
     return await _doWork((pref) {
       return pref.clear();
+    }).catchError((e) => throw Exception(e)) as bool;
+  }
+
+  @override
+  Future<bool> clearExceptSomeKeys() async {
+    return await _doWork((pref) {
+      for (String key in pref.getKeys()) {
+        // if (key != PrefKeys.isFirstOpenApp &&
+        //     key != PrefKeys.itemLookingFor &&
+        //     key != PrefKeys.splashLoaded) {
+        return pref.remove(key);
+        // }
+      }
     }).catchError((e) => throw Exception(e)) as bool;
   }
 

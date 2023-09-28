@@ -5,9 +5,12 @@ class CustomCheckBoxWidget extends StatelessWidget {
   final bool? iconRadio;
   final Function() onChange;
 
-  const CustomCheckBoxWidget(
-      {Key? key, this.iconRadio, required this.value, required this.onChange})
-      : super(key: key);
+  const CustomCheckBoxWidget({
+    Key? key,
+    this.iconRadio,
+    required this.value,
+    required this.onChange,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

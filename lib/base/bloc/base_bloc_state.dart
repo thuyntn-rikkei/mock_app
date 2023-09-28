@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'bloc_status.dart';
+import 'package:base_bloc_3/base/bloc/bloc_status.dart';
 
 abstract class BaseBlocState extends Equatable {
   const BaseBlocState({

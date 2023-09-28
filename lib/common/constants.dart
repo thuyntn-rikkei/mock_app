@@ -8,7 +8,7 @@ class LocalizationConstants {
 
 class NotificationConfig {
   static const highImportance = "High Importance channel";
-  static const highChannelId = "flutter_channel_id_0";
+  static const highChannelId = "high_importance_channel";
   static const highChannelDescription = "Floating notification with sound";
   static const notificationIconPath = 'ic_notification';
 }
@@ -16,4 +16,22 @@ class NotificationConfig {
 class Config {
   static const memCacheHeight = 150;
   static const memCacheWidth = 150;
+  static const defaultDurationShowToast = 2; //seconds
+}
+
+class PrefKeys {
+  static const String initLink = 'initLink';
+  static const String initFirebaseLink = 'initFirebaseLink';
+  static const String splashLoaded = 'splashLoaded';
+}
+
+class PasswordConfig {
+  static const int maxLength = 8;
+  static const int minLength = 8;
+  static const int minimumRuleMatch = 3;
+}
+
+class Constants {
+  static const int maxLengthTextArea = 1000;
+  static const int maxLengthTextAreaRating = 200;
 }

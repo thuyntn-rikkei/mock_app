@@ -1,7 +1,7 @@
-import 'package:base_bloc_3/base/network/errors/error.dart';
-import 'package:base_bloc_3/base/network/errors/extension.dart';
 import 'package:dartz/dartz.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:base_bloc_3/base/network/errors/error.dart';
+import 'package:base_bloc_3/base/network/errors/extension.dart';
 
 class BaseCommonMethodMixin {
   void pagingControllerOnLoad<T>(
@@ -11,23 +11,26 @@ class BaseCommonMethodMixin {
     int limit = 10,
     String? errorMessage,
     Function(String)? onError,
-    Function()? onSuccess,
+    Function(List<T>)? onSuccess,
   }) {
     either.fold(
       (l) {
-        final error = errorMessage ?? l.getError;
+        final error = errorMessage ?? l.getErrorString;
         pagingController.error = error;
         onError?.call(error);
       },
       (r) {
+        //if page = first page key then clear the list
+        if (page == pagingController.firstPageKey) {
+          pagingController.itemList?.clear();
+        }
         final isLastPage = r.length < limit;
         if (isLastPage) {
           pagingController.appendLastPage(r);
         } else {
-          final nextPageKey = page + r.length;
-          pagingController.appendPage(r, nextPageKey);
+          pagingController.appendPage(r, page + 1);
         }
-        onSuccess?.call();
+        onSuccess?.call(r);
       },
     );
   }

@@ -4,8 +4,9 @@ part 'error.freezed.dart';
 
 @freezed
 class BaseError with _$BaseError {
-  const factory BaseError.httpInternalServerError(String errorBody) =
-      HttpInternalServerError;
+  const factory BaseError.httpInternalServerError(
+    String errorBody,
+  ) = HttpInternalServerError;
 
   const factory BaseError.httpUnAuthorizedError() = HttpUnAuthorizedError;
 

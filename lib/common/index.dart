@@ -5,5 +5,6 @@ export 'extensions/index.dart';
 export 'local_data/index.dart';
 export 'logger/index.dart';
 export 'mixins/index.dart';
+export 'notification/index.dart';
 export 'utils/index.dart';
 export 'widgets/index.dart';

@@ -1,4 +1,4 @@
-import 'package:base_bloc_3/features/example/domain/entity/player/player_entity.dart';
+import 'package:base_bloc_3/features/example/domain/entity/player_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'player.freezed.dart';

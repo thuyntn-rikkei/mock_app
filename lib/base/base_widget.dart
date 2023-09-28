@@ -1,17 +1,37 @@
-import 'package:base_bloc_3/common/utils/snack_bar/snack_bar_helper.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:base_bloc_3/di/di_setup.dart';
 
-import 'bloc/index.dart';
+import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/base/bloc/index.dart';
 
 abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
-    B extends BaseBloc<E, S>> extends State<W> {
+    B extends BaseBloc<E, S>> extends State<W> with BaseMethodMixin<S> {
   late B bloc;
+
+  B provideBloc(BuildContext context) {
+    return getIt.get<B>();
+  }
+
+  void initBloc(BuildContext context) {
+    bloc = provideBloc(context);
+  }
+
+  Widget blocBuilder(
+    Widget Function(BuildContext context, S state) builder, {
+    bool Function(S previous, S current)? buildWhen,
+  }) {
+    return BlocBuilder<B, S>(
+      bloc: bloc,
+      buildWhen: buildWhen,
+      builder: builder,
+    );
+  }
 
   @override
   void initState() {
-    bloc = getIt<B>();
+    // bloc = getIt.get<B>();
+    initBloc(context);
     /*
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
       if (!mounted) return;
@@ -26,14 +46,165 @@ abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
       injector<LogUtils>().logD(error.toString());
     });
     */
+
     super.initState();
   }
 
-  void showMessage(String message, {type = SnackBarType.success}) {
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
+
+  // void showMessage(String message, {type = SnackBarType.success}) {
+  //   final SnackBarHelper helper = getIt<SnackBarHelper>();
+  //   switch (type) {
+  //     case SnackBarType.error:
+  //       helper.showError(context, message);
+  //       break;
+  //     case SnackBarType.info:
+  //       helper.showInfo(context, message);
+  //       break;
+  //     default:
+  //       helper.showSuccess(context, message);
+  //       break;
+  //   }
+  // }
+  //
+  // bool listenWhen(S previous, S current) {
+  //   return previous != current ||
+  //       previous.status != current.status ||
+  //       previous.message != current.message;
+  // }
+  //
+  // void listener(BuildContext context, S state) {
+  //   if (state.status == BaseStateStatus.failed) {
+  //     showMessage(state.message ?? "");
+  //   }
+  // }
+
+  @required
+  Widget renderUI(BuildContext context);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => bloc,
+      child: BlocListener<B, S>(
+        listenWhen: listenWhen,
+        listener: listener,
+        child: renderUI(context),
+      ),
+    );
+  }
+}
+
+abstract class BaseShareState<
+    W extends StatefulWidget,
+    E,
+    S extends BaseBlocState,
+    B extends BaseBloc<E, S>> extends State<W> with BaseMethodMixin<S> {
+  late B bloc;
+
+  B provideBloc(BuildContext context) {
+    return getIt.get<B>();
+  }
+
+  void initBloc(BuildContext context) {
+    bloc = provideBloc(context);
+  }
+
+  @override
+  void initState() {
+    initBloc(context);
+    /*
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+      if (!mounted) return;
+      context.pushNamed(
+        Routes.forgotPasswordDynamicLink,
+        params: {
+          RouterParamConstants.deepLink: dynamicLinkData.link.toString()
+        },
+      );
+    }).onError((error) {
+      //DO NOTHING
+      injector<LogUtils>().logD(error.toString());
+    });
+    */
+
+    super.initState();
+  }
+
+  Widget blocBuilder(
+    Widget Function(BuildContext c, S) builder, [
+    bool Function(S, S)? buildWhen,
+  ]) {
+    return BlocBuilder<B, S>(
+      bloc: bloc,
+      buildWhen: buildWhen,
+      builder: builder,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  // void showMessage(String message, {type = SnackBarType.success}) {
+  //   final SnackBarHelper helper = getIt<SnackBarHelper>();
+  //   switch (type) {
+  //     case SnackBarType.error:
+  //       helper.showError(context, message);
+  //       break;
+  //     case SnackBarType.info:
+  //       helper.showInfo(context, message);
+  //       break;
+  //     default:
+  //       helper.showSuccess(context, message);
+  //       break;
+  //   }
+  // }
+  //
+  // bool listenWhen(S previous, S current) {
+  //   return previous != current ||
+  //       previous.status != current.status ||
+  //       previous.message != current.message;
+  // }
+  //
+  // void listener(BuildContext context, S state) {
+  //   if (state.status == BaseStateStatus.failed) {
+  //     showMessage(state.message ?? "");
+  //   }
+  // }
+
+  @required
+  Widget renderUI(BuildContext context);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: bloc,
+      child: BlocListener<B, S>(
+        listenWhen: listenWhen,
+        listener: listener,
+        child: renderUI(context),
+      ),
+    );
+  }
+}
+
+mixin BaseMethodMixin<S extends BaseBlocState> {
+  void showMessage(
+    BuildContext context,
+    String message, {
+    type = SnackBarType.success,
+    int duration = Config.defaultDurationShowToast,
+  }) {
     final SnackBarHelper helper = getIt<SnackBarHelper>();
     switch (type) {
       case SnackBarType.error:
-        helper.showError(context, message);
+        helper.showError(context, message, duration: duration);
         break;
       case SnackBarType.info:
         helper.showInfo(context, message);
@@ -51,23 +222,17 @@ abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
   }
 
   void listener(BuildContext context, S state) {
-    if (state.status == BaseStateStatus.failed) {
-      showMessage(state.message ?? "");
+    // if (state.status == BaseStateStatus.failed) {
+    //   if (state.message != null && state.message!.isNotEmpty) {
+    //     showMessage(context, state.message!);
+    //   }
+    // }
+    if (state.status == BaseStateStatus.loading) {
+      DialogService.showLoading(
+        context,
+      );
+    } else {
+      DialogService.hideDialog(context);
     }
-  }
-
-  @required
-  Widget renderUI(BuildContext context);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => bloc,
-      child: BlocListener<B, S>(
-        listenWhen: listenWhen,
-        listener: listener,
-        child: renderUI(context),
-      ),
-    );
   }
 }

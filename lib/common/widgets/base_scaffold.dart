@@ -1,12 +1,12 @@
-import 'package:base_bloc_3/common/config/screen_utils_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BaseScaffold extends StatelessWidget {
+  final GlobalKey? scaffoldKey;
   final Widget? appBar;
   final Widget? body;
   final bool hasTabBar;
-  final bool? hasBackgroundImage;
+  final double? appBarHeight;
   final bool? addKey;
   final bool? resizeToAvoidBottomInset;
   final String? backgroundImage;
@@ -17,18 +17,24 @@ class BaseScaffold extends StatelessWidget {
   final Widget? bottomNavigation;
   final bool extendBodyBehindAppBar;
   final Color backgroundColor;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Function(bool)? showFloat;
   final Function(bool)? onScroll;
+  final double? paddingTop;
+  final bool hasSearchTextField;
+  final Widget? endDrawer;
+  final bool endDrawerEnableOpenDragGesture;
 
   const BaseScaffold({
     Key? key,
+    this.scaffoldKey,
     this.appBar,
     this.marginTop,
     this.addKey,
     this.isBottom,
     this.backgroundImage,
     this.backgroundColor = Colors.white,
-    this.hasBackgroundImage,
     this.isFull,
     this.extendBodyBehindAppBar = false,
     this.hasDismissKeyboard,
@@ -38,53 +44,68 @@ class BaseScaffold extends StatelessWidget {
     this.showFloat,
     this.onScroll,
     this.hasTabBar = false,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.paddingTop,
+    this.appBarHeight,
+    this.hasSearchTextField = true,
+    this.endDrawer,
+    this.endDrawerEnableOpenDragGesture = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: bottomNavigation,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      extendBodyBehindAppBar: extendBodyBehindAppBar,
-      backgroundColor: backgroundColor,
-      appBar: appBar == null
-          ? null
-          : PreferredSize(
-              preferredSize: Size.fromHeight(
-                AppBar().preferredSize.height +
-                    (hasTabBar ? kToolbarHeight.h : 0),
-              ),
-              child: appBar!,
-            ),
-      body: Stack(
-        children: [
-          if ((hasBackgroundImage ?? false) &&
-              (backgroundImage ?? "").isNotEmpty)
-            Container(
-              height: ScreenUtilsConfig.designHeight,
-              width: ScreenUtilsConfig.designWidth,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(backgroundImage!),
-                  fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: Scaffold(
+        key: scaffoldKey,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        bottomNavigationBar: bottomNavigation,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        extendBodyBehindAppBar: extendBodyBehindAppBar,
+        backgroundColor: backgroundColor,
+        appBar: appBar == null
+            ? null
+            : PreferredSize(
+                preferredSize: Size.fromHeight(
+                  appBarHeight ??
+                      (hasSearchTextField
+                          ? (AppBar().preferredSize.height +
+                              (hasTabBar ? kToolbarHeight.h : 0))
+                          : kToolbarHeight.h),
                 ),
+                child: appBar!,
               ),
-            )
-          else
-            const SizedBox.shrink(),
-          SafeArea(
-            top: false,
-            bottom: isBottom ?? true,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: appBar == null && !(isFull ?? false)
-                    ? MediaQuery.of(context).padding.top
-                    : 0,
+        body: Stack(
+          children: [
+            if ((backgroundImage ?? "").isNotEmpty)
+              Container(
+                height: 1.sh,
+                width: 1.sw,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(backgroundImage!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            else
+              const SizedBox.shrink(),
+            SafeArea(
+              top: false,
+              bottom: isBottom ?? true,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: paddingTop ?? 0,
+                ),
+                child: body ?? const SizedBox(),
               ),
-              child: body ?? const SizedBox(),
             ),
-          ),
-        ],
+          ],
+        ),
+        endDrawer: endDrawer,
+        endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       ),
     );
   }
