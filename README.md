@@ -1,5 +1,5 @@
 
-# Base Project Flutter with Bloc Pattern
+# Base Project Flutter 3.13.7 with Bloc Pattern
 
 
 
@@ -16,6 +16,11 @@
 - [Dio client generator: retrofit](https://pub.dev/packages/retrofit)
 -  ...
 
+## First Time Setup after fork
+run command in terminal
+```bash
+sh repo_setup.sh
+```
 
 
 ## Installation

@@ -32,7 +32,7 @@ Future<void> main() async {
     ),
   );
   log("flavor: $flavor");
-  EnvConfig.loadEnv();
+  await EnvConfig.loadEnv();
 
   /// uncomment if api domain is not have https
   // HttpOverrides.global = MyHttpOverrides();
