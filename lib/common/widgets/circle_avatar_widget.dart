@@ -46,7 +46,7 @@ class CircleAvatarWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
-        )
+        ),
       ],
     );
   }

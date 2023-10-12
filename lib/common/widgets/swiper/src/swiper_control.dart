@@ -101,7 +101,7 @@ class SwiperControl extends SwiperPlugin {
             iconDaga: iconNext,
             quarterTurns: 0,
             previous: false,
-          )
+          ),
         ],
       );
     } else {
@@ -122,7 +122,7 @@ class SwiperControl extends SwiperPlugin {
             iconDaga: iconNext,
             quarterTurns: -3,
             previous: false,
-          )
+          ),
         ],
       );
     }

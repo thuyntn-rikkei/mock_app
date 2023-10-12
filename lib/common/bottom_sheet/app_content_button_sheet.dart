@@ -102,7 +102,7 @@ class _AppContentSheetState extends State<AppContentSheet> {
                   controller: scrollController,
                   child: widget.content,
                 ),
-              )
+              ),
             ],
           ),
         ),

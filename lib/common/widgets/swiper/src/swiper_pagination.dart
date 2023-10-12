@@ -49,7 +49,7 @@ class FractionPaginationBuilder extends SwiperPlugin {
           Text(
             '${config.itemCount}',
             style: TextStyle(color: color, fontSize: fontSize),
-          )
+          ),
         ],
       );
     } else {
@@ -64,7 +64,7 @@ class FractionPaginationBuilder extends SwiperPlugin {
           Text(
             ' / ${config.itemCount}',
             style: TextStyle(color: color, fontSize: fontSize),
-          )
+          ),
         ],
       );
     }

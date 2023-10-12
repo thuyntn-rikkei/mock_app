@@ -208,7 +208,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet>
                               ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -374,7 +374,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet>
                       color: Colors.white,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

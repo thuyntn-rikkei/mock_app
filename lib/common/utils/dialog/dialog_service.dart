@@ -520,7 +520,7 @@ class DialogWidgetState extends State<DialogWidget> {
                     : const SizedBox.shrink(),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
