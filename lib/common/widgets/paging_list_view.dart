@@ -57,7 +57,7 @@ class CustomSliverListView<T> extends StatelessWidget {
             ElevatedButton(
               onPressed: onRefresh ?? () => controller.refresh(),
               child: const Text('Tải lại trang'),
-            )
+            ),
           ],
         ),
         newPageProgressIndicatorBuilder: (_) => Center(
@@ -118,7 +118,7 @@ class CustomListView<T> extends StatelessWidget {
             ElevatedButton(
               onPressed: onRefresh ?? () => controller.refresh(),
               child: const Text('Click to reload'),
-            )
+            ),
           ],
         ),
       ),
@@ -181,7 +181,7 @@ class CustomSliverListViewSeparated<T> extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onRefresh ?? () => controller.refresh(),
                   child: const Text('Click to reload'),
-                )
+                ),
               ],
             ),
       ),
@@ -250,7 +250,7 @@ class CustomListViewSeparated<T> extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onRefresh ?? () => controller.refresh(),
                   child: const Text('Click to reload'),
-                )
+                ),
               ],
             ),
         newPageProgressIndicatorBuilder: (_) {
@@ -268,9 +268,9 @@ class CustomListViewSeparated<T> extends StatelessWidget {
         newPageErrorIndicatorBuilder: (_) => InkWell(
           onTap: controller.retryLastFailedRequest,
           child: newPageErrorIndicatorBuilder ??
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
                     'Bấm để tải lại',
                     textAlign: TextAlign.center,
@@ -356,15 +356,15 @@ class CustomSliverGridView<T> extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onRefresh ?? () => controller.refresh(),
                   child: const Text('Tải lại trang'),
-                )
+                ),
               ],
             ),
         newPageErrorIndicatorBuilder: (_) => InkWell(
           onTap: controller.retryLastFailedRequest,
           child: newPageErrorIndicatorBuilder ??
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
                     'Bấm để tải lại',
                     textAlign: TextAlign.center,
@@ -433,7 +433,7 @@ class CustomGridView<T> extends StatelessWidget {
             ElevatedButton(
               onPressed: onRefresh ?? () => controller.refresh(),
               child: const Text('Tải lại trang'),
-            )
+            ),
           ],
         ),
       ),

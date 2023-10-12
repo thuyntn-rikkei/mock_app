@@ -44,11 +44,11 @@ class ShimmerSelectionDiscountWidget extends StatelessWidget {
                       ),
                       ShimmerWidget.rectangular(
                         height: 14.h,
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

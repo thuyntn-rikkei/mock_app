@@ -45,7 +45,7 @@ class EmptyListPage extends StatelessWidget {
             verticalPadding: 14.h,
             title: buttonTitle,
             onPressed: onPressed,
-          )
+          ),
         ],
       ),
     );

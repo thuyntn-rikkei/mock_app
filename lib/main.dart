@@ -8,16 +8,10 @@ import 'package:base_bloc_3/translations/runtime_language_loader.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:base_bloc_3/common/index.dart';
 import 'package:base_bloc_3/di/di_setup.dart';
-import 'package:base_bloc_3/routes/app_pages.dart';
-import 'package:base_bloc_3/routes/route_observer.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override

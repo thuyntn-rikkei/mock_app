@@ -248,7 +248,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 });
               },
               child: widget.messageContent ?? const SizedBox.shrink(),
-            )
+            ),
         ],
       ),
     );
@@ -321,7 +321,7 @@ class MessageBubble extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -245,7 +245,7 @@ class _SelectionBottomSheetWidgetState
                   itemCount: items.length,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

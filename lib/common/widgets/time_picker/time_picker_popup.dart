@@ -139,7 +139,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -157,7 +157,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

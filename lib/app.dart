@@ -1,6 +1,5 @@
 
 import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/common/local_data/shared_pref.dart';
 import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/routes/app_pages.dart';
 import 'package:base_bloc_3/routes/route_observer.dart';

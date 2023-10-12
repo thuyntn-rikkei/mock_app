@@ -62,7 +62,7 @@ class ShimmerCardItemWidget extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

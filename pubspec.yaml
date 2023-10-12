@@ -135,7 +135,6 @@ flutter:
         - asset: assets/fonts/roboto_condensed/RobotoCondensed-Italic.ttf
           style: italic
   assets:
-    - assets/translations/
     - assets/env/
     - assets/images/
     - assets/svg/
