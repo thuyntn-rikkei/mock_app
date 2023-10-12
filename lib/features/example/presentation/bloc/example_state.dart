@@ -3,7 +3,7 @@ part of 'example_bloc.dart';
 @CopyWith()
 class ExampleState extends BaseBlocState {
   final Option<String>? attribute;
-  final List<PlayerEntity> players;
+  final List<Player> players;
 
   const ExampleState({
     required super.status,

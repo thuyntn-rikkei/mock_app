@@ -1,7 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:base_bloc_3/common/app_theme/app_colors.dart';
+import 'package:base_bloc_3/common/app_theme/app_text_styles.dart';
 
 class BaseAppBar extends StatelessWidget {
   final String? title;
@@ -22,6 +26,8 @@ class BaseAppBar extends StatelessWidget {
   final bool? backwardsCompatibility;
   final Color? textColor;
   final dynamic result;
+  final Widget? leadingIcon;
+  final Color? shadowColor;
 
   const BaseAppBar({
     Key? key,
@@ -43,6 +49,8 @@ class BaseAppBar extends StatelessWidget {
     this.onPressedLeading,
     this.result,
     this.systemUiOverlayStyle,
+    this.leadingIcon,
+    this.shadowColor,
   }) : super(key: key);
 
   @override
@@ -50,32 +58,39 @@ class BaseAppBar extends StatelessWidget {
     return AppBar(
       backgroundColor: backgroundColor ?? Colors.white,
       elevation: elevation ?? 0.7,
+      shadowColor: shadowColor,
       leadingWidth: leadingWidth,
-      titleSpacing: titleSpacing,
+      titleSpacing: 0,
       systemOverlayStyle: systemUiOverlayStyle ?? SystemUiOverlayStyle.dark,
       leading: leading ??
           Visibility(
             visible: hasBack ?? true,
             child: CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  if (onPressedLeading != null) {
-                    onPressedLeading!();
-                  } else {
-                    context.popRoute(result);
-                  }
-                },
-                child: const Icon(Icons.arrow_back_ios) //todo: default icon,
-                ),
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                if (onPressedLeading != null) {
+                  onPressedLeading!();
+                } else {
+                  context.popRoute(result);
+                }
+              },
+              child: leadingIcon ??
+                  Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.primary,
+                    size: 22.sp,
+                  ),
+            ),
           ),
       title: appBarWidget ??
-          Text(
-            title ?? "",
-            style: textStyle ?? const TextStyle(), //todo: defaultTextStyle
+          AutoSizeText(
+            title ?? '',
+            maxLines: 1,
+            style: textStyle ?? AppStyles.s16w700,
+            minFontSize: 14,
           ),
-      actions: actions,
+      actions: actions ?? [SizedBox(width: 5.w)],
       bottom: bottom,
-
       centerTitle: true,
       // flexibleSpace: Container(
       //     decoration: BoxDecoration(

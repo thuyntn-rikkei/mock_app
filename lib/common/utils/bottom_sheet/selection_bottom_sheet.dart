@@ -1,7 +1,7 @@
-import 'package:base_bloc_3/common/widgets/textfields/search_textfield.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:base_bloc_3/common/widgets/textfields/search_textfield.dart';
 
 class ItemSelection {
   final String title;
@@ -32,6 +32,7 @@ class SelectionBottomSheetWidget extends StatefulWidget {
   final bool isRadio;
   final bool hasSelectAll;
   final bool hasRefreshButton;
+
   const SelectionBottomSheetWidget({
     Key? key,
     required this.data,
@@ -89,169 +90,163 @@ class _SelectionBottomSheetWidgetState
           topLeft: Radius.circular(16.w),
           topRight: Radius.circular(16.w),
         ),
-        child: Container(
-          // color: ColorUtils.gray3BackgroundColor,
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(
-                      onTap: () => submit(),
-                      child: Container(
-                        height: 4.h,
-                        width: 32.h,
-                        margin: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          // color: ColorUtils.gray4BackgroundColor,
-                        ),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () => submit(),
+                    child: Container(
+                      height: 4.h,
+                      width: 32.h,
+                      margin: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        // color: ColorUtils.gray4BackgroundColor,
                       ),
                     ),
-                    SizedBox(height: 8.h),
-                    AppBar(
-                      toolbarHeight: 40,
-                      title: Text(
-                        "options".tr(),
-                        // style: StyleUtils.title3
-                        //     .copyWith(color: ColorUtils.typographyTitle),
-                      ),
-                      centerTitle: true,
-                      automaticallyImplyLeading: false,
-                      leadingWidth: 70.w,
-                      leading: widget.hasRefreshButton
-                          ? TextButton(
-                              onPressed: () => selectAll(value: false),
-                              child: FittedBox(
-                                child: Text(
-                                  "refresh".tr(),
-                                  // style: StyleUtils.buttonText2
-                                  //     .copyWith(color: ColorUtils.primaryColor),
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      actions: [
-                        if (!widget.isRadio)
-                          TextButton(
-                            onPressed: () => submit(),
+                  ),
+                  SizedBox(height: 8.h),
+                  AppBar(
+                    toolbarHeight: 40,
+                    title: Text(
+                      "options".tr(),
+                      // style: StyleUtils.title3
+                      //     .copyWith(color: ColorUtils.typographyTitle),
+                    ),
+                    centerTitle: true,
+                    automaticallyImplyLeading: false,
+                    leadingWidth: 70.w,
+                    leading: widget.hasRefreshButton
+                        ? TextButton(
+                            onPressed: () => selectAll(value: false),
                             child: FittedBox(
                               child: Text(
-                                "confirm_dialog_ok_title".tr(),
+                                "refresh".tr(),
                                 // style: StyleUtils.buttonText2
                                 //     .copyWith(color: ColorUtils.primaryColor),
                               ),
                             ),
-                          ),
-                      ],
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ),
-                    SizedBox(height: 20.h),
-                    CustomTextFieldSearch(
-                      focusNode: FocusNode(),
-                      searchTextController: searchController,
-                      onSearch: search,
-                      onChanged: search,
-                    ),
-                    SizedBox(height: 8.h),
-                  ],
-                ),
-              ),
-              if (!widget.isRadio && widget.hasSelectAll)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-                    child: TextButton(
-                      onPressed: selectAll,
-                      child: Text(
-                        "select_all".tr(),
-                        // style: StyleUtils.buttonText2
-                        //     .copyWith(color: ColorUtils.primaryColor),
-                      ),
-                    ),
-                  ),
-                ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  padding: EdgeInsets.all(16.w),
-                  margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.w),
-                  child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    separatorBuilder: (c, i) => items[i].show
-                        ? const Divider()
-                        : const SizedBox.shrink(),
-                    itemBuilder: (c, i) => items[i].show
-                        ? InkWell(
-                            onTap: () {
-                              if (items[i].selected) {
-                                if (widget.isRadio) {
-                                  //do nothing
-                                } else {
-                                  setState(() {
-                                    items[i] =
-                                        items[i].copyWith(selected: false);
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  if (widget.isRadio) {
-                                    submit(res: [i]);
-                                  } else {
-                                    //multi Selection
-                                    items[i] =
-                                        items[i].copyWith(selected: true);
-                                  }
-                                });
-                              }
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0.h),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      items[i].title,
-                                      // style: StyleUtils.title6.copyWith(
-                                      //   color: ColorUtils.typographyPrimaryText,
-                                      // ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 20.w,
-                                    width: 20.w,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: items[i].selected
-                                          ? Border.all(
-                                              width: 4.w,
-                                              // color: ColorUtils.primaryColor,
-                                            )
-                                          : Border.all(
-                                              // color: ColorUtils
-                                              //     .typographyDisableColor,
-                                              ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           )
                         : const SizedBox.shrink(),
-                    itemCount: items.length,
+                    actions: [
+                      if (!widget.isRadio)
+                        TextButton(
+                          onPressed: () => submit(),
+                          child: FittedBox(
+                            child: Text(
+                              "confirm_dialog_ok_title".tr(),
+                              // style: StyleUtils.buttonText2
+                              //     .copyWith(color: ColorUtils.primaryColor),
+                            ),
+                          ),
+                        ),
+                    ],
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                  ),
+                  SizedBox(height: 20.h),
+                  CustomTextFieldSearch(
+                    focusNode: FocusNode(),
+                    searchTextController: searchController,
+                    onSearch: search,
+                    onChanged: search,
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+              ),
+            ),
+            if (!widget.isRadio && widget.hasSelectAll)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
+                  child: TextButton(
+                    onPressed: selectAll,
+                    child: Text(
+                      "select_all".tr(),
+                      // style: StyleUtils.buttonText2
+                      //     .copyWith(color: ColorUtils.primaryColor),
+                    ),
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                padding: EdgeInsets.all(16.w),
+                margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.w),
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  separatorBuilder: (c, i) =>
+                      items[i].show ? const Divider() : const SizedBox.shrink(),
+                  itemBuilder: (c, i) => items[i].show
+                      ? InkWell(
+                          onTap: () {
+                            if (items[i].selected) {
+                              if (widget.isRadio) {
+                                //do nothing
+                              } else {
+                                setState(() {
+                                  items[i] = items[i].copyWith(selected: false);
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                if (widget.isRadio) {
+                                  submit(res: [i]);
+                                } else {
+                                  //multi Selection
+                                  items[i] = items[i].copyWith(selected: true);
+                                }
+                              });
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0.h),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    items[i].title,
+                                    // style: StyleUtils.title6.copyWith(
+                                    //   color: ColorUtils.typographyPrimaryText,
+                                    // ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 20.w,
+                                  width: 20.w,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: items[i].selected
+                                        ? Border.all(
+                                            width: 4.w,
+                                            // color: ColorUtils.primaryColor,
+                                          )
+                                        : Border.all(
+                                            // color: ColorUtils
+                                            //     .typographyDisableColor,
+                                            ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  itemCount: items.length,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

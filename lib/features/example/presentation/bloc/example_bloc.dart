@@ -1,16 +1,16 @@
-import 'package:base_bloc_3/base/bloc/index.dart';
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/features/example/domain/use_case/use_case.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:injectable/injectable.dart';
+import 'package:base_bloc_3/base/bloc/index.dart';
+import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/features/example/domain/use_case/use_case.dart';
 
-import '../../../../base/network/errors/error.dart';
-import '../../data/model/index.dart';
-import '../../domain/entity/player/player_entity.dart';
+import 'package:base_bloc_3/base/network/errors/error.dart';
+import 'package:base_bloc_3/features/example/data/model/index.dart';
+import 'package:base_bloc_3/features/example/domain/entity/player_entity.dart';
 
 part 'example_bloc.freezed.dart';
 part 'example_bloc.g.dart';
@@ -25,7 +25,7 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
       await event.when(
         getData: () => onGetData(emit),
         showMessage: () => onShowMessage(emit),
-        getPlayers: (List<PlayerEntity> players, int offset) =>
+        getPlayers: (List<Player> players, int offset) =>
             onGetPlayers(emit, players, offset),
       );
     });
@@ -51,11 +51,19 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
     emit(state.copyWith(message: "Error"));
   }
 
-  Future onGetPlayers(Emitter<ExampleState> emit, List<PlayerEntity> players,
-      int offset) async {
+  Future onGetPlayers(
+    Emitter<ExampleState> emit,
+    List<Player> players,
+    int offset,
+  ) async {
     final res = await _coreUseCase.getData(offset: offset, limit: 25);
-    pagingControllerOnLoad(offset, pagingController, res, onSuccess: () {
-      emit(state.copyWith(players: pagingController.itemList));
-    });
+    pagingControllerOnLoad(
+      offset,
+      pagingController,
+      res,
+      onSuccess: (data) {
+        emit(state.copyWith(players: pagingController.itemList));
+      },
+    );
   }
 }

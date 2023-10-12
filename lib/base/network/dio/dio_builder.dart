@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-import '../../../common/config/index.dart';
-import '../../../common/logger/index.dart';
-import 'dio_interceptor.dart';
+import 'package:base_bloc_3/base/network/dio/dio_interceptor.dart';
+import 'package:base_bloc_3/common/config/default_config.dart';
+import 'package:base_bloc_3/common/config/index.dart';
+import 'package:base_bloc_3/common/logger/index.dart';
 
 class DioBuilder {
   Dio? dio;
@@ -13,20 +12,21 @@ class DioBuilder {
       final BaseOptions options = BaseOptions(
         baseUrl: getUrl(),
         receiveDataWhenStatusError: true,
-        connectTimeout: ApiConfig.connectTimeout * 1000,
-        receiveTimeout: ApiConfig.receiveTimeout * 1000,
+        connectTimeout: const Duration(seconds: ApiConfig.connectTimeout),
+        receiveTimeout: const Duration(seconds: ApiConfig.receiveTimeout),
         headers: {"accept": "application/json"},
       );
       dio = Dio(options);
-      dio?.options.headers['content-Type'] = 'Application/json';
+      dio?.options.headers['content-Type'] = 'application/json';
       dio?.interceptors.addAll(
         [
           PrettyDioLogger(
             requestHeader: true,
             requestBody: true,
-            responseHeader: true,
+            responseHeader: false,
+            responseBody: false,
           ),
-          DioInterceptor()
+          DioInterceptor(),
         ],
       );
     }
@@ -34,6 +34,6 @@ class DioBuilder {
   }
 
   String getUrl() {
-    return dotenv.get('BASE_URL');
+    return DefaultConfig.getBaseUrl;
   }
 }

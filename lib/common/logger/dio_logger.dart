@@ -19,10 +19,12 @@ class PrettyDioLogger extends Interceptor {
     this.maxLines = 10,
     this.compact = true,
     this.logPrint = printDebug,
+    this.showTime = true,
   });
 
   /// Print request [Options]
   final bool request;
+  final bool showTime;
 
   /// Print request header [Options.headers]
   final bool requestHeader;
@@ -94,9 +96,9 @@ class PrettyDioLogger extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     if (error) {
-      if (err.type == DioErrorType.response) {
+      if (err.type == DioExceptionType.badResponse) {
         final uri = err.response?.requestOptions.uri;
         _printBoxed(
           header:
@@ -289,6 +291,7 @@ class PrettyDioLogger extends Interceptor {
 
   void _printMapAsTable(Map? map, {String? header}) {
     if (map == null || map.isEmpty) return;
+    if (showTime) logPrint('Time ${DateTime.now().toIso8601String()}');
     logPrint('╔ $header ');
     map.forEach(
       (dynamic key, dynamic value) => _printKV(key.toString(), value),
