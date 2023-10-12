@@ -1,9 +1,8 @@
+import 'package:base_bloc_3/base/bloc/index.dart';
+import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
-
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/base/bloc/index.dart';
 
 abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
     B extends BaseBloc<E, S>> extends State<W> with BaseMethodMixin<S> {
@@ -135,10 +134,10 @@ abstract class BaseShareState<
     super.initState();
   }
 
-  Widget blocBuilder(
-    Widget Function(BuildContext c, S) builder, [
+  Widget blocBuilder({
+    required Widget Function(BuildContext c, S) builder,
     bool Function(S, S)? buildWhen,
-  ]) {
+  }) {
     return BlocBuilder<B, S>(
       bloc: bloc,
       buildWhen: buildWhen,

@@ -38,7 +38,9 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 │   
 └───features 
 │   
-└───routes // navigation
+└───routes // navigation  
+│
+└───translations // localization
 │   
 └───main.dart
 ```
@@ -274,5 +276,22 @@ Hanlde onTap Notification
 ```dart
     Future<dynamic> selectNotification(String? payload) async {
     }
+```
+
+## How to use easy_localization
+- [Easy Localization](https://pub.dev/packages/easy_localization)
+- ./lib/translations/translate_data folder contains all translation data
+- ./lib/translations/translate_key.dart contains all translation key
+- ./lib/translations/translate_data/en.json contains all translation data for english
+```
+│
+└───translations // localization
+    └─── translate_data // all translation data
+    │        └─── en_us.json // translation data for english
+    │        └─── vi_vn.json // translation data for vietnamese
+    └─── translate_key.dart // all translation key
+    └─── runtime_language_loader.dart // load language every time app start, no need to rebuild app
+```
+
 ```
 
