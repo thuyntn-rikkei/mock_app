@@ -11,7 +11,7 @@ pipeline {
 
         // Don't change these variables if you don't know what you're doing
         PROJECT_CONFIG_FOLDER = 'ci-cd-config'
-        PROJECT_CONFIG_FILE = "$PROJECT_CONFIG_FOLDER/.project-config.yaml"
+        PROJECT_CONFIG_FILE = "$PROJECT_CONFIG_FOLDER/project-config.yaml"
         scannerHome = tool 'Rikkei SonarQube'
         flutterSDKCacheDirectory = '/Users/servermac-d1-m/fvm/versions'
         DEPLOYGATE_API_TOKEN = credentials('Deploygate-token')

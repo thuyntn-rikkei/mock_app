@@ -6,6 +6,7 @@ C_RESET='\e[0m'
 C_RED='\e[31m'
 C_GREEN='\e[32m'
 C_YELLOW='\e[33m'
+FVM="fvm"
 
 function __run() #(step, name, cmd)
 {
@@ -23,8 +24,13 @@ function __run() #(step, name, cmd)
         exit 1
     fi
 }
-dart_format="dart format --set-exit-if-changed"
-dart_analyze="dart analyze"
+# Check if the environment variable is set
+if [ -z "${!FVM}" ]; then
+    echo "fvm command not found. Using flutter instead."
+    FVM=""
+fi
+dart_format="$FVM dart format --set-exit-if-changed"
+dart_analyze="$FVM flutter analyze --fatal-infos --fatal-warnings"
 modified="git diff --diff-filter=M --name-only --cached  | grep \".dart\""
-__run "1/2" "Dart Format" "${modified} | xargs -r ${dart_format}"
-__run "2/2" "Dart Analyze" "${modified} | xargs -r ${dart_analyze}"
+__run "1/2" "Flutter Format" "${modified} | xargs -r ${dart_format}"
+__run "2/2" "Flutter Analyze" "${dart_analyze}"
