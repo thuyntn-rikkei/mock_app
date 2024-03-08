@@ -991,8 +991,8 @@ class ScaleAndFadeTransformer extends PageTransformer {
     final position = info.position;
     var c = child;
     if (_scale != null) {
-      final scaleFactor = (1 - position!.abs()) * (1 - _scale!);
-      final scale = _scale! + scaleFactor;
+      final scaleFactor = (1 - position!.abs()) * (1 - _scale);
+      final scale = _scale + scaleFactor;
 
       c = Transform.scale(
         scale: scale,
@@ -1001,8 +1001,8 @@ class ScaleAndFadeTransformer extends PageTransformer {
     }
 
     if (_fade != null) {
-      final fadeFactor = (1 - position!.abs()) * (1 - _fade!);
-      final opacity = _fade! + fadeFactor;
+      final fadeFactor = (1 - position!.abs()) * (1 - _fade);
+      final opacity = _fade + fadeFactor;
       c = Opacity(
         opacity: opacity,
         child: c,

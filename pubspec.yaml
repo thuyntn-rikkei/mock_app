@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.1 <4.0.0"
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -48,7 +48,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   get_it: ^7.2.0
   infinite_scroll_pagination: ^3.2.0
-  injectable: ^2.1.1
+  injectable: 2.3.2
   json_annotation: ^4.7.0
   logger: ^1.1.0
   permission_handler: ^10.2.0
@@ -64,7 +64,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.1
   freezed: ^2.2.0
-  injectable_generator: ^2.1.5
+  injectable_generator: 2.4.1
   build_runner: ^2.3.2
   json_serializable: ^6.5.4
   retrofit_generator: ^6.0.0+3

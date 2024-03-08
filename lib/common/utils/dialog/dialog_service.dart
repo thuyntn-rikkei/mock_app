@@ -29,8 +29,9 @@ class DialogService {
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => Future.value(barrierDismissible),
+        return PopScope(
+          onPopInvoked: (bool value) {},
+          canPop: !barrierDismissible,
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
