@@ -16,8 +16,9 @@ class CustomSnackBarWidget extends StatefulWidget {
   final double iconPositionTop;
   final double iconPositionLeft;
   final EdgeInsetsGeometry messagePadding;
-  final double textScaleFactor;
   final TextAlign textAlign;
+
+  final TextScaler? textScaler;
 
   const CustomSnackBarWidget.success({
     super.key,
@@ -40,8 +41,8 @@ class CustomSnackBarWidget extends StatefulWidget {
     this.backgroundColor = AppColors.alertSuccess,
     this.boxShadow = kDefaultBoxShadow,
     this.borderRadius = const BorderRadius.all(Radius.circular(0)),
-    this.textScaleFactor = 1.0,
     this.textAlign = TextAlign.center,
+    this.textScaler,
   });
 
   const CustomSnackBarWidget.info({
@@ -65,8 +66,8 @@ class CustomSnackBarWidget extends StatefulWidget {
     this.backgroundColor = const Color(0xff2196F3),
     this.boxShadow = kDefaultBoxShadow,
     this.borderRadius = kDefaultBorderRadius,
-    this.textScaleFactor = 1.0,
     this.textAlign = TextAlign.center,
+    required this.textScaler,
   });
 
   const CustomSnackBarWidget.error({
@@ -90,8 +91,8 @@ class CustomSnackBarWidget extends StatefulWidget {
     this.backgroundColor = AppColors.alertError,
     this.boxShadow = kDefaultBoxShadow,
     this.borderRadius = const BorderRadius.all(Radius.circular(0)),
-    this.textScaleFactor = 1.0,
     this.textAlign = TextAlign.center,
+    required this.textScaler,
   });
 
   @override
@@ -127,7 +128,7 @@ class CustomSnackBarWidgetState extends State<CustomSnackBarWidget> {
                   widget.textStyle,
                 ),
                 textAlign: widget.textAlign,
-                textScaleFactor: widget.textScaleFactor,
+                textScaler: widget.textScaler,
               ),
             ),
           ),

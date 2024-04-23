@@ -113,26 +113,12 @@ class $AssetsSvgGen {
       ];
 }
 
-class $AssetsTranslationsGen {
-  const $AssetsTranslationsGen();
-
-  /// File path: assets/translations/en-US.json
-  String get enUS => 'assets/translations/en-US.json';
-
-  /// File path: assets/translations/vi-VN.json
-  String get viVN => 'assets/translations/vi-VN.json';
-
-  /// List of all assets
-  List<String> get values => [enUS, viVN];
-}
-
 class Assets {
   Assets._();
 
   static const $AssetsEnvGen env = $AssetsEnvGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
-  static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
 }
 
 class AssetGenImage {

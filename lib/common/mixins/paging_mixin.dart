@@ -3,7 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/base/network/errors/extension.dart';
 
-class BaseCommonMethodMixin {
+mixin BaseCommonMethodMixin {
   void pagingControllerOnLoad<T>(
     int page,
     PagingController<int, T> pagingController,
