@@ -99,7 +99,7 @@ class Example extends StatelessWidget {
 ```dart
 class xxxBloc extends BaseBloc<E, S> with BaseCommonMethodMixin{
     ...
-    final PagingController<int, Player> pagingController =
+    final PagingController<int, PlayerEntity> pagingController =
       PagingController(firstPageKey: 0);
     ...
 

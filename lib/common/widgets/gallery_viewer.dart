@@ -129,7 +129,7 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
         direction: DismissDirection.vertical,
         key: const Key('#photo_view'),
         onDismissed: (_) {
-          context.popRoute();
+          context.maybePop();
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: _Const.animationDuration),
