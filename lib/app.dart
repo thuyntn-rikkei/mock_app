@@ -4,7 +4,6 @@ import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/routes/app_pages.dart';
 import 'package:base_bloc_3/routes/route_observer.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -19,15 +18,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _appRoute = getIt<AppPages>();
 
-  void initDynamicLinks() async {
-    //get initlink
-    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
-      /// TODO: handle dynamic link
-    }).onError((error) {
-      // Handle errors
-    });
-  }
-
   // late StreamSubscription tokenExpiredStream;
   // final localPref = getIt<LocalStorage>();
   // bool isShowDialog = false;
@@ -37,7 +27,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      initDynamicLinks();
       getIt<LocalStorage>().save(PrefKeys.splashLoaded, false);
     });
     // tokenExpiredStream = getIt<EventBus>().on<AppHashExpiredEvent>().listen(
