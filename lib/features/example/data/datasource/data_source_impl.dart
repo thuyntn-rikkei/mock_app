@@ -1,8 +1,7 @@
+import 'package:base_bloc_3/features/example/data/model/player/player.dart';
 import 'package:injectable/injectable.dart';
 import 'package:base_bloc_3/base/network/models/base_data.dart';
 import 'package:base_bloc_3/features/example/data/datasource/remote/service/example_service.dart';
-
-import 'package:base_bloc_3/features/example/data/model/player/index.dart';
 import 'package:base_bloc_3/features/example/data/datasource/index.dart';
 
 @Injectable(as: DataSource)

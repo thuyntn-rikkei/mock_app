@@ -1,41 +1,37 @@
+import 'package:base_bloc_3/features/example/data/index.dart';
+import 'package:base_bloc_3/features/example/domain/entity/team_entity.dart';
+
 class PlayerEntity {
-  final int? id;
-  final String? firstName;
-  final String? heightFeet;
-  final String? heightInches;
-  final String? lastName;
-  final String? position;
+  final int id;
+  final String firstName;
+  final String heightFeet;
+  final String heightInches;
+  final String lastName;
+  final String position;
   final TeamEntity? team;
-  final String? weightPounds;
+  final String weightPounds;
 
   PlayerEntity({
-    this.id,
-    this.firstName,
-    this.heightFeet,
-    this.heightInches,
-    this.lastName,
-    this.position,
+    required this.id,
+    required this.firstName,
+    required this.heightFeet,
+    required this.heightInches,
+    required this.lastName,
+    required this.position,
     this.team,
-    this.weightPounds,
+    required this.weightPounds,
   });
-}
 
-class TeamEntity {
-  final int? id;
-  final String? abbreviation;
-  final String? city;
-  final String? conference;
-  final String? division;
-  final String? fullName;
-  final String? name;
-
-  TeamEntity({
-    this.id,
-    this.abbreviation,
-    this.city,
-    this.conference,
-    this.division,
-    this.fullName,
-    this.name,
-  });
+  factory PlayerEntity.fromModel(Player model) {
+    return PlayerEntity(
+      id: model.id ?? 0,
+      firstName: model.firstName ?? '',
+      heightFeet: model.heightFeet ?? '',
+      heightInches: model.heightInches ?? '',
+      lastName: model.lastName ?? '',
+      position: model.position ?? '',
+      team: TeamEntity.fromModel(model.team),
+      weightPounds: model.weightPounds ?? '',
+    );
+  }
 }

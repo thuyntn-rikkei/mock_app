@@ -9,7 +9,6 @@ import 'package:base_bloc_3/common/index.dart';
 import 'package:base_bloc_3/features/example/domain/use_case/use_case.dart';
 
 import 'package:base_bloc_3/base/network/errors/error.dart';
-import 'package:base_bloc_3/features/example/data/model/index.dart';
 import 'package:base_bloc_3/features/example/domain/entity/player_entity.dart';
 
 part 'example_bloc.freezed.dart';
@@ -25,14 +24,14 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
       await event.when(
         getData: () => onGetData(emit),
         showMessage: () => onShowMessage(emit),
-        getPlayers: (List<Player> players, int offset) =>
+        getPlayers: (List<PlayerEntity> players, int offset) =>
             onGetPlayers(emit, players, offset),
       );
     });
   }
 
   final ExampleUseCase _coreUseCase;
-  final PagingController<int, Player> pagingController =
+  final PagingController<int, PlayerEntity> pagingController =
       PagingController(firstPageKey: 0);
 
   Future onGetData(Emitter<ExampleState> emit) async {
@@ -42,7 +41,7 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
     emit(
       result.fold(
         (l) => state.copyWith(status: BaseStateStatus.failed, message: "Error"),
-        (r) => state.copyWith(status: BaseStateStatus.failed, message: "Error"),
+        (r) => state.copyWith(status: BaseStateStatus.idle),
       ),
     );
   }
@@ -53,7 +52,7 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
 
   Future onGetPlayers(
     Emitter<ExampleState> emit,
-    List<Player> players,
+    List<PlayerEntity> players,
     int offset,
   ) async {
     final res = await _coreUseCase.getData(offset: offset, limit: 25);
