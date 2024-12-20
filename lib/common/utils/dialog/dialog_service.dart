@@ -30,7 +30,7 @@ class DialogService {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return PopScope(
-          onPopInvoked: (bool value) {},
+          onPopInvokedWithResult: (didPop, result) {},
           canPop: !barrierDismissible,
           child: Dialog(
             shape: RoundedRectangleBorder(

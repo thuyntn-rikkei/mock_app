@@ -36,8 +36,6 @@ extension StatusCodeEnumExtension on StatusCodeEnum {
         return BaseError.httpInternalServerError("not_found".tr());
       case StatusCodeEnum.permissionDenied:
         return BaseError.httpInternalServerError("permission_denied".tr());
-      default:
-        return BaseError.httpUnknownError('error_system'.tr());
     }
   }
 }

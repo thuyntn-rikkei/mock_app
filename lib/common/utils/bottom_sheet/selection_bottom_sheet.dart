@@ -81,8 +81,8 @@ class _SelectionBottomSheetWidgetState
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (bool value) {
-        submit();
+      onPopInvokedWithResult: (bool value, List<int>? res) {
+        submit(res: res);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.only(

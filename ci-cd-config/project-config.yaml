@@ -1,5 +1,5 @@
 # Change the flutter version to the one you want to use
-flutter_version=3.13.7
+flutter_version=3.24.5
 #for firebase
 firebase_android_staging_app_id=<put your app id here>
 firebase_android_production_app_id=<put your app id here>

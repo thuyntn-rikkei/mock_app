@@ -35,10 +35,6 @@ class SnackBarHelper {
         icon = const Icon(Icons.info_outline);
         color = Colors.blue;
         break;
-      default:
-        icon = const Icon(Icons.check);
-        color = AppColors.alertSuccess;
-        break;
     }
     SmartDialog.showToast(
       message,

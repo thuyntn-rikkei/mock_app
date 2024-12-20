@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:base_bloc_3/base/network/models/base_data.dart';
 import 'package:base_bloc_3/features/example/data/model/player/player.dart';
 

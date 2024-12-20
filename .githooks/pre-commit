@@ -7,28 +7,23 @@ C_RED='\e[31m'
 C_GREEN='\e[32m'
 C_YELLOW='\e[33m'
 FVM="fvm"
-
 function __run() #(step, name, cmd)
 {
-    local color output exitcode
+    local color output exitCode
 
     printf "${C_YELLOW}[%s]${C_RESET} %-20s" "$1" "$2"
     output=$(eval "$3" 2>&1)
-    exitcode=$?
+    exitCode=$?
 
-    if [[ 0 == $exitcode || 130 == $exitcode ]]; then
-        printf "${C_YELLOW}[%s]${C_RESET}\n" "OK!"
+    if [[ 0 == "$exitCode" || 130 == "$exitCode" ]]; then
+        printf "${C_GREEN}[%s]${C_RESET}\n" "OK!"
 
     else
-        printf "${C_RED}[%s]${C_RESET}\n\n[%s]" "NOK!" "$output"
+        printf "${C_RED}[%s]${C_RESET}\n[%s]" "NOK!" "$output"
         exit 1
     fi
 }
-# Check if the environment variable is set
-if [ -z "${!FVM}" ]; then
-    echo "fvm command not found. Using flutter instead."
-    FVM=""
-fi
+
 dart_format="$FVM dart format --set-exit-if-changed"
 dart_analyze="$FVM flutter analyze --fatal-infos --fatal-warnings"
 modified="git diff --diff-filter=M --name-only --cached  | grep \".dart\""

@@ -1,5 +1,9 @@
 
-# Base Project Flutter 3.13.7 with Bloc Pattern
+# Base Project Flutter
+Requirement:
+- Flutter 3.24.5
+- Java 17
+
 
 
 
