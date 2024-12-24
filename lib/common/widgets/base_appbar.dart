@@ -80,7 +80,13 @@ class BaseAppBar extends StatelessWidget {
           AutoSizeText(
             title ?? '',
             maxLines: 1,
-            style: textStyle ?? AppStyles.s16w700,
+            style: textStyle ??
+                TextStyle(
+                  fontSize: 16.sp,
+                  color: AppColors.deepDark,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: robotoFont,
+                ),
             minFontSize: 14,
           ),
       actions: actions ?? [SizedBox(width: 5.w)],

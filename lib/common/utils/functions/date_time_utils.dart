@@ -4,28 +4,11 @@ import 'package:intl/intl.dart';
 
 enum Pattern {
   hhmm,
-  hhmmss,
-  ddmmm,
-  md,
   ddMMMMyyyyHHmm,
-  ddMMyyyyHHmm,
-  ddMMyyyyHHmmss,
-  yyyyMMddHHmm,
-  yyyyMMddHHmmWithSeparator,
-  yyyyMMdd,
-  yyyyMMddHHmmss,
-  yyyyMMddWithSeparator,
-  yyyyMMddHHmmssWithSeparator,
-  ddMMyyyyWithSeparator,
-  ddMMMyyyyWithSeparator,
-  yyyyMM,
   ddMMyyyy,
   hhmmEEEEddMMyyyy,
   hhmma,
   EEEE,
-  MMMMyyyy,
-  HHmmyyyyMMddWithSeparator,
-  HHmmyyyyMMddWithLineSeparator
 }
 
 extension PatternExtension on Pattern {
@@ -33,48 +16,16 @@ extension PatternExtension on Pattern {
     switch (this) {
       case Pattern.hhmm:
         return 'HH:mm';
-      case Pattern.hhmmss:
-        return 'HH:mm:ss';
-      case Pattern.ddmmm:
-        return 'dd MMM';
-      case Pattern.md:
-        return 'M/d';
-      case Pattern.ddMMyyyyHHmm:
-        return 'dd/MM/yyyy HH:mm';
       case Pattern.ddMMMMyyyyHHmm:
         return 'dd/MMMM/yyyy HH:mm';
-      case Pattern.ddMMyyyyHHmmss:
-        return 'dd/MM/yyyy HH:mm:ss';
-      case Pattern.yyyyMMddHHmm:
-        return 'yyyy/MM/dd HH:mm';
-      case Pattern.yyyyMMddHHmmWithSeparator:
-        return 'yyyy-MM-dd HH:mm';
-      case Pattern.HHmmyyyyMMddWithSeparator:
-        return 'HH:mm dd/MM/yyyy';
-      case Pattern.HHmmyyyyMMddWithLineSeparator:
-        return 'HH:mm dd-MM-yyyy';
-      case Pattern.yyyyMMddHHmmss:
-        return 'yyyy-MM-dd HH:mm:ss';
       case Pattern.ddMMyyyy:
         return 'dd/MM/yyyy';
-      case Pattern.yyyyMMdd:
-        return 'yyyy/MM/dd';
-      case Pattern.yyyyMMddWithSeparator:
-        return 'yyyy-MM-dd';
-      case Pattern.ddMMyyyyWithSeparator:
-        return 'dd-MM-yyyy';
-      case Pattern.ddMMMyyyyWithSeparator:
-        return 'dd MMM yyyy';
-      case Pattern.yyyyMMddHHmmssWithSeparator:
-        return 'yyyy-MM-dd HH:mm:ss';
       case Pattern.hhmmEEEEddMMyyyy:
         return 'HH:mm, EEEE dd/MM/yyyy';
       case Pattern.hhmma:
         return 'hh:mm a';
       case Pattern.EEEE:
         return 'EEEE';
-      case Pattern.MMMMyyyy:
-        return 'MMMM yyyy';
       default:
         return '';
     }
@@ -119,62 +70,6 @@ String getStringDate(
   return '';
 }
 
-bool isToday(DateTime date) {
-  final now = DateTime.now();
-  return DateTime(date.year, date.month, date.day)
-          .difference(DateTime(now.year, now.month, now.day))
-          .inDays ==
-      0;
-}
-
-/// lấy thứ trong tuần của ngày hôm nay
-String getWeekdayToday() {
-  final now = DateTime.now();
-  return DateFormat('EEEE').format(now).toLowerCase();
-}
-
-bool isWarning(dynamic time, Pattern patternConvert) {
-  final datetime = getTimestamp(time, patternConvert);
-  final diff = DateTime.now().millisecondsSinceEpoch - datetime;
-  final week = diff ~/ weekMillis;
-  return week > 1;
-}
-
-bool isTooLong(dynamic time, Pattern patternConvert) {
-  final datetime = getTimestamp(time, patternConvert);
-  final diff = DateTime.now().millisecondsSinceEpoch - datetime;
-  final month = diff ~/ monthMillis;
-  return month > 3;
-}
-
-String getStringTimeAgo(
-  dynamic time,
-  Pattern patternConvert, {
-  String? languageCode,
-}) {
-  final datetime = getTimestamp(time, patternConvert);
-  final diff = DateTime.now().millisecondsSinceEpoch - datetime;
-  if (diff < minuteMillis) {
-    return 'vừa xong';
-  } else if (diff < 60 * minuteMillis) {
-    final minute = diff ~/ minuteMillis;
-    return '$minute ${Intl.plural(minute, one: 'phút', other: 'phút')}';
-  } else if (diff < 24 * hourMillis) {
-    final hour = diff ~/ hourMillis;
-    return '$hour ${Intl.plural(hour, one: 'giờ', other: 'giờ')}';
-  } else if (diff < weekMillis) {
-    final day = (diff / dayMillis).round();
-    return '$day ${Intl.plural(day, one: 'ngày', other: 'ngày')}';
-  } else if (diff < monthMillis) {
-    final week = diff ~/ weekMillis;
-    return '$week ${Intl.plural(week, one: 'tuần', other: 'tuần')}';
-  } else if (diff < quarterMillis) {
-    final month = diff ~/ monthMillis;
-    return '$month ${Intl.plural(month, one: 'tháng', other: 'tháng')}';
-  }
-  return getStringDate(datetime, patternConvert, languageCode: languageCode);
-}
-
 int getTimestamp(dynamic dateToConvert, Pattern pattern) {
   if (dateToConvert is DateTime) {
     return dateToConvert.millisecondsSinceEpoch;
@@ -197,8 +92,8 @@ DateTime? getDateFromDateAndTime({
     return getDateTime('$date $time', pattern: pattern);
   } else if (date is DateTime) {
     return getDateTime(
-      '${getStringDate(date, Pattern.yyyyMMddWithSeparator)} $time',
-      pattern: Pattern.yyyyMMddHHmmss,
+      '${getStringDate(date, Pattern.ddMMyyyy)} $time',
+      pattern: Pattern.ddMMyyyy,
     );
   }
   return null;

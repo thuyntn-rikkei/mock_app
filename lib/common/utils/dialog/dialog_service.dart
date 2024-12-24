@@ -1,7 +1,5 @@
-import 'package:base_bloc_3/import.dart';
-import 'package:flutter/cupertino.dart';
-
 class DialogService {
+  /*
   static bool isShowLoading = false;
   static bool isShowActionDialog = false;
 
@@ -26,7 +24,7 @@ class DialogService {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return PopScope(
-          onPopInvokedWithResult: (didPop, result) {},
+          onPopInvoked: (bool value) {},
           canPop: !barrierDismissible,
           child: Dialog(
             shape: RoundedRectangleBorder(
@@ -82,25 +80,25 @@ class DialogService {
     Navigator.of(context).pop();
   }
 
-  // static Future<dynamic> showSizeGuide(
-  //   BuildContext context,
-  //   String sizeGuide, {
-  //   bool isOnlyDialog = false,
-  // }) {
-  //   if (isShowActionDialog && isOnlyDialog) return Future.value();
-  //   isShowActionDialog = true;
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return SizeGuideDialog(
-  //         content: sizeGuide,
-  //       );
-  //     },
-  //   ).whenComplete(
-  //     () => isShowActionDialog = false,
-  //   );
-  // }
+  static Future<dynamic> showSizeGuide(
+    BuildContext context,
+    String sizeGuide, {
+    bool isOnlyDialog = false,
+  }) {
+    if (isShowActionDialog && isOnlyDialog) return Future.value();
+    isShowActionDialog = true;
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SizeGuideDialog(
+          content: sizeGuide,
+        );
+      },
+    ).whenComplete(
+      () => isShowActionDialog = false,
+    );
+  }
 
   static Future<dynamic> showPopUpHome(
     BuildContext context,
@@ -154,77 +152,77 @@ class DialogService {
   }
 }
 
-// class SizeGuideDialog extends StatelessWidget {
-//   const SizeGuideDialog({super.key, required this.content});
-//
-//   final String content;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Dialog(
-//       insetPadding: const EdgeInsets.symmetric(horizontal: 0),
-//       elevation: 0.0,
-//       backgroundColor: Colors.transparent,
-//       child: dialogContent(context),
-//     );
-//   }
-//
-//   Widget dialogContent(BuildContext context) {
-//     return SingleChildScrollView(
-//       child: Container(
-//         margin: const EdgeInsets.only(left: 0.0, right: 0.0),
-//         padding: EdgeInsets.only(left: 8.w),
-//         child: Stack(
-//           children: <Widget>[
-//             Container(
-//               margin: EdgeInsets.only(top: 12.h, right: 12.w),
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 shape: BoxShape.rectangle,
-//                 borderRadius: BorderRadius.only(
-//                   topLeft: Radius.circular(16.r),
-//                   topRight: Radius.circular(16.r),
-//                 ),
-//               ),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.stretch,
-//                 children: <Widget>[
-//                   InteractiveViewer(
-//                     panEnabled: false, // Set it to false to prevent panning.
-//                     minScale: 1,
-//                     maxScale: 4,
-//                     child: Padding(
-//                       padding:
-//                           EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-//                       child: HtmlWidget(
-//                         content,
-//                         //set loading widget html
-//                         onLoadingBuilder: (context, element, loadingProcess) =>
-//                             const Center(
-//                           child: CupertinoActivityIndicator(),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             Positioned(
-//               right: 0.0,
-//               child: GestureDetector(
-//                 onTap: () {
-//                   Navigator.of(context).pop();
-//                 },
-//                 child: Assets.svg.icCloseDialog.svg(),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+class SizeGuideDialog extends StatelessWidget {
+  const SizeGuideDialog({super.key, required this.content});
+
+  final String content;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 0),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  Widget dialogContent(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(left: 0.0, right: 0.0),
+        padding: EdgeInsets.only(left: 8.w),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 12.h, right: 12.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.r),
+                  topRight: Radius.circular(16.r),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  InteractiveViewer(
+                    panEnabled: false, // Set it to false to prevent panning.
+                    minScale: 1,
+                    maxScale: 4,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+                      child: HtmlWidget(
+                        content,
+                        //set loading widget html
+                        onLoadingBuilder: (context, element, loadingProcess) =>
+                            const Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              right: 0.0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Assets.svg.icCloseDialog.svg(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class PopUpHomeDialog extends StatelessWidget {
   const PopUpHomeDialog({
@@ -376,6 +374,52 @@ class PopUpHomeDialog extends StatelessWidget {
   }
 }
 
+class LoadingWidget extends StatefulWidget {
+  const LoadingWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  LoadingWidgetState createState() => LoadingWidgetState();
+}
+
+class LoadingWidgetState extends State<LoadingWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _controller.repeat();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: Tween(begin: 1.0, end: 0.0).animate(_controller),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        color: Colors.transparent,
+        child: SizedBox(
+          width: 54.w,
+          height: 54.h,
+          child: Assets.images.loading.image(),
+        ),
+      ),
+    );
+  }
+}
+
 class DialogWidget extends StatefulWidget {
   final String? leftButtonText;
   final String? rightButtonText;
@@ -476,4 +520,5 @@ class DialogWidgetState extends State<DialogWidget> {
       ),
     );
   }
+   */
 }

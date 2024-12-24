@@ -10,14 +10,6 @@ abstract class BaseBloc<E, S extends BaseBlocState> extends Bloc<E, S> {
 
   // final connectivity = Connectivity().onConnectivityChanged;
 
-  Future<void> clearDataWhenLogout() async {
-    try {
-      await localPref.clearExceptSomeKeys();
-    } catch (e) {
-      /// do nothing
-    }
-  }
-
   EventTransformer<E> debounce(Duration duration) {
     return (events, mapper) {
       return events.debounce(duration).switchMap(mapper);
