@@ -1,5 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:base_bloc_3/import.dart';
 
 /// Use when search or lazy loading list item
 class EmptyWidget extends StatelessWidget {

@@ -1,7 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/widgets/textfields/search_textfield.dart';
+import 'package:base_bloc_3/import.dart';
 
 class ItemSelection {
   final String title;

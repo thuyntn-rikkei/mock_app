@@ -1,10 +1,4 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:base_bloc_3/base/network/constants/constants.dart';
-import 'package:base_bloc_3/base/network/errors/error.dart';
-import 'package:base_bloc_3/base/network/errors/error_response.dart';
+import 'package:base_bloc_3/import.dart';
 
 extension DioErrorMessage on DioException {
   BaseError get baseError {

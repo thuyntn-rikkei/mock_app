@@ -1,22 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:base_bloc_3/import.dart';
 
 extension DateTimeExtension on DateTime {
-  String get formatTimeToMMddYYHHmm {
-    final t = DateFormat("MM/dd/yyyy     HH:mm").format(this);
-    return t;
-  }
-
-  String get formatTimeToddMMYYHHmm {
-    final t = DateFormat("dd/MM/yyyy     HH:mm").format(this);
-    return t;
-  }
-
-  String get formatTimeToddMMYYYY {
-    final t = DateFormat("dd/MM/yyyy").format(this);
-    return t;
-  }
-
   bool isSameDay(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
   }

@@ -1,6 +1,4 @@
-
-import 'package:collection/collection.dart';
-import 'package:video_player/video_player.dart';
+import 'package:base_bloc_3/import.dart';
 
 class FileUtils {
   static String? getFileExtension(String path) {

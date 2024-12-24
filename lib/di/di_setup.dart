@@ -1,7 +1,4 @@
-import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
-
-import 'package:base_bloc_3/di/di_setup.config.dart';
+import 'package:base_bloc_3/import.dart';
 
 final GetIt getIt = GetIt.instance;
 

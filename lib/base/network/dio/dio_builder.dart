@@ -1,8 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:base_bloc_3/base/network/dio/dio_interceptor.dart';
-import 'package:base_bloc_3/common/config/default_config.dart';
-import 'package:base_bloc_3/common/config/index.dart';
-import 'package:base_bloc_3/common/logger/index.dart';
+import 'package:base_bloc_3/import.dart';
 
 class DioBuilder {
   Dio? dio;

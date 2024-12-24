@@ -1,9 +1,4 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-import 'package:base_bloc_3/base/base_widget.dart';
-
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/features/example/presentation/bloc/example_bloc.dart';
+import 'package:base_bloc_3/import.dart';
 
 @RoutePage()
 class ExamplePage extends StatefulWidget {

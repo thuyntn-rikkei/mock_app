@@ -1,6 +1,4 @@
-import 'package:injectable/injectable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:base_bloc_3/import.dart';
 
 abstract class LocalStorage {
   Future<T?> get<T>(String key);

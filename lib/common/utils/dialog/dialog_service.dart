@@ -1,9 +1,5 @@
+import 'package:base_bloc_3/import.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/gen/assets.gen.dart';
 
 class DialogService {
   static bool isShowLoading = false;
@@ -374,52 +370,6 @@ class PopUpHomeDialog extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class LoadingWidget extends StatefulWidget {
-  const LoadingWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  LoadingWidgetState createState() => LoadingWidgetState();
-}
-
-class LoadingWidgetState extends State<LoadingWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-    _controller.repeat();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: Tween(begin: 1.0, end: 0.0).animate(_controller),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        color: Colors.transparent,
-        child: SizedBox(
-          width: 54.w,
-          height: 54.h,
-          child: Assets.images.loading.image(),
         ),
       ),
     );

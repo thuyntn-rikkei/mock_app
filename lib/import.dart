@@ -1,0 +1,10 @@
+export 'main.dart';
+export 'app.dart';
+export 'di/index.dart';
+export 'features/index.dart';
+export 'gen/index.dart';
+export 'common/index.dart';
+export 'data/index.dart';
+export 'routes/index.dart';
+export 'translations/index.dart';
+export 'base/index.dart';

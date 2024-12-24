@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/import.dart';
 
 class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;

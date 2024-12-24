@@ -1,11 +1,5 @@
-import 'dart:io';
-
+import 'package:base_bloc_3/import.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
-import 'package:base_bloc_3/common/widgets/index.dart';
 
 class CustomSliverListView<T> extends StatelessWidget {
   final PagingController<int, T> controller;

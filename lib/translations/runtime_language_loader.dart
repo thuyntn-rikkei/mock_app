@@ -1,7 +1,4 @@
-import 'dart:ui';
-
-import 'package:base_bloc_3/translations/translate_key.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:base_bloc_3/import.dart';
 
 class LanguageRuntimeLoader extends AssetLoader {
   @override

@@ -1,13 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:injectable/injectable.dart';
-import 'package:base_bloc_3/common/logger/index.dart';
-import 'package:base_bloc_3/common/notification/local_notification_helper.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
+import 'package:base_bloc_3/import.dart';
 
 @singleton
 class PushNotificationHelper {

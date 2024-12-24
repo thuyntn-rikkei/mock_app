@@ -1,8 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/gen/assets.gen.dart';
+import 'package:base_bloc_3/import.dart';
 
 class PaymentBottomSheet extends StatefulWidget {
   final ValueNotifier isExpanded;

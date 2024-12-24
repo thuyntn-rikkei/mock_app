@@ -1,8 +1,4 @@
-
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/services.dart';
-import 'package:base_bloc_3/common/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:base_bloc_3/import.dart';
 
 bool hasMatchLengthPassword(String? pass) {
   if ((pass ?? "").trim().isEmpty) {
