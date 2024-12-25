@@ -93,16 +93,16 @@ int? getIntegerFromDynamic(dynamic value) {
 }
 
 /// open phone phone app in device
-Future<void> openPhoneApp(String phoneNumber) async {
-  final Uri launchUri = Uri(
-    scheme: 'tel',
-    path: phoneNumber,
-  );
-  try {
-    if (await canLaunchUrl(launchUri)) {
-      await launchUrl(launchUri);
-    }
-  } catch (e) {
-    throw "Can't launch url";
-  }
-}
+// Future<void> openPhoneApp(String phoneNumber) async {
+//   final Uri launchUri = Uri(
+//     scheme: 'tel',
+//     path: phoneNumber,
+//   );
+//   try {
+//     if (await canLaunchUrl(launchUri)) {
+//       await launchUrl(launchUri);
+//     }
+//   } catch (e) {
+//     throw "Can't launch url";
+//   }
+// }

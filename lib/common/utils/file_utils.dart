@@ -15,17 +15,17 @@ class FileUtils {
     return false;
   }
 
-  static bool isAllowedVideo(VideoPlayerController videoPlayerController) {
-    if (videoPlayerController.value.duration.inSeconds < 10 &&
-        videoPlayerController.value.duration.inSeconds > 60) {
-      return false;
-    }
-    if (videoPlayerController.value.size.width > 1280 ||
-        videoPlayerController.value.size.height > 1280) {
-      return false;
-    }
-    return true;
-  }
+  // static bool isAllowedVideo(VideoPlayerController videoPlayerController) {
+  //   if (videoPlayerController.value.duration.inSeconds < 10 &&
+  //       videoPlayerController.value.duration.inSeconds > 60) {
+  //     return false;
+  //   }
+  //   if (videoPlayerController.value.size.width > 1280 ||
+  //       videoPlayerController.value.size.height > 1280) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   static bool isVideo(String? extension) {
     return videoAllowedExtensions.contains(extension?.toLowerCase());
