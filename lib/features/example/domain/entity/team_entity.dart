@@ -1,4 +1,4 @@
-import 'package:base_bloc_3/features/example/data/model/team/team.dart';
+import 'package:base_bloc_3/import.dart';
 
 class TeamEntity {
   final int id;

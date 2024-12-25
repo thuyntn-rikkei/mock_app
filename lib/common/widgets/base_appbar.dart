@@ -1,11 +1,5 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:base_bloc_3/import.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/app_theme/app_colors.dart';
-import 'package:base_bloc_3/common/app_theme/app_text_styles.dart';
 
 class BaseAppBar extends StatelessWidget {
   final String? title;

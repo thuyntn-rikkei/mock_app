@@ -1,12 +1,4 @@
-import 'dart:typed_data';
-
-import 'package:event_bus/event_bus.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:injectable/injectable.dart';
-import 'package:base_bloc_3/common/event_bus/event_open_notification.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
-
-import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/import.dart';
 
 @singleton
 class LocalNotificationHelper {

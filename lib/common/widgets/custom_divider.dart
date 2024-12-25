@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'package:base_bloc_3/common/app_theme/app_colors.dart';
+import 'package:base_bloc_3/import.dart';
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({

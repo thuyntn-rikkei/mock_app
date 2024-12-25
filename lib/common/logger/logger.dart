@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:injectable/injectable.dart';
-import 'package:logger/logger.dart';
+import 'package:base_bloc_3/import.dart';
 
 @singleton
 class LogUtils {

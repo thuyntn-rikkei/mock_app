@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/app_theme/app_colors.dart';
-import 'package:base_bloc_3/common/app_theme/app_text_styles.dart';
-
-import 'package:base_bloc_3/common/bottom_sheet/line_separation.dart';
+import 'package:base_bloc_3/import.dart';
 
 /// [AppContentSheet] is a simple bottom sheet to show any content which is a widget
 /// if content is a list, consider to use [AppDragableBottomSheet]

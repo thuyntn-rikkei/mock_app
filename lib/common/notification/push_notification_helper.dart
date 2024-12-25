@@ -1,14 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:injectable/injectable.dart';
-import 'package:base_bloc_3/common/logger/index.dart';
-import 'package:base_bloc_3/common/notification/local_notification_helper.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
+import 'package:base_bloc_3/import.dart';
 
 @singleton
 class PushNotificationHelper {
@@ -105,28 +95,6 @@ class PushNotificationHelper {
   Future<void> deleteToken() async {
     pushToken = null;
     await _firebaseMessaging.deleteToken();
-  }
-
-  void removeBadgeCount() {
-    ///It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
-    if (Platform.isIOS) {
-      FlutterAppBadger.removeBadge();
-    } else if (Platform.isAndroid) {
-      ///todo: handle for android
-      /// Flutter App Badget docs said that use ShortcutBadger for some Android devices
-      // FlutterAppBadger.removeBadge();
-    }
-  }
-
-  void setBadgeCount(int count) async {
-    ///It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
-    if (Platform.isIOS) {
-      FlutterAppBadger.updateBadgeCount(count);
-    } else if (Platform.isAndroid) {
-      ///todo: handle for android
-      /// Flutter App Badget docs said that use ShortcutBadger for some Android devices
-      // FlutterAppBadger.updateBadgeCount(count);
-    }
   }
 
   FirebaseMessaging getFirebaseInstance() {

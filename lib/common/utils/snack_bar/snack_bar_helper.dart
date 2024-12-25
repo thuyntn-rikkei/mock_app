@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:injectable/injectable.dart';
-import 'package:base_bloc_3/common/snack_bar_widget/snack_bar_widget.dart';
-
-import 'package:base_bloc_3/gen/assets.gen.dart';
-import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/import.dart';
 
 enum SnackBarType { success, error, info }
 
@@ -34,10 +27,6 @@ class SnackBarHelper {
       case SnackBarType.info:
         icon = const Icon(Icons.info_outline);
         color = Colors.blue;
-        break;
-      default:
-        icon = const Icon(Icons.check);
-        color = AppColors.alertSuccess;
         break;
     }
     SmartDialog.showToast(

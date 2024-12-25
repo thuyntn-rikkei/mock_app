@@ -1,7 +1,4 @@
-import 'dart:developer';
-
-import 'package:base_bloc_3/gen/assets.gen.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:base_bloc_3/import.dart';
 
 enum EnvFlavor { dev, staging, uat, production }
 

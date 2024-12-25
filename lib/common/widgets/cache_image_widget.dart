@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:base_bloc_3/import.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/gen/assets.gen.dart';
 
 ///Use for Network Image
 class CachedImageWidget extends StatelessWidget {

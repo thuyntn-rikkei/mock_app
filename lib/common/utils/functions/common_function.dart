@@ -1,8 +1,4 @@
-
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/services.dart';
-import 'package:base_bloc_3/common/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:base_bloc_3/import.dart';
 
 bool hasMatchLengthPassword(String? pass) {
   if ((pass ?? "").trim().isEmpty) {
@@ -97,16 +93,16 @@ int? getIntegerFromDynamic(dynamic value) {
 }
 
 /// open phone phone app in device
-Future<void> openPhoneApp(String phoneNumber) async {
-  final Uri launchUri = Uri(
-    scheme: 'tel',
-    path: phoneNumber,
-  );
-  try {
-    if (await canLaunchUrl(launchUri)) {
-      await launchUrl(launchUri);
-    }
-  } catch (e) {
-    throw "Can't launch url";
-  }
-}
+// Future<void> openPhoneApp(String phoneNumber) async {
+//   final Uri launchUri = Uri(
+//     scheme: 'tel',
+//     path: phoneNumber,
+//   );
+//   try {
+//     if (await canLaunchUrl(launchUri)) {
+//       await launchUrl(launchUri);
+//     }
+//   } catch (e) {
+//     throw "Can't launch url";
+//   }
+// }

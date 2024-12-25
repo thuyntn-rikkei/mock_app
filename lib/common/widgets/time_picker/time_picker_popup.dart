@@ -1,8 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/extensions/datetime_extension.dart';
-import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/import.dart';
 
 class TimePickerPopup extends StatefulWidget {
   final TimeOfDay initTime;

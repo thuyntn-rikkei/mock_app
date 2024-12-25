@@ -1,6 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'package:base_bloc_3/base/network/constants/constants.dart';
+import 'package:base_bloc_3/import.dart';
 
 part 'error_response.freezed.dart';
 part 'error_response.g.dart';

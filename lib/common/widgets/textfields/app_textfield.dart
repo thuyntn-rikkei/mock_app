@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_bloc_3/common/index.dart';
-
-import 'package:base_bloc_3/gen/assets.gen.dart';
+import 'package:base_bloc_3/import.dart';
 
 enum TextFieldState {
   none,
@@ -240,15 +235,6 @@ class _AppTextFieldState extends State<AppTextField> {
                     .copyWith(color: AppColors.alertError),
               ),
             ),
-          if (_state == TextFieldState.showMessage)
-            MessageBubble(
-              onTapClose: () {
-                setState(() {
-                  _state = TextFieldState.none;
-                });
-              },
-              child: widget.messageContent ?? const SizedBox.shrink(),
-            ),
         ],
       ),
     );
@@ -275,56 +261,5 @@ class _AppTextFieldState extends State<AppTextField> {
       return AppColors.alertError;
     }
     return _textStyle.color ?? AppColors.deepDark;
-  }
-}
-
-class MessageBubble extends StatelessWidget {
-  final Widget child;
-  final Function() onTapClose;
-
-  const MessageBubble({
-    Key? key,
-    required this.child,
-    required this.onTapClose,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 2.h),
-      child: CustomPaint(
-        painter: BubblePainter(),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    child,
-                  ],
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: onTapClose,
-              child: Padding(
-                padding: EdgeInsets.only(top: 14.0.h, right: 2.w),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

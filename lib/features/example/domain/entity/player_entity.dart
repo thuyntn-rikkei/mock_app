@@ -1,5 +1,4 @@
-import 'package:base_bloc_3/features/example/data/index.dart';
-import 'package:base_bloc_3/features/example/domain/entity/team_entity.dart';
+import 'package:base_bloc_3/import.dart';
 
 class PlayerEntity {
   final int id;

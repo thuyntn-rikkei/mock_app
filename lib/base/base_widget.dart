@@ -1,8 +1,4 @@
-import 'package:base_bloc_3/base/bloc/index.dart';
-import 'package:base_bloc_3/common/index.dart';
-import 'package:base_bloc_3/di/di_setup.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:base_bloc_3/import.dart';
 
 abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
     B extends BaseBloc<E, S>> extends State<W> with BaseMethodMixin<S> {
