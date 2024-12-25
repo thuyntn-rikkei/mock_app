@@ -2,16 +2,16 @@ import 'package:base_bloc_3/import.dart';
 
 @Injectable(as: ExampleRepo)
 class ExampleRepoImpl implements ExampleRepo {
-  ExampleRepoImpl(this._remoteDataSource);
+  ExampleRepoImpl(this._exampleService);
 
-  final ExampleDataSource _remoteDataSource;
+  final ExampleService _exampleService;
 
   @override
   Future<Either<BaseError, List<PlayerEntity>>> getData({
     required GetPlayerRequest request,
   }) async {
     try {
-      final result = await _remoteDataSource.getData(
+      final result = await _exampleService.getData(
         request: request,
       );
       return right(
