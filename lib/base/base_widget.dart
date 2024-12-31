@@ -190,26 +190,6 @@ abstract class BaseShareState<
 }
 
 mixin BaseMethodMixin<S extends BaseBlocState> {
-  void showMessage(
-    BuildContext context,
-    String message, {
-    type = SnackBarType.success,
-    int duration = Config.defaultDurationShowToast,
-  }) {
-    final SnackBarHelper helper = getIt<SnackBarHelper>();
-    switch (type) {
-      case SnackBarType.error:
-        helper.showError(context, message, duration: duration);
-        break;
-      case SnackBarType.info:
-        helper.showInfo(context, message);
-        break;
-      default:
-        helper.showSuccess(context, message);
-        break;
-    }
-  }
-
   bool listenWhen(S previous, S current) {
     return previous != current ||
         previous.status != current.status ||
@@ -223,11 +203,11 @@ mixin BaseMethodMixin<S extends BaseBlocState> {
     //   }
     // }
     if (state.status == BaseStateStatus.loading) {
-      DialogService.showLoading(
-        context,
-      );
+      // DialogService.showLoading(
+      //   context,
+      // );
     } else {
-      DialogService.hideDialog(context);
+      // DialogService.hideDialog(context);
     }
   }
 }

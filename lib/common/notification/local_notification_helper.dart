@@ -111,7 +111,7 @@ class LocalNotificationHelper {
       NotificationConfig.highImportance,
       channelDescription: NotificationConfig.highChannelDescription,
       icon: NotificationConfig.notificationIconPath,
-      color: AppColors.notificationBg,
+      color: const Color(0xff2F304D),
       // vibrationPattern: vibrationPattern,
 
       // sound: RawResourceAndroidNotificationSound(

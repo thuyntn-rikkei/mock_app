@@ -18,7 +18,7 @@ class AppButton extends StatelessWidget {
   final bool? isOutlined;
 
   const AppButton({
-    Key? key,
+    super.key,
     this.onPressed,
     this.textColor = AppColors.white,
     this.textStyle,
@@ -34,7 +34,7 @@ class AppButton extends StatelessWidget {
     this.width,
     this.isOutlined,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,12 @@ class AppButton extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: textStyle?.copyWith(color: textColor) ??
-                    AppStyles.button15ptMedium.copyWith(color: textColor),
+                    TextStyle(
+                      fontSize: 15.sp,
+                      color: AppColors.deepDark,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: robotoFont,
+                    ).copyWith(color: textColor),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 6.0.w),

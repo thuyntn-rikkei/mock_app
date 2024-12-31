@@ -58,7 +58,7 @@ class AppTextField extends StatefulWidget {
     this.controller,
     this.readOnly = false,
     this.radius = 8,
-    this.borderColor = AppColors.stroke,
+    this.borderColor = const Color(0xFFEBEBEB),
     this.focusBorderColor = AppColors.deepDark,
     this.textStyle,
     this.cursorColor,
@@ -104,7 +104,14 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   void initState() {
     isObscure = widget.isPassword;
-    _textStyle = widget.textStyle ?? AppStyles.h5Input13ptLight;
+    _textStyle = widget.textStyle ??
+        TextStyle(
+          fontSize: 13.sp,
+          color: AppColors.deepDark,
+          fontWeight: FontWeight.w300,
+          fontFamily: robotoFont,
+          leadingDistribution: TextLeadingDistribution.even,
+        );
     _state = widget.state;
     _controller =
         widget.controller ?? TextEditingController(text: widget.initText);
@@ -191,8 +198,12 @@ class _AppTextFieldState extends State<AppTextField> {
                         isCollapsed: true,
                         hintText: widget.hintText ?? "",
                         hintStyle: widget.hintStyle ??
-                            AppStyles.h5Input13ptLight.copyWith(
+                            TextStyle(
+                              fontSize: 13.sp,
                               color: AppColors.deepDark.withOpacity(0.5),
+                              fontWeight: FontWeight.w300,
+                              fontFamily: robotoFont,
+                              leadingDistribution: TextLeadingDistribution.even,
                             ),
                       ),
                       style: _textStyle.copyWith(color: _textColor),
@@ -231,8 +242,13 @@ class _AppTextFieldState extends State<AppTextField> {
               padding: EdgeInsets.only(top: 8.0.h),
               child: Text(
                 widget.errorText!,
-                style: AppStyles.h612ptRegular
-                    .copyWith(color: AppColors.alertError),
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: const Color(0xFFFE5050),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: robotoFont,
+                  height: 14.06 / 12,
+                ),
               ),
             ),
         ],
@@ -242,10 +258,10 @@ class _AppTextFieldState extends State<AppTextField> {
 
   Color get _borderColor {
     if (_state == TextFieldState.validateFailed && !isFocus) {
-      return AppColors.alertError;
+      return const Color(0xFFFE5050);
     }
     if (_state == TextFieldState.showMessage) {
-      return AppColors.brandingOwen;
+      return const Color(0xFFCEE1FF);
     }
     if (isFocus) {
       return widget.focusBorderColor;
@@ -258,7 +274,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
   Color get _textColor {
     if (_state == TextFieldState.validateFailed && !isFocus) {
-      return AppColors.alertError;
+      return const Color(0xFFFE5050);
     }
     return _textStyle.color ?? AppColors.deepDark;
   }

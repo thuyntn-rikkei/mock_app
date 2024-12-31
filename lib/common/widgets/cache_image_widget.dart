@@ -46,8 +46,8 @@ class CachedImageWidget extends StatelessWidget {
       ),
       fit: BoxFit.cover,
       alignment: alignment,
-      memCacheHeight: Config.memCacheHeight,
-      memCacheWidth: Config.memCacheWidth,
+      memCacheHeight: CachedImageConfig.memCacheHeight,
+      memCacheWidth: CachedImageConfig.memCacheWidth,
       placeholder: (context, url) => SizedBox(
         height: height,
         width: width,
@@ -117,8 +117,10 @@ class HighCachedImageWidget extends StatelessWidget {
       ),
       fit: BoxFit.cover,
       alignment: alignment,
-      memCacheHeight: maxHeightDiskCache == null ? Config.memCacheHeight : null,
-      memCacheWidth: maxWidthDiskCache == null ? Config.memCacheWidth : null,
+      memCacheHeight:
+          maxHeightDiskCache == null ? CachedImageConfig.memCacheHeight : null,
+      memCacheWidth:
+          maxWidthDiskCache == null ? CachedImageConfig.memCacheWidth : null,
       maxHeightDiskCache: maxHeightDiskCache,
       maxWidthDiskCache: maxWidthDiskCache,
       placeholder: (context, url) => SizedBox(
