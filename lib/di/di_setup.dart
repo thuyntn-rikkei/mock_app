@@ -1,6 +1,7 @@
 import 'package:base_bloc_3/import.dart';
 
 final GetIt getIt = GetIt.instance;
+final Talker logger = getIt.get();
 
 @InjectableInit(
   initializerName: r'$initGetIt', // default

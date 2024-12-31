@@ -16,13 +16,10 @@ class DioBuilder {
       dio?.options.headers['content-Type'] = 'application/json';
       dio?.interceptors.addAll(
         [
-          PrettyDioLogger(
-            requestHeader: true,
-            requestBody: true,
-            responseHeader: false,
-            responseBody: false,
-          ),
           DioInterceptor(),
+          TalkerDioLogger(
+            talker: getIt<Talker>(),
+          ),
         ],
       );
     }

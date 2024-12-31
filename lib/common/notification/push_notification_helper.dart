@@ -6,6 +6,9 @@ class PushNotificationHelper {
   Function(String)? handleNotificationOnTap;
   String? pushToken;
   String? _payLoad;
+  final Talker logger;
+
+  PushNotificationHelper(this.logger);
 
   Future<void> initialize({
     Function(String)? handleNotificationOnTap,
@@ -38,8 +41,8 @@ class PushNotificationHelper {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         _payLoad = getNotificationContent(message);
         if (message.notification != null) {
-          getIt<LogUtils>().logD("Message: ${message.notification.toString()}");
-          getIt<LogUtils>().logD("Message: ${message.data}");
+          logger.debug("Message: ${message.notification.toString()}");
+          logger.debug("Message: ${message.data}");
           if (Platform.isAndroid) {
             getIt<LocalNotificationHelper>().showNotification(
               title: message.notification?.title ?? '',
@@ -80,7 +83,7 @@ class PushNotificationHelper {
 
   Future<String?> getPushToken() async {
     pushToken ??= await _firebaseMessaging.getToken();
-    getIt<LogUtils>().logD('fcm token: $pushToken');
+    logger.debug('fcm token: $pushToken');
     return pushToken;
   }
 
@@ -123,7 +126,7 @@ String getNotificationContent(RemoteMessage? message) {
 Future<void> firebaseMessagingBackgroundHandler(
   RemoteMessage remoteMessage,
 ) async {
-  printDebug(
+  logger.debug(
     'Handling a background message: ${getNotificationContent(remoteMessage)}',
   );
   // injector<LogUtils>()

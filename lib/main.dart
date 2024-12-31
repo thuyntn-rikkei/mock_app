@@ -12,13 +12,11 @@ class MyHttpOverrides extends HttpOverrides {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  const flavor = String.fromEnvironment('flavor', defaultValue: 'dev');
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ),
   );
-  log("flavor: $flavor");
   await EnvConfig.loadEnv();
 
   /// uncomment if api domain is not have https

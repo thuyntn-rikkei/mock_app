@@ -77,7 +77,7 @@ class BaseAppBar extends StatelessWidget {
             ),
           ),
       title: appBarWidget ??
-          AutoSizeText(
+          Text(
             title ?? '',
             maxLines: 1,
             style: textStyle ??
@@ -87,7 +87,6 @@ class BaseAppBar extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontFamily: robotoFont,
                 ),
-            minFontSize: 14,
           ),
       actions: actions ?? [SizedBox(width: 5.w)],
       bottom: bottom,

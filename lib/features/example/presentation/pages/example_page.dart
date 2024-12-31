@@ -26,9 +26,26 @@ class _ExamplePageState
 
   @override
   Widget renderUI(BuildContext context) {
-    return const BaseScaffold(
+    return BaseScaffold(
       body: Center(
-        child: Text("Base Bloc"),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Base Bloc"),
+            AppButton(
+              title: "Call API",
+              onPressed: () => bloc.add(const ExampleEvent.getData()),
+            ),
+            AppButton(
+              title: "Talker Screen",
+              onPressed: () => context.router.pushWidget(
+                TalkerScreen(
+                  talker: getIt<Talker>(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

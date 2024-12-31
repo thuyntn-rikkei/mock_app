@@ -1,5 +1,4 @@
 export 'constants.dart';
-export 'logger/index.dart';
 export 'mixins/index.dart';
 export 'config/index.dart';
 export 'notification/index.dart';
