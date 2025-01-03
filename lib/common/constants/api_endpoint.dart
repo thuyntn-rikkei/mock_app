@@ -1,5 +1,6 @@
 class ApiEndpoint {
   static const getPlayer = "/api/v1/players";
+  static const refreshToken = "/api/v1/refresh_token";
 
   static bool needAccessToken(String path) {
     List<String> excludeEndpoints = [

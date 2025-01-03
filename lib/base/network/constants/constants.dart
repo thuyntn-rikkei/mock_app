@@ -6,6 +6,7 @@ class StatusCode {
   static const int unauthorized = 401;
   static const int notFound = 404;
   static const int permissionDenied = 403;
+  static const int success = 200;
 }
 
 enum StatusCodeEnum {
@@ -36,4 +37,10 @@ extension StatusCodeEnumExtension on StatusCodeEnum {
         return BaseError.httpInternalServerError("permission_denied".tr());
     }
   }
+}
+
+class KeyRequest {
+  static const String authorization = "Authorization";
+  static const String bearer = "Bearer";
+  static const String retry = "retry";
 }
