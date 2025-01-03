@@ -2,11 +2,14 @@ import 'package:base_bloc_3/import.dart';
 
 @singleton
 class LocalNotificationHelper {
+  bool isInit = false;
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   static int _notificationId = 1;
 
+  /// Initialize local notification, should be called in core.dart
   Future<void> init() async {
     final initializationSettings = await _getPlatformSettings();
 
@@ -16,17 +19,26 @@ class LocalNotificationHelper {
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-    // /// get message when app kill
-    // final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-    //     await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    //
-    // if (notificationAppLaunchDetails != null) {
-    //   handlerSelectNotification(notificationAppLaunchDetails.payload);
-    // }
+    await _requestPermissions();
+
+    /// get message when app kill
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (notificationAppLaunchDetails != null &&
+        notificationAppLaunchDetails.didNotificationLaunchApp &&
+        !(notificationAppLaunchDetails.notificationResponse?.payload
+                ?.isNullOrEmpty() ??
+            false)) {
+      getIt<EventBus>().fire(
+        OpenNotificationEvent(
+          RemoteMessage.fromMap(
+            jsonDecode(
+              notificationAppLaunchDetails.notificationResponse!.payload!,
+            ),
+          ),
+        ),
+      );
+    }
 
     _createNotificationChannel(
       id: NotificationConfig.highChannelId,
@@ -35,15 +47,46 @@ class LocalNotificationHelper {
       // soundPath: notificationSoundPath,
       importance: Importance.max,
     );
+    isInit = true;
   }
 
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final requestNotificationsPermissionResult =
+          await flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
+              ?.requestNotificationsPermission();
+
+      final requestExactAlarmsPermissionResult =
+          await flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
+              ?.requestExactAlarmsPermission();
+      logger.info(
+        'requestNotificationsPermission: $requestNotificationsPermissionResult\n'
+        'requestExactAlarmsPermission: $requestExactAlarmsPermissionResult',
+      );
+    }
+  }
+
+  @pragma('vm:entry-point')
   static void notificationTapBackground(
     NotificationResponse notificationResponse,
   ) {
     if (notificationResponse.payload?.isNotEmpty ?? false) {
       getIt<EventBus>().fire(
         OpenNotificationEvent(
-          notificationResponse.payload!,
+          RemoteMessage.fromMap(jsonDecode(notificationResponse.payload!)),
         ),
       );
     }
@@ -100,6 +143,8 @@ class LocalNotificationHelper {
     Importance? importance,
     Priority? priority,
   }) async {
+    if (!isInit) await init();
+
     // final vibrationPattern = Int64List(4);
     // vibrationPattern[0] = 0;
     // vibrationPattern[1] = 200;

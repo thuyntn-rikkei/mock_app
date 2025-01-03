@@ -3,19 +3,17 @@ import 'package:base_bloc_3/import.dart';
 @singleton
 class PushNotificationHelper {
   late final FirebaseMessaging _firebaseMessaging;
-  Function(String)? handleNotificationOnTap;
+  RemoteMessage? initMessage;
   String? pushToken;
-  String? _payLoad;
   final Talker logger;
 
   PushNotificationHelper(this.logger);
 
+  /// Call this method to initialize FCM at main.dart after Firebase.initializeApp()
   Future<void> initialize({
     Function(String)? handleNotificationOnTap,
   }) async {
-    await Firebase.initializeApp();
     _firebaseMessaging = FirebaseMessaging.instance;
-    this.handleNotificationOnTap = handleNotificationOnTap;
     await _fcmInitialization();
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -27,52 +25,32 @@ class PushNotificationHelper {
 
   Future _fcmInitialization() async {
     try {
-      await getPushToken();
       FirebaseMessaging.instance.onTokenRefresh.listen((token) {
         pushToken = token;
       });
 
-      final RemoteMessage? initMessage =
-          await _firebaseMessaging.getInitialMessage();
-      if (initMessage != null) {
-        _payLoad = jsonEncode(initMessage);
-      }
+      initMessage = await _firebaseMessaging.getInitialMessage();
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        _payLoad = getNotificationContent(message);
+        logger.debug("Message: ${message.toMap()}");
+
         if (message.notification != null) {
-          logger.debug("Message: ${message.notification.toString()}");
-          logger.debug("Message: ${message.data}");
           if (Platform.isAndroid) {
             getIt<LocalNotificationHelper>().showNotification(
               title: message.notification?.title ?? '',
               body: message.notification?.body ?? '',
-              payload: _payLoad,
+              payload: jsonEncode(message.toMap()),
             );
           }
         }
-
-        ///Gửi event load lại các trang hiện chấm đỏ của notification
-        //   NotificationFCM notificationFCM = NotificationFCM.fromJson(
-        //     jsonDecode(_payLoad ?? "") as Map<String, dynamic>,
-        //   );
-        //   getIt<EventBus>().fire(
-        //     ChangeStatusNotificationEvent(
-        //       isNewNotification:
-        //           (message.notification?.title?.isNotEmpty ?? false) &&
-        //               (message.notification?.body?.isNotEmpty ?? false),
-        //       notificationEnum:
-        //           int.tryParse(notificationFCM.data?.notificationType ?? "0")
-        //               ?.getTypeNotificationByInt,
-        //     ),
-        //   );
       });
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        _payLoad = getNotificationContent(message);
-        if (handleNotificationOnTap != null && _payLoad != null) {
-          handleNotificationOnTap!(_payLoad!);
-        }
+        getIt<EventBus>().fire(
+          OpenNotificationEvent(
+            message,
+          ),
+        );
       });
     } catch (e) {
       if (kDebugMode) {
@@ -105,32 +83,13 @@ class PushNotificationHelper {
   }
 }
 
-String getNotificationContent(RemoteMessage? message) {
-  if (message == null) return 'RemoteMessage is Null';
-  final body = {
-    'notification': {
-      'title': message.notification?.title,
-      'body': message.notification?.body,
-    },
-    'data': message.data,
-    "collapse_key": message.collapseKey,
-    "message_id": message.messageId,
-    "sent_time": message.sentTime?.millisecondsSinceEpoch,
-    "from": message.from,
-    "ttl": message.ttl,
-  };
-  return jsonEncode(body);
-}
-
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(
   RemoteMessage remoteMessage,
 ) async {
-  logger.debug(
-    'Handling a background message: ${getNotificationContent(remoteMessage)}',
-  );
-  // injector<LogUtils>()
-  //     .logD('Handling a background message ${remoteMessage.messageId}');
-  // injector<LogUtils>()
-  //     .logD('message data ${getNotificationContent(remoteMessage)}');
+  if (kDebugMode) {
+    print(
+      'Handling a background message: ${remoteMessage.toMap()}',
+    );
+  }
 }
