@@ -16,10 +16,10 @@ class DioBuilder {
       dio?.options.headers['content-Type'] = 'application/json';
       dio?.interceptors.addAll(
         [
-          DioInterceptor(),
           TalkerDioLogger(
             talker: getIt<Talker>(),
           ),
+          DioInterceptor(dio),
         ],
       );
     }

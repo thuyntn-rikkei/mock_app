@@ -1,6 +1,13 @@
-import 'package:dio/dio.dart';
+import 'package:base_bloc_3/base/network/constants/constants.dart';
+import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/data/service/auth_service/index.dart';
+import 'package:base_bloc_3/di/index.dart';
 
 class DioInterceptor extends Interceptor {
+  final Dio? dio;
+
+  DioInterceptor(this.dio);
+
   @override
   Future<void> onRequest(
     RequestOptions options,
@@ -11,8 +18,7 @@ class DioInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // ErrorHandling.withError(error: err);
-    super.onError(err, handler);
+    handleError(err, handler);
   }
 
   @override
@@ -35,5 +41,56 @@ class DioInterceptor extends Interceptor {
       }
     }
     super.onResponse(response, handler);
+  }
+
+  Future<void> handleError(DioException err, ErrorInterceptorHandler handler) async {
+    //check unAuthorization error
+    if (StatusCode.unauthorized == err.response?.statusCode) {
+      //check if request option contains retry then logout else retry
+      if (err.requestOptions.extra.containsKey(KeyRequest.retry)) {
+        navigateToLogin();
+      } else {
+        err.requestOptions.extra[KeyRequest.retry] = true;
+        AuthService? authService = getIt<AuthService>();
+        LocalStorage localStorage = getIt<LocalStorage>();
+        final refreshToken = await localStorage.get<String>(SharePrefConstants.refreshToken);
+        // if refreshToken is null, call event app_hash expired
+        if (refreshToken != null && refreshToken.isNotEmpty == true) {
+          authService.refreshToken(refreshToken).then((response) async {
+            if (response.data != null && response.status == StatusCode.success) {
+              //save token
+              final newToken = response.data?.accessToken;
+              final newRefreshToken = response.data?.refreshToken;
+              localStorage.save(SharePrefConstants.accessToken, newToken);
+              localStorage.save(SharePrefConstants.refreshToken, newRefreshToken);
+
+              //retry request
+              try {
+                err.requestOptions.headers[KeyRequest.authorization] = "${KeyRequest.bearer} $newToken";
+                final responseRefresh = await dio?.fetch(err.requestOptions);
+                if (responseRefresh != null) {
+                  handler.resolve(responseRefresh);
+                }
+              } on DioException catch (e) {
+                handler.reject(e);
+              }
+            } else {
+              navigateToLogin();
+            }
+          }).catchError((e) {
+            handler.reject(e);
+          });
+        } else {
+          navigateToLogin();
+        }
+      }
+    } else {
+      handler.next(err);
+    }
+  }
+
+  void navigateToLogin() {
+    //clear token
+    //go to login
   }
 }
