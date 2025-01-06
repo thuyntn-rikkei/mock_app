@@ -55,12 +55,12 @@ class _LoginScreenState
       children: [
         const SizedBox(height: 150),
         Text(
-          "Welcome back",
+          S.current.welcome_back,
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 10),
         Text(
-          "Login to your account",
+          S.current.login_to_your_account,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
@@ -72,7 +72,7 @@ class _LoginScreenState
       controller: _controllerUsername,
       keyboardType: TextInputType.name,
       decoration: InputDecoration(
-        labelText: "Username",
+        labelText: S.current.username,
         prefixIcon: const Icon(Icons.person_outline),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -93,7 +93,7 @@ class _LoginScreenState
       obscureText: _obscurePassword,
       keyboardType: TextInputType.visiblePassword,
       decoration: InputDecoration(
-        labelText: "Password",
+        labelText: S.current.password,
         prefixIcon: const Icon(Icons.password_outlined),
         suffixIcon: IconButton(
           onPressed: _togglePasswordVisibility,
@@ -138,7 +138,7 @@ class _LoginScreenState
             ),
           ),
           onPressed: _onLoginPressed,
-          child: const Text("Login"),
+          child: Text(S.current.login),
         );
       },
     );
@@ -161,13 +161,13 @@ class _LoginScreenState
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?"),
+        Text(S.current.do_not_have_an_account),
         TextButton(
           onPressed: () {
             _formKey.currentState?.reset();
             context.push(RouteName.register);
           },
-          child: const Text("Signup"),
+          child: Text(S.current.signup),
         ),
       ],
     );

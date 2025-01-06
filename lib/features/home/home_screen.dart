@@ -1,4 +1,6 @@
 import 'package:base_bloc_3/features/authen/presentation/bloc/auth_bloc.dart';
+import 'package:base_bloc_3/features/setting_app/bloc/setting_bloc.dart';
+import 'package:base_bloc_3/features/setting_app/enum/app_locale_enum.dart';
 import 'package:base_bloc_3/import.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScaffold(
       appBar: BaseAppBar(
-        title: "Home_Screen",
+        title: S.current.home_screen,
         hasBack: false,
         actions: [
           BlocListener<AuthBloc, AuthState>(
@@ -41,14 +43,36 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Welcome 🎉",
+              S.current.greeting,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 10),
-            Text(
-              "You are logged in",
-              style: Theme.of(context).textTheme.headlineLarge,
+            SizedBox(height: 12.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Language: "),
+                DropdownButton<AppLocaleEnum>(
+                  value: getIt<SettingBloc>().state.appLocale,
+                  items: AppLocaleEnum.values.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(e.displayName),
+                    );
+                  }).toList(),
+                  onChanged: (appLocale) {
+                    if (appLocale != null) {
+                      getIt<SettingBloc>().add(
+                        SettingEvent.onChangeAppLocale(
+                          appLocaleEnum: appLocale,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
+            SizedBox(height: 12.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),

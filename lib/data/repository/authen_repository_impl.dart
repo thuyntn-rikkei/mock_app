@@ -19,7 +19,7 @@ class AuthenRepositoryRepoImpl implements AuthenRepository {
     } on DioException catch (exception) {
       return left(exception.baseError);
     } catch (exception) {
-      return left(BaseError.httpUnknownError("error_unknown".tr()));
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
 
@@ -32,7 +32,7 @@ class AuthenRepositoryRepoImpl implements AuthenRepository {
     } on DioException catch (exception) {
       return left(exception.baseError);
     } catch (exception) {
-      return left(BaseError.httpUnknownError("error_unknown".tr()));
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
 }

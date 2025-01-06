@@ -1,6 +1,7 @@
 import 'package:base_bloc_3/features/authen/presentation/bloc/auth_bloc.dart';
+import 'package:base_bloc_3/features/setting_app/bloc/setting_bloc.dart';
+import 'package:base_bloc_3/features/setting_app/enum/app_locale_enum.dart';
 import 'package:base_bloc_3/import.dart';
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -17,12 +18,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       getIt<LocalStorage>().save(PrefKeys.splashLoaded, false);
     });
     getIt<AuthBloc>().add(const AuthEvent.onAuthStarted());
+    getIt<SettingBloc>().add(const SettingEvent.onInit());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    // tokenExpiredStream.cancel();
     super.dispose();
   }
 
@@ -45,18 +46,30 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         return BlocBuilder<AuthBloc, AuthState>(
           bloc: getIt<AuthBloc>(),
           builder: (context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              builder: FlutterSmartDialog.init(
-                loadingBuilder: (msg) => const LoadingWidget(),
-              ),
-              routerConfig: router,
+            return BlocBuilder<SettingBloc, SettingState>(
+              bloc: getIt<SettingBloc>(),
+              buildWhen: (previous, current) => previous.appLocale != current.appLocale,
+              builder: (context, state) {
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                  ),
+                  builder: FlutterSmartDialog.init(
+                    loadingBuilder: (msg) => const LoadingWidget(),
+                  ),
+                  supportedLocales:
+                      AppLocaleEnum.values.map((e) => e.locale).toList(),
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    S.delegate,
+                  ],
+                  locale: state.appLocale.locale,
+                  routerConfig: router,
+                );
+              },
             );
           },
         );

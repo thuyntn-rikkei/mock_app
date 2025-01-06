@@ -68,6 +68,10 @@ run_prd_mobile: ## Runs the mobile application in product
 	@echo "╠ Running the app with production flavor"
 	@fvm flutter run --flavor production -t lib/main.dart --dart-define=flavor=production
 
+translate: ## Generate translation files
+	@echo "╠ Generating translation files"
+	@fvm flutter pub run intl_utils:generate
+
 build_apk_dev: ## Build the mobile application in dev
 	@fvm flutter build apk --dart-define flavor=dev --flavor dev
 build_app_bundle_dev: ## Build the mobile application in dev

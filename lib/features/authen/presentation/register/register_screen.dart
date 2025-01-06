@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BaseScaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Form(
         key: _formKey,
@@ -36,19 +36,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 100),
               Text(
-                "Register",
+                S.current.register,
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               SizedBox(height: 10.h),
               Text(
-                "Create your account",
+                S.current.create_your_account,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 35.h),
               _buildTextField(
                 controller: _controllerUsername,
                 focusNode: null,
-                label: "Username",
+                label: S.current.username,
                 icon: Icons.person_outline,
                 validator: Validators.usernameValidator,
                 keyboardType: TextInputType.name,
@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildTextField(
                 controller: _controllerEmail,
                 focusNode: _focusNodeEmail,
-                label: "Email",
+                label: S.current.Email,
                 icon: Icons.email_outlined,
                 validator: Validators.emailValidator,
                 keyboardType: TextInputType.emailAddress,
@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildTextField(
                 controller: _controllerPassword,
                 focusNode: _focusNodePassword,
-                label: "Password",
+                label: S.current.password,
                 icon: Icons.password_outlined,
                 validator: Validators.passwordValidator,
                 obscureText: _obscurePassword,
@@ -85,10 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildTextField(
                 controller: _controllerConfirmPassword,
                 focusNode: _focusNodeConfirmPassword,
-                label: "Confirm Password",
+                label: S.current.confirm_password,
                 icon: Icons.password_outlined,
                 validator: (value) => Validators.confirmPasswordValidator(
-                    value, _controllerPassword.text),
+                  value,
+                  _controllerPassword.text,
+                ),
                 obscureText: _obscurePassword,
                 keyboardType: TextInputType.visiblePassword,
               ),
@@ -155,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               behavior: SnackBarBehavior.floating,
-              content: const Text("Registered Successfully"),
+              content: Text(S.current.registered_successfully),
             ),
           );
           context.go(RouteName.login);
@@ -185,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               );
             }
           },
-          child: const Text("Register"),
+          child: Text(S.current.register),
         );
       },
     );
@@ -195,10 +197,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account?"),
+        Text(S.current.already_have_an_account),
         TextButton(
           onPressed: () => context.push(RouteName.login),
-          child: const Text("Login"),
+          child: Text(S.current.signup),
         ),
       ],
     );

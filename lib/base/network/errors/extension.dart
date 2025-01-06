@@ -2,25 +2,25 @@ import 'package:base_bloc_3/import.dart';
 
 extension DioErrorMessage on DioException {
   BaseError get baseError {
-    BaseError errorMessage = BaseError.httpUnknownError("error_system".tr());
+    BaseError errorMessage = BaseError.httpUnknownError(S.current.error_system);
     switch (type) {
       case DioExceptionType.cancel:
-        errorMessage = BaseError.httpUnknownError("dio_cancel_request".tr());
+        errorMessage = BaseError.httpUnknownError(S.current.dio_cancel_request);
         break;
       case DioExceptionType.connectionTimeout:
-        errorMessage = BaseError.httpUnknownError("dio_cancel_request".tr());
+        errorMessage = BaseError.httpUnknownError(S.current.dio_cancel_request);
         break;
       case DioExceptionType.unknown:
         if (error != null && error is SocketException) {
           errorMessage =
-              BaseError.httpInternalServerError('no_internet_access'.tr());
+              BaseError.httpInternalServerError(S.current.no_internet_access);
         }
         break;
       case DioExceptionType.receiveTimeout:
-        errorMessage = BaseError.httpUnknownError("dio_cancel_request".tr());
+        errorMessage = BaseError.httpUnknownError(S.current.dio_cancel_request);
         break;
       case DioExceptionType.sendTimeout:
-        errorMessage = BaseError.httpUnknownError("dio_cancel_request".tr());
+        errorMessage = BaseError.httpUnknownError(S.current.dio_cancel_request);
         break;
       case DioExceptionType.badResponse:
         try {
@@ -32,10 +32,10 @@ extension DioErrorMessage on DioException {
             ///Call event app_hash expired
           } else {
             errorMessage = code?.message ??
-                BaseError.httpInternalServerError("error_system".tr());
+                BaseError.httpInternalServerError(S.current.error_system);
           }
         } catch (e) {
-          errorMessage = BaseError.httpInternalServerError("error_system".tr());
+          errorMessage = BaseError.httpInternalServerError(S.current.error_system);
         }
 
         //handle refresh Token
@@ -45,7 +45,7 @@ extension DioErrorMessage on DioException {
         // }
         break;
       default:
-        errorMessage = BaseError.httpUnknownError("error_system".tr());
+        errorMessage = BaseError.httpUnknownError(S.current.error_system);
         break;
     }
     return errorMessage;
@@ -57,10 +57,10 @@ extension BaseErrorMessage on BaseError {
     if (this is HttpInternalServerError) {
       return (this as HttpInternalServerError).errorBody;
     } else if (this is HttpUnAuthorizedError) {
-      return "error_system".tr();
+      return S.current.error_system;
     } else if (this is HttpUnknownError) {
       return (this as HttpUnknownError).message;
     }
-    return "error_system".tr(); //todo: specify error string
+    return S.current.error_system; //todo: specify error string
   }
 }

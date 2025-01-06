@@ -1,4 +1,3 @@
-export 'package:easy_localization/easy_localization.dart' hide TextDirection;
 export 'package:dartz/dartz.dart' hide State, Order, order, idF;
 export 'dart:developer' hide Flow;
 
@@ -31,3 +30,4 @@ export 'package:talker_flutter/talker_flutter.dart';
 export 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 export 'package:go_router/go_router.dart';
 export 'package:jwt_decoder/jwt_decoder.dart';
+export 'package:flutter_localizations/flutter_localizations.dart';
