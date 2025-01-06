@@ -136,17 +136,9 @@ class AuthBloc extends BaseBloc<AuthEvent, AuthState> {
   }
 
   Future<bool> _checkExpiredToken() async {
-    final String? accessToken = await _localStorage.get(SharePrefConstants.accessToken);
-
-    if (accessToken != null && accessToken.isNotEmpty) {
-      bool isTokenExpired = JwtDecoder.isExpired(accessToken);
-      if (!isTokenExpired) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
+    final accessToken = await _localStorage.get(SharePrefConstants.accessToken);
+    return accessToken == null ||
+        accessToken.isEmpty ||
+        JwtDecoder.isExpired(accessToken);
   }
 }
