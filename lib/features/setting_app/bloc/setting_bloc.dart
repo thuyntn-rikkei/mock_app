@@ -24,11 +24,11 @@ class SettingBloc extends BaseBloc<SettingEvent, SettingState> {
     AppLocaleEnum appLocaleEnum,
   ) {
     emit(state.copyWith(appLocale: appLocaleEnum));
-    _localStorage.save(PrefKeys.languageCode, appLocaleEnum.languageCode);
+    _localStorage.save(SharePrefConstants.languageCode, appLocaleEnum.languageCode);
   }
 
   _onInit(Emitter<SettingState> emit) async {
-    final languageCode = await _localStorage.get(PrefKeys.languageCode) ??
+    final languageCode = await _localStorage.get(SharePrefConstants.languageCode) ??
         AppLocaleEnum.english.languageCode;
     final appLocale = AppLocaleEnum.fromLanguageCode(languageCode);
     emit(state.copyWith(appLocale: appLocale));

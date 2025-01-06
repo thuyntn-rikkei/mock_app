@@ -1,3 +1,4 @@
+import 'package:base_bloc_3/data/model/authen/auth_token.dart';
 import 'package:base_bloc_3/data/model/authen/index.dart';
 import 'package:base_bloc_3/import.dart';
 import 'package:retrofit/retrofit.dart';
@@ -10,13 +11,17 @@ abstract class AuthenService {
   @factoryMethod
   factory AuthenService(Dio dio) = _AuthenService;
 
-  @GET(ApiEndpoint.loginApi)
+  @POST(ApiEndpoint.loginApi)
   Future<LoginSuccessModel> login({
-    @Queries() required LoginRequest request,
+    @Body() LoginRequest request,
   });
 
-  @GET(ApiEndpoint.loginApi)
+  @POST(ApiEndpoint.loginApi)
   Future<void> register({
-    @Queries() required RegisterRequest request,
+    @Body() RegisterRequest request,
   });
+
+  @POST(ApiEndpoint.refreshToken)
+  @FormUrlEncoded()
+  Future<BaseData<AuthToken>> refreshToken(@Field() String refreshToken);
 }

@@ -131,12 +131,12 @@ class AuthBloc extends BaseBloc<AuthEvent, AuthState> {
   Future<void> _onAuthLogoutStarted(
     Emitter<AuthState> emit,
   ) async {
-    await _localStorage.remove(PrefKeys.accessToken);
+    await _localStorage.remove(SharePrefConstants.accessToken);
     emit(state.copyWith(isLogoutSuccess: true, isLogin: false));
   }
 
   Future<bool> _checkExpiredToken() async {
-    final String? accessToken = await _localStorage.get(PrefKeys.accessToken);
+    final String? accessToken = await _localStorage.get(SharePrefConstants.accessToken);
 
     if (accessToken != null && accessToken.isNotEmpty) {
       bool isTokenExpired = JwtDecoder.isExpired(accessToken);
