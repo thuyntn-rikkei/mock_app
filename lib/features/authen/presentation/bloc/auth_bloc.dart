@@ -74,7 +74,8 @@ class AuthBloc extends BaseBloc<AuthEvent, AuthState> {
     //           ),
     //         ), (r) async {
     //   // save token
-    //   await _localStorage.save(PrefKeys.accessToken, r.accessToken);
+    //   await _localStorage.save(SharePrefConstants.accessToken, r.accessToken);
+    //   await _localStorage.save(SharePrefConstants.refreshToken, r.refreshToken);
     //   emit(
     //     state.copyWith(
     //       status: BaseStateStatus.success,
@@ -132,6 +133,7 @@ class AuthBloc extends BaseBloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     await _localStorage.remove(SharePrefConstants.accessToken);
+    await _localStorage.remove(SharePrefConstants.refreshToken);
     emit(state.copyWith(isLogoutSuccess: true, isLogin: false));
   }
 

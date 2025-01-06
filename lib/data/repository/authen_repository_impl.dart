@@ -1,4 +1,4 @@
-import 'package:base_bloc_3/data/model/authen/login_success_model.dart';
+import 'package:base_bloc_3/data/model/authen/auth_token.dart';
 import 'package:base_bloc_3/features/authen/domain/repository/authen_repository.dart';
 import 'package:base_bloc_3/import.dart';
 
@@ -10,7 +10,7 @@ class AuthenRepositoryRepoImpl implements AuthenRepository {
   );
 
   @override
-  Future<Either<BaseError, LoginSuccessModel>> login(
+  Future<Either<BaseError, AuthToken>> login(
     LoginRequest loginRequest,
   ) async {
     try {

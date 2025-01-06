@@ -12,7 +12,7 @@ abstract class AuthenService {
   factory AuthenService(Dio dio) = _AuthenService;
 
   @POST(ApiEndpoint.loginApi)
-  Future<LoginSuccessModel> login({
+  Future<AuthToken> login({
     @Body() LoginRequest request,
   });
 
