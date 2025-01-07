@@ -25,6 +25,15 @@
   "confirm_password": "パスワードを確認",
   "registered_successfully": "登録成功",
   "already_have_an_account": "すでにアカウントをお持ちですか？",
-  "home_screen": "ホーム画面"
+  "home_screen": "ホーム画面",
+  "page_not_found": "ページが見つかりません",
+  "page_not_found_message": "{uri} に対するページが見つかりません。",
+  "validators_username_required": "ユーザー名を入力してください。",
+  "validators_password_required": "パスワードを入力してください。",
+  "validators_password_min_length": "パスワードは6文字以上である必要があります。",
+  "validators_email_required": "メールアドレスを入力してください。",
+  "validators_email_invalid": "無効なメールアドレスです。",
+  "validators_password_confirmation_required": "パスワードを入力してください。",
+  "validators_password_confirmation_mismatch": "パスワードが一致しません。"
   
 }

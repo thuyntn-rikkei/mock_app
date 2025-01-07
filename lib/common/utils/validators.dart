@@ -1,35 +1,37 @@
+import 'package:base_bloc_3/import.dart';
+
 class Validators {
   static String? usernameValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please enter username.";
+      return S.current.validators_username_required;
     }
     return null;
   }
 
   static String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please enter password.";
+      return S.current.validators_password_required;
     }
     if (value.length < 6) {
-      return "Password must be at least 6 characters long.";
+      return S.current.validators_password_min_length;
     }
     return null;
   }
 
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please enter email.";
+      return S.current.validators_email_required;
     } else if (!(value.contains('@') && value.contains('.'))) {
-      return "Invalid email";
+      return S.current.validators_email_invalid;
     }
     return null;
   }
 
   static String? confirmPasswordValidator(String? value, String password) {
     if (value == null || value.isEmpty) {
-      return "Please enter password.";
+      return S.current.validators_password_confirmation_required;
     } else if (value != password) {
-      return "Password doesn't match.";
+      return S.current.validators_password_confirmation_mismatch;
     }
     return null;
   }

@@ -25,5 +25,14 @@
   "confirm_password": "Xác nhận mật khẩu",
   "registered_successfully": "Đăng ký thành công",
   "already_have_an_account": "Đã có tài khoản?",
-   "home_screen": "Màn hình chính"
+  "home_screen": "Màn hình chính",
+  "page_not_found": "Không tìm thấy trang",
+  "page_not_found_message": "Không tìm thấy trang với đường dẫn: {uri}",
+  "validators_username_required": "Vui lòng nhập tên người dùng.",
+  "validators_password_required": "Vui lòng nhập mật khẩu.",
+  "validators_password_min_length": "Mật khẩu phải có ít nhất 6 ký tự.",
+  "validators_email_required": "Vui lòng nhập email.",
+  "validators_email_invalid": "Email không hợp lệ.",
+  "validators_password_confirmation_required": "Vui lòng nhập mật khẩu.",
+  "validators_password_confirmation_mismatch": "Mật khẩu không khớp."
 }

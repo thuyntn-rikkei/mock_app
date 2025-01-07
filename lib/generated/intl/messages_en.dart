@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(uri) => "Can\'t find a page for: ${uri}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "Email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -56,6 +58,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_internet_access": MessageLookupByLibrary.simpleMessage(
             "No internet access, please check your internet connection"),
         "not_found": MessageLookupByLibrary.simpleMessage("Not found."),
+        "page_not_found":
+            MessageLookupByLibrary.simpleMessage("Page Not Found"),
+        "page_not_found_message": m0,
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "permission_denied": MessageLookupByLibrary.simpleMessage(
             "Message displayed when the user is denied permission"),
@@ -65,6 +70,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Signup"),
         "title": MessageLookupByLibrary.simpleMessage("Hello"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "validators_email_invalid":
+            MessageLookupByLibrary.simpleMessage("Invalid email."),
+        "validators_email_required":
+            MessageLookupByLibrary.simpleMessage("Please enter email."),
+        "validators_password_confirmation_mismatch":
+            MessageLookupByLibrary.simpleMessage("Password doesn\'t match."),
+        "validators_password_confirmation_required":
+            MessageLookupByLibrary.simpleMessage("Please enter password."),
+        "validators_password_min_length": MessageLookupByLibrary.simpleMessage(
+            "Password must be at least 6 characters long."),
+        "validators_password_required":
+            MessageLookupByLibrary.simpleMessage("Please enter password."),
+        "validators_username_required":
+            MessageLookupByLibrary.simpleMessage("Please enter username."),
         "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back")
       };
 }

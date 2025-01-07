@@ -329,6 +329,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Page Not Found`
+  String get page_not_found {
+    return Intl.message(
+      'Page Not Found',
+      name: 'page_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can't find a page for: {uri}`
+  String page_not_found_message(Object uri) {
+    return Intl.message(
+      'Can\'t find a page for: $uri',
+      name: 'page_not_found_message',
+      desc: '',
+      args: [uri],
+    );
+  }
+
+  /// `Please enter username.`
+  String get validators_username_required {
+    return Intl.message(
+      'Please enter username.',
+      name: 'validators_username_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter password.`
+  String get validators_password_required {
+    return Intl.message(
+      'Please enter password.',
+      name: 'validators_password_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be at least 6 characters long.`
+  String get validators_password_min_length {
+    return Intl.message(
+      'Password must be at least 6 characters long.',
+      name: 'validators_password_min_length',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter email.`
+  String get validators_email_required {
+    return Intl.message(
+      'Please enter email.',
+      name: 'validators_email_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid email.`
+  String get validators_email_invalid {
+    return Intl.message(
+      'Invalid email.',
+      name: 'validators_email_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter password.`
+  String get validators_password_confirmation_required {
+    return Intl.message(
+      'Please enter password.',
+      name: 'validators_password_confirmation_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password doesn't match.`
+  String get validators_password_confirmation_mismatch {
+    return Intl.message(
+      'Password doesn\'t match.',
+      name: 'validators_password_confirmation_mismatch',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

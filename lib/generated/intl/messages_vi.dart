@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
 
+  static String m0(uri) => "Không tìm thấy trang với đường dẫn: ${uri}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "already_have_an_account":
@@ -57,6 +59,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_internet_access": MessageLookupByLibrary.simpleMessage(
             "Vui lòng kiểm tra lại kết nối mạng."),
         "not_found": MessageLookupByLibrary.simpleMessage("Không tìm thấy."),
+        "page_not_found":
+            MessageLookupByLibrary.simpleMessage("Không tìm thấy trang"),
+        "page_not_found_message": m0,
         "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
         "permission_denied": MessageLookupByLibrary.simpleMessage(
             "Thông báo khi quyền truy cập bị từ chối"),
@@ -66,6 +71,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("Đăng ký"),
         "title": MessageLookupByLibrary.simpleMessage("Xin chào"),
         "username": MessageLookupByLibrary.simpleMessage("Tên người dùng"),
+        "validators_email_invalid":
+            MessageLookupByLibrary.simpleMessage("Email không hợp lệ."),
+        "validators_email_required":
+            MessageLookupByLibrary.simpleMessage("Vui lòng nhập email."),
+        "validators_password_confirmation_mismatch":
+            MessageLookupByLibrary.simpleMessage("Mật khẩu không khớp."),
+        "validators_password_confirmation_required":
+            MessageLookupByLibrary.simpleMessage("Vui lòng nhập mật khẩu."),
+        "validators_password_min_length": MessageLookupByLibrary.simpleMessage(
+            "Mật khẩu phải có ít nhất 6 ký tự."),
+        "validators_password_required":
+            MessageLookupByLibrary.simpleMessage("Vui lòng nhập mật khẩu."),
+        "validators_username_required": MessageLookupByLibrary.simpleMessage(
+            "Vui lòng nhập tên người dùng."),
         "welcome_back":
             MessageLookupByLibrary.simpleMessage("Chào mừng bạn quay lại")
       };

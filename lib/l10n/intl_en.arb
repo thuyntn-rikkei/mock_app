@@ -26,5 +26,14 @@
   "confirm_password": "Confirm Password",
   "registered_successfully": "Registered Successfully",
   "already_have_an_account": "Already have an account?",
-   "home_screen": "Home Screen"
+  "home_screen": "Home Screen",
+  "page_not_found": "Page Not Found",
+  "page_not_found_message": "Can't find a page for: {uri}",
+  "validators_username_required": "Please enter username.",
+  "validators_password_required": "Please enter password.",
+  "validators_password_min_length": "Password must be at least 6 characters long.",
+  "validators_email_required": "Please enter email.",
+  "validators_email_invalid": "Invalid email.",
+  "validators_password_confirmation_required": "Please enter password.",
+  "validators_password_confirmation_mismatch": "Password doesn't match."
 }

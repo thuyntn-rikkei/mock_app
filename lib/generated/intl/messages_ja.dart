@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ja';
 
+  static String m0(uri) => "${uri} に対するページが見つかりません。";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "already_have_an_account":
@@ -53,6 +55,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "インターネットに接続できません。接続を確認してください。"),
         "not_found":
             MessageLookupByLibrary.simpleMessage("リソースが見つからない場合に表示されるメッセージ"),
+        "page_not_found": MessageLookupByLibrary.simpleMessage("ページが見つかりません"),
+        "page_not_found_message": m0,
         "password": MessageLookupByLibrary.simpleMessage("パスワード"),
         "permission_denied":
             MessageLookupByLibrary.simpleMessage("アクセスが拒否された場合に表示されるメッセージ"),
@@ -61,6 +65,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "signup": MessageLookupByLibrary.simpleMessage("サインアップ"),
         "title": MessageLookupByLibrary.simpleMessage("Hello"),
         "username": MessageLookupByLibrary.simpleMessage("ユーザー名"),
+        "validators_email_invalid":
+            MessageLookupByLibrary.simpleMessage("無効なメールアドレスです。"),
+        "validators_email_required":
+            MessageLookupByLibrary.simpleMessage("メールアドレスを入力してください。"),
+        "validators_password_confirmation_mismatch":
+            MessageLookupByLibrary.simpleMessage("パスワードが一致しません。"),
+        "validators_password_confirmation_required":
+            MessageLookupByLibrary.simpleMessage("パスワードを入力してください。"),
+        "validators_password_min_length":
+            MessageLookupByLibrary.simpleMessage("パスワードは6文字以上である必要があります。"),
+        "validators_password_required":
+            MessageLookupByLibrary.simpleMessage("パスワードを入力してください。"),
+        "validators_username_required":
+            MessageLookupByLibrary.simpleMessage("ユーザー名を入力してください。"),
         "welcome_back": MessageLookupByLibrary.simpleMessage("お帰りなさい")
       };
 }

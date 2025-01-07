@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:base_bloc_3/import.dart';
 
 /// The not found screen
 class NotFoundScreen extends StatelessWidget {
@@ -10,10 +10,10 @@ class NotFoundScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page Not Found')),
+    return BaseScaffold(
+      appBar: AppBar(title: Text(S.current.not_found)),
       body: Center(
-        child: Text("Can't find a page for: $uri"),
+        child: Text(S.current.page_not_found_message(uri)),
       ),
     );
   }
