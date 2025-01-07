@@ -42,3 +42,31 @@ extension StringExtension on String? {
     ).hasMatch(this!);
   }
 }
+
+extension StringNonNullableExtension on String {
+  String useCorrectEllipsis() {
+    return replaceAll('', '\u200B');
+  }
+
+  String replaceParams({required Map<String, String> params}) {
+    String result = this;
+    params.forEach((key, value) {
+      result = result.replaceAll('{$key}', value);
+    });
+    return result;
+  }
+
+  String get formatEmptyStringDate => isEmpty ? '----/--/-- ()' : this;
+  String get formatEmptyStringDateTime =>
+      isEmpty ? '----/--/-- ()\n-- : --' : this;
+}
+
+extension OptionalStringExtension on String? {
+  bool isNullOrEmpty() {
+    return this == null || this!.isEmpty;
+  }
+
+  bool isNotNullOrEmpty() {
+    return !isNullOrEmpty();
+  }
+}
