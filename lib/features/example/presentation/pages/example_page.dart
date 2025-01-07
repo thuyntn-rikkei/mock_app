@@ -1,6 +1,5 @@
 import 'package:base_bloc_3/import.dart';
 
-@RoutePage()
 class ExamplePage extends StatefulWidget {
   const ExamplePage({Key? key}) : super(key: key);
 
@@ -38,11 +37,7 @@ class _ExamplePageState
             ),
             AppButton(
               title: "Talker Screen",
-              onPressed: () => context.router.pushWidget(
-                TalkerScreen(
-                  talker: getIt<Talker>(),
-                ),
-              ),
+              onPressed: () => context.push(RouteName.talkerScreen),
             ),
           ],
         ),

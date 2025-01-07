@@ -6,6 +6,6 @@ class EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("no_data".tr());
+    return Text(S.current.not_found);
   }
 }

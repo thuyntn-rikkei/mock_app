@@ -1,4 +1,3 @@
-export 'package:easy_localization/easy_localization.dart' hide TextDirection;
 export 'package:dartz/dartz.dart' hide State, Order, order, idF;
 export 'dart:developer' hide Flow;
 
@@ -11,7 +10,6 @@ export 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 export 'package:flutter/material.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
 export 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-export 'package:auto_route/auto_route.dart';
 export 'dart:async';
 export 'dart:io';
 export 'package:firebase_core/firebase_core.dart';
@@ -30,3 +28,6 @@ export 'package:flutter_dotenv/flutter_dotenv.dart';
 export 'package:talker/talker.dart';
 export 'package:talker_flutter/talker_flutter.dart';
 export 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+export 'package:go_router/go_router.dart';
+export 'package:jwt_decoder/jwt_decoder.dart';
+export 'package:flutter_localizations/flutter_localizations.dart';

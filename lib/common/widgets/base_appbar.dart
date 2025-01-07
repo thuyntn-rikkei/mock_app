@@ -65,7 +65,7 @@ class BaseAppBar extends StatelessWidget {
                 if (onPressedLeading != null) {
                   onPressedLeading!();
                 } else {
-                  context.maybePop(result);
+                  context.pop(result);
                 }
               },
               child: leadingIcon ??

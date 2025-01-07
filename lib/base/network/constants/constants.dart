@@ -26,15 +26,15 @@ extension StatusCodeEnumExtension on StatusCodeEnum {
   BaseError get message {
     switch (this) {
       case StatusCodeEnum.verifyOtpError:
-        return BaseError.httpInternalServerError("invalid_otp".tr());
+        return BaseError.httpInternalServerError(S.current.invalid_otp);
       case StatusCodeEnum.error:
-        return BaseError.httpInternalServerError("error_system".tr());
+        return BaseError.httpInternalServerError(S.current.error_system);
       case StatusCodeEnum.unauthorized:
         return const BaseError.httpUnAuthorizedError();
       case StatusCodeEnum.notFound:
-        return BaseError.httpInternalServerError("not_found".tr());
+        return BaseError.httpInternalServerError(S.current.not_found);
       case StatusCodeEnum.permissionDenied:
-        return BaseError.httpInternalServerError("permission_denied".tr());
+        return BaseError.httpInternalServerError(S.current.permission_denied);
     }
   }
 }
