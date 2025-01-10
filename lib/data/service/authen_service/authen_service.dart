@@ -13,12 +13,12 @@ abstract class AuthenService {
 
   @POST(ApiEndpoint.loginApi)
   Future<AuthToken> login({
-    @Body() LoginRequest request,
+    @Body() required LoginRequest request,
   });
 
   @POST(ApiEndpoint.loginApi)
   Future<void> register({
-    @Body() RegisterRequest request,
+    @Body() required RegisterRequest request,
   });
 
   @POST(ApiEndpoint.refreshToken)

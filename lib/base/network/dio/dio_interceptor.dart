@@ -45,6 +45,16 @@ class DioInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    // check connection
+    if (err.type == DioExceptionType.unknown) {
+      final connectivityResult =
+          await getIt<Connectivity>().checkConnectivity();
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        err = err.copyWith(message: S.current.no_internet_access);
+        super.onError(err, handler);
+      }
+    }
+
     //check unAuthorization error
     if (StatusCode.unauthorized == err.response?.statusCode) {
       //check if request option contains retry then logout else retry

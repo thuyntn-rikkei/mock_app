@@ -10,3 +10,4 @@ export 'local_data/index.dart';
 export 'widgets/index.dart';
 export 'event_bus/index.dart';
 export 'external_lib.dart';
+export 'dialog/index.dart';

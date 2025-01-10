@@ -51,33 +51,6 @@ abstract class BaseState<W extends StatefulWidget, E, S extends BaseBlocState,
     super.dispose();
   }
 
-  // void showMessage(String message, {type = SnackBarType.success}) {
-  //   final SnackBarHelper helper = getIt<SnackBarHelper>();
-  //   switch (type) {
-  //     case SnackBarType.error:
-  //       helper.showError(context, message);
-  //       break;
-  //     case SnackBarType.info:
-  //       helper.showInfo(context, message);
-  //       break;
-  //     default:
-  //       helper.showSuccess(context, message);
-  //       break;
-  //   }
-  // }
-  //
-  // bool listenWhen(S previous, S current) {
-  //   return previous != current ||
-  //       previous.status != current.status ||
-  //       previous.message != current.message;
-  // }
-  //
-  // void listener(BuildContext context, S state) {
-  //   if (state.status == BaseStateStatus.failed) {
-  //     showMessage(state.message ?? "");
-  //   }
-  // }
-
   @required
   Widget renderUI(BuildContext context);
 
@@ -146,33 +119,6 @@ abstract class BaseShareState<
     super.dispose();
   }
 
-  // void showMessage(String message, {type = SnackBarType.success}) {
-  //   final SnackBarHelper helper = getIt<SnackBarHelper>();
-  //   switch (type) {
-  //     case SnackBarType.error:
-  //       helper.showError(context, message);
-  //       break;
-  //     case SnackBarType.info:
-  //       helper.showInfo(context, message);
-  //       break;
-  //     default:
-  //       helper.showSuccess(context, message);
-  //       break;
-  //   }
-  // }
-  //
-  // bool listenWhen(S previous, S current) {
-  //   return previous != current ||
-  //       previous.status != current.status ||
-  //       previous.message != current.message;
-  // }
-  //
-  // void listener(BuildContext context, S state) {
-  //   if (state.status == BaseStateStatus.failed) {
-  //     showMessage(state.message ?? "");
-  //   }
-  // }
-
   @required
   Widget renderUI(BuildContext context);
 
@@ -197,17 +143,15 @@ mixin BaseMethodMixin<S extends BaseBlocState> {
   }
 
   void listener(BuildContext context, S state) {
-    // if (state.status == BaseStateStatus.failed) {
-    //   if (state.message != null && state.message!.isNotEmpty) {
-    //     showMessage(context, state.message!);
-    //   }
-    // }
+    if (state.status == BaseStateStatus.failed) {
+      if (state.message != null && state.message!.isNotEmpty) {
+        DialogUtils.showDialog(content: state.message!);
+      }
+    }
     if (state.status == BaseStateStatus.loading) {
-      // DialogService.showLoading(
-      //   context,
-      // );
+      DialogUtils.showLoading();
     } else {
-      // DialogService.hideDialog(context);
+      DialogUtils.hideLoading();
     }
   }
 }
