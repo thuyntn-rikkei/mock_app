@@ -2,24 +2,24 @@ part of 'example_bloc.dart';
 
 @CopyWith()
 class ExampleState extends BaseBlocState {
-  final Option<String>? attribute;
-  final List<PlayerEntity> players;
-  final GetPlayerRequest request;
+  final List<ProductEntity> products;
+  final ProductEntity? productDetails;
   const ExampleState({
     required super.status,
     super.message,
-    this.players = const [],
-    this.attribute,
-    required this.request,
+    this.products = const [],
+    this.productDetails,
   });
 
   factory ExampleState.init() {
-    return ExampleState(
-      status: BaseStateStatus.init,
-      request: GetPlayerRequest.init(),
-    );
+    return const ExampleState(status: BaseStateStatus.init);
   }
 
   @override
-  List get props => [status, players, message, attribute];
+  List get props => [
+        status,
+        message,
+        products,
+        productDetails,
+      ];
 }

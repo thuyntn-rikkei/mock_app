@@ -7,15 +7,13 @@ class ExampleRepoImpl implements ExampleRepo {
   final ExampleService _exampleService;
 
   @override
-  Future<Either<BaseError, List<PlayerEntity>>> getData({
-    required GetPlayerRequest request,
+  Future<Either<BaseError, List<ProductEntity>>> getData({
+    required PagingRequest request,
   }) async {
     try {
-      final result = await _exampleService.getData(
-        request: request,
-      );
+      final result = await _exampleService.getData(request: request);
       return right(
-        (result.data ?? []).map((e) => PlayerEntity.fromModel(e)).toList(),
+        (result.data ?? []).map((e) => ProductEntity.fromModel(e)).toList(),
       );
     } on DioException catch (exception) {
       return left(exception.baseError);

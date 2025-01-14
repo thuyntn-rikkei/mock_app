@@ -11,47 +11,44 @@ class ExampleBloc extends BaseBloc<ExampleEvent, ExampleState>
   ExampleBloc(this._repo) : super(ExampleState.init()) {
     on<ExampleEvent>((ExampleEvent event, Emitter<ExampleState> emit) async {
       await event.when(
-        getData: () => onGetData(emit),
-        showMessage: () => onShowMessage(emit),
-        getPlayers: (List<PlayerEntity> players, int offset) =>
-            onGetPlayers(emit, players, offset),
+        getProductsList: (int page) => onGetData(emit, page),
+        getProductDetail: (ProductEntity product) =>
+            onGetProductDetail(emit, product),
       );
     });
   }
 
   final ExampleRepo _repo;
-  final PagingController<int, PlayerEntity> pagingController =
+  final PagingController<int, ProductEntity> pagingController =
       PagingController(firstPageKey: 0);
 
-  Future onGetData(Emitter<ExampleState> emit) async {
-    emit(state.copyWith(attribute: none()));
-    final Either<BaseError, List<PlayerEntity>> result =
-        await _repo.getData(request: state.request);
-    emit(
-      result.fold(
-        (l) => state.copyWith(status: BaseStateStatus.failed, message: "Error"),
-        (r) => state.copyWith(status: BaseStateStatus.idle),
-      ),
+  Future onGetData(Emitter<ExampleState> emit, int page) async {
+    final Either<BaseError, List<ProductEntity>> result =
+        await _repo.getData(request: PagingRequest(page: page));
+    pagingControllerOnLoad(
+      page,
+      pagingController,
+      result,
+      onSuccess: (r) {
+        emit(state.copyWith(status: BaseStateStatus.success, products: r));
+      },
+      onError: (l) {
+        emit(state.copyWith(status: BaseStateStatus.failed, message: l));
+      },
     );
   }
 
-  Future onShowMessage(Emitter<ExampleState> emit) async {
-    emit(state.copyWith(message: "Error"));
-  }
-
-  Future onGetPlayers(
+  Future onGetProductDetail(
     Emitter<ExampleState> emit,
-    List<PlayerEntity> players,
-    int offset,
+    ProductEntity product,
   ) async {
-    final res = await _repo.getData(request: state.request);
-    pagingControllerOnLoad(
-      offset,
-      pagingController,
-      res,
-      onSuccess: (data) {
-        emit(state.copyWith(players: pagingController.itemList ?? []));
-      },
+    emit(state.copyWith(status: BaseStateStatus.loading, productDetails: null));
+    await Future.delayed(const Duration(seconds: 1));
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.showPopUp,
+        productDetails: product,
+      ),
     );
   }
 }

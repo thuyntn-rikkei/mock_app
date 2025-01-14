@@ -1,2 +1,1 @@
-export 'team_entity.dart';
-export 'player_entity.dart';
+export 'product_entity.dart';

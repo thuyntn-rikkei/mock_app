@@ -9,8 +9,8 @@ abstract class ExampleService {
   @factoryMethod
   factory ExampleService(Dio dio) = _ExampleService;
 
-  @GET(ApiEndpoint.getPlayer)
-  Future<BaseListData<Player>> getData({
-    @Queries() required GetPlayerRequest request,
+  @GET(ApiEndpoint.getProducts)
+  Future<BaseListData<ProductModel>> getData({
+    required PagingRequest request,
   });
 }
