@@ -14,33 +14,80 @@ class _ExamplePageState
   void initState() {
     super.initState();
     bloc.pagingController.addPageRequestListener(
-      (pageKey) => bloc.add(
-        ExampleEvent.getPlayers(
-          players: bloc.state.players,
-          offset: pageKey,
-        ),
-      ),
+      (page) => bloc.add(ExampleEvent.getProductsList(page)),
     );
+  }
+
+  @override
+  void listener(BuildContext context, ExampleState state) {
+    super.listener(context, state);
+    if (state.status == BaseStateStatus.showPopUp) {
+      DialogUtils.showCustomDialog(
+        child: _productDetailsDialog(state.productDetails),
+      );
+    }
   }
 
   @override
   Widget renderUI(BuildContext context) {
     return BaseScaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Base Bloc"),
-            AppButton(
-              title: "Call API",
-              onPressed: () => bloc.add(const ExampleEvent.getData()),
-            ),
-            AppButton(
-              title: "Talker Screen",
-              onPressed: () => context.push(RouteName.talkerScreen),
-            ),
-          ],
+      appBar: const BaseAppBar(
+        title: "Example Page",
+      ),
+      body: CustomListViewSeparated(
+        controller: bloc.pagingController,
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        builder: (context, product, index) => ProductItem(
+          product: product,
+          onTap: () {
+            bloc.add(ExampleEvent.getProductDetail(product));
+          },
         ),
+        separatorBuilder: (context, index) => SizedBox(height: 10.h),
+      ),
+    );
+  }
+
+  Widget _productDetailsDialog(ProductEntity? product) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: blocBuilder(
+        (context, state) {
+          if (product == null) {
+            return const Center(child: LoadingWidget());
+          }
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                product.name,
+                style: AppStyles.s20w700,
+              ),
+              CachedImageWidget(
+                url: product.thumbnail,
+                height: 200.h,
+                fit: BoxFit.contain,
+              ),
+              Text(
+                product.description,
+                style: AppStyles.s16w400,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

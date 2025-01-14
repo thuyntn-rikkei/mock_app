@@ -1,12 +1,12 @@
 class ApiEndpoint {
-  static const getPlayer = "/api/v1/players";
+  static const getProducts = "/c/53f0-cfd4-4e00-8e1f";
   static const refreshToken = "/api/v1/refresh_token";
   static const loginApi = "";
   static const registerApi = "";
 
   static bool needAccessToken(String path) {
     List<String> excludeEndpoints = [
-      ApiEndpoint.getPlayer,
+      ApiEndpoint.getProducts,
     ];
     for (String endpoint in excludeEndpoints) {
       if (checkPathMatch(pathPattern: endpoint, urlPath: path)) {
