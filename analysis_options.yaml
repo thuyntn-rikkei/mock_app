@@ -5,6 +5,7 @@ analyzer:
     - "test/**"
     - "plugins/**"
     - "**.config.dart"
+    - "template_feature/**"
   errors:
     invalid_annotation_target: ignore
     mixin_inherits_from_not_object: ignore

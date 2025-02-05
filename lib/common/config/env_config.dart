@@ -7,13 +7,13 @@ extension EnvFlavorExtension on EnvFlavor {
   String get configFile {
     switch (this) {
       case EnvFlavor.dev:
-        return Assets.env.aEnvDev;
+        return "env/.env_dev";
       case EnvFlavor.staging:
-        return Assets.env.aEnvStaging;
+        return "env/.env_staging";
       case EnvFlavor.production:
-        return Assets.env.aEnvProduction;
+        return "env/.env_production";
       default:
-        return Assets.env.aEnvDev;
+        return "env/.env_dev";
     }
   }
 }
