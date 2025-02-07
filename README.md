@@ -4,10 +4,6 @@ Requirement:
 - Flutter 3.24.5
 - Java 17
 
-
-
-
-
 ## Packages 
 
 - [Bloc Pattern: flutter_bloc](https://pub.dev/packages/flutter_bloc)
@@ -43,9 +39,11 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 │    
 └───common // contains app theme, config, extensions, common widgets ...
 │   
-└───di 
+└───data // data layer
 │   
-└───features 
+└───di // dependency injection
+│   
+└───features // domain and presentation layer
 │   
 └───routes // navigation  
 │
@@ -68,32 +66,29 @@ Use CLEAN architecture
 │            └─── source
 │   └─── repository (impl)
 └───domain
+│   └─── entity
 │   └─── repository (abstract)
-│   └─── use_case
 └───presentation
 │   └─── bloc
 │   └─── pages
 │   └─── widgets
 ```
 
+## Generate a Feature code with Mason Brick
+- [Mason](https://pub.dev/packages/mason_cli)
+- Activate Mason with Dart:
+```bash
+dart pub global activate mason
+```
 
+- Run command to get Mason template
+```bash
+mason get
+```
 
-
-## Must use BaseScaffold and BaseAppBar!!!
-eg:
-```dart
-class Example extends StatelessWidget {
-  const Example({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseScaffold(
-      appBar: BaseAppBar(),
-      body: Column(),
-    );
-  }
-}
-
+- Run command to generate feature code
+```bash
+mason make template_feature -o ./lib/features
 ```
 
 ## How to use pagination
@@ -178,8 +173,10 @@ Using
   Config env in
 ```
 │
-└───assets
-│   └─── evn
+└───env
+│   └─── .env_dev
+│   └─── .env_staging
+│   └─── .env_production
 ```
 In Android
 ----------- 
@@ -285,22 +282,5 @@ Hanlde onTap Notification
 ```dart
     Future<dynamic> selectNotification(String? payload) async {
     }
-```
-
-## How to use easy_localization
-- [Easy Localization](https://pub.dev/packages/easy_localization)
-- ./lib/translations/translate_data folder contains all translation data
-- ./lib/translations/translate_key.dart contains all translation key
-- ./lib/translations/translate_data/en.json contains all translation data for english
-```
-│
-└───translations // localization
-    └─── translate_data // all translation data
-    │        └─── en_us.json // translation data for english
-    │        └─── vi_vn.json // translation data for vietnamese
-    └─── translate_key.dart // all translation key
-    └─── runtime_language_loader.dart // load language every time app start, no need to rebuild app
-```
-
 ```
 
