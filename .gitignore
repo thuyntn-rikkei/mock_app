@@ -57,3 +57,5 @@ app.*.map.json
 # Mason file
 .mason/
 mason-lock.json
+
+lib/firebase_options.dart
