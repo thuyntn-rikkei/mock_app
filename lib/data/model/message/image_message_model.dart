@@ -1,4 +1,5 @@
 import 'package:base_bloc_3/data/model/message/message_model.dart';
+import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'image_message_model.g.dart';
@@ -14,6 +15,7 @@ class ImageMessageModel with _$ImageMessageModel implements MessageModel {
     bool? isRead,
     int? timestamp,
     String? imageUrl,
+    MessageType? type,
   }) = _ImageMessageModel;
 
   factory ImageMessageModel.fromJson(Map<String, dynamic> json) =>

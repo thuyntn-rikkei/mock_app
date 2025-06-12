@@ -200,6 +200,15 @@ class S {
     );
   }
 
+  String get app_name {
+    return Intl.message(
+      'Awesome Chat',
+      name: 'app_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login to your account`
   String get login_to_your_account {
     return Intl.message(
@@ -220,11 +229,40 @@ class S {
     );
   }
 
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get fullName {
+    return Intl.message(
+      'Full Name',
+      name: 'fullName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Password`
   String get password {
     return Intl.message(
       'Password',
       name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot Password?`
+  String get forgot_password {
+    return Intl.message(
+      'Forgot Password?',
+      name: 'forgot_password',
       desc: '',
       args: [],
     );
@@ -300,6 +338,15 @@ class S {
     );
   }
 
+  String get terms_and_conditions {
+    return Intl.message(
+      'I agree to the Terms and Conditions',
+      name: 'terms_and_conditions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Registered Successfully`
   String get registered_successfully {
     return Intl.message(
@@ -350,6 +397,15 @@ class S {
     );
   }
 
+  String get validators_full_name_required {
+    return Intl.message(
+      'Please enter full name.',
+      name: 'validators_full_name_required',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Please enter username.`
   String get validators_username_required {
     return Intl.message(
@@ -373,7 +429,7 @@ class S {
   /// `Password must be at least 6 characters long.`
   String get validators_password_min_length {
     return Intl.message(
-      'Password must be at least 6 characters long.',
+      'Password must be at least 8 characters long.',
       name: 'validators_password_min_length',
       desc: '',
       args: [],
@@ -395,6 +451,15 @@ class S {
     return Intl.message(
       'Invalid email.',
       name: 'validators_email_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get validators_password_invalid {
+    return Intl.message(
+      'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number.',
+      name: 'validators_password_invalid',
       desc: '',
       args: [],
     );

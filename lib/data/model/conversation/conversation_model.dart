@@ -1,4 +1,4 @@
-import 'package:base_bloc_3/data/model/message/MessageModelConverter.dart';
+import 'package:base_bloc_3/data/model/message/message_model_converter.dart';
 import 'package:base_bloc_3/data/model/message/message_model.dart';
 import 'package:base_bloc_3/data/model/user/user_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

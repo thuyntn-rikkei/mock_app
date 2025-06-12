@@ -1,6 +1,7 @@
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/message/image_message_model.dart';
 import 'package:base_bloc_3/data/model/message/message_model.dart';
+import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
 import 'package:base_bloc_3/data/model/message/text_message_model.dart';
 
 class MessageModelConverter implements JsonConverter<MessageModel, Map<String, dynamic>> {
@@ -9,7 +10,7 @@ class MessageModelConverter implements JsonConverter<MessageModel, Map<String, d
   @override
   MessageModel fromJson(Map<String, dynamic> json) {
     switch (json['type']) {
-      case 'text':
+      case MessageType.text:
         return TextMessageModel(
           messageId: json['messageId'],
           conversationId: json['conversationId'],
@@ -19,7 +20,7 @@ class MessageModelConverter implements JsonConverter<MessageModel, Map<String, d
           timestamp: json['timestamp'],
           text: json['text'],
         );
-      case 'image':
+      case MessageType.image:
         return ImageMessageModel(
           messageId: json['messageId'],
           conversationId: json['conversationId'],

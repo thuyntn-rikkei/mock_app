@@ -1,8 +1,11 @@
 import 'package:base_bloc_3/common/widgets/not_found_screen.dart';
 import 'package:base_bloc_3/features/authen/presentation/bloc/auth_bloc.dart';
+import 'package:base_bloc_3/features/login/presentation/pages/login_page.dart';
+import 'package:base_bloc_3/features/signup/pages/signup_page.dart';
 import 'package:base_bloc_3/import.dart';
 
 final router = GoRouter(
+  initialLocation: RouteName.login,
   errorBuilder: (context, state) =>
       NotFoundScreen(uri: state.extra as String? ?? ''),
   debugLogDiagnostics: true,
@@ -15,12 +18,12 @@ final router = GoRouter(
     GoRoute(
       path: RouteName.login,
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          MaterialPage<void>(key: state.pageKey, child: const LoginScreen()),
+          MaterialPage<void>(key: state.pageKey, child: const LoginPage()),
     ),
     GoRoute(
       path: RouteName.register,
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          MaterialPage<void>(key: state.pageKey, child: const RegisterScreen()),
+          MaterialPage<void>(key: state.pageKey, child: const SignupPage()),
     ),
     GoRoute(
       path: RouteName.example,
@@ -46,6 +49,6 @@ final router = GoRouter(
       return null;
     }
 
-    return RouteName.login;
+    return null;
   },
 );

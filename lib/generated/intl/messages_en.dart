@@ -79,7 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "validators_password_confirmation_required":
             MessageLookupByLibrary.simpleMessage("Please enter password."),
         "validators_password_min_length": MessageLookupByLibrary.simpleMessage(
-            "Password must be at least 6 characters long."),
+            "Password must be at least 8 characters long."),
         "validators_password_required":
             MessageLookupByLibrary.simpleMessage("Please enter password."),
         "validators_username_required":
