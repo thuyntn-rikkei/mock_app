@@ -1,5 +1,6 @@
 import 'package:base_bloc_3/common/widgets/not_found_screen.dart';
 import 'package:base_bloc_3/features/authen/presentation/bloc/auth_bloc.dart';
+import 'package:base_bloc_3/features/conversation/presentation/pages/contact_list_page.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/message_list_screen.dart';
 import 'package:base_bloc_3/features/login/presentation/pages/login_page.dart';
@@ -20,7 +21,7 @@ final router = GoRouter(
     GoRoute(
       path: RouteName.login,
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          MaterialPage<void>(key: state.pageKey, child: const MessageListScreen()),
+          MaterialPage<void>(key: state.pageKey, child: const LoginPage()),
     ),
     GoRoute(
       path: RouteName.register,
@@ -40,6 +41,11 @@ final router = GoRouter(
           talker: getIt<Talker>(),
         ),
       ),
+    ),
+    GoRoute(
+      path: RouteName.contactList,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          MaterialPage<void>(key: state.pageKey, child: const ContactListPage()),
     ),
   ],
   redirect: (context, state) {

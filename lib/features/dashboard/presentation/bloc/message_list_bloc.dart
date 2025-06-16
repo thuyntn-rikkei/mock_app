@@ -23,7 +23,7 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
         (MessageListEvent event, Emitter<MessageListState> emit) async {
       await event.when(
         started: () => _onStarted(emit),
-        fetch: () => _onFetch(emit),
+        fetch: (userId) => _onFetch(emit, userId),
       );
     });
   }
@@ -32,10 +32,10 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
     emit(state.copyWith(status: BaseStateStatus.init));
   }
 
-  Future<void> _onFetch(Emitter<MessageListState> emit) async {
-    emit(state.copyWith(status: BaseStateStatus.loading));
+  Future<void> _onFetch(Emitter<MessageListState> emit, String userId) async {
+    emit(MessageListState.loading());
 
-    final result = await _conversationRepository.fetchConversations();
+    final result = await _conversationRepository.fetchConversations(userId);
 
     print(result);
 
@@ -44,32 +44,23 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
         l.when(
           httpInternalServerError: (String errorBody) {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: errorBody,
-              ),
+              MessageListState.failed(errorBody),
             );
           },
           httpUnAuthorizedError: () {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: 'Unauthorized',
-              ),
+              MessageListState.failed('UnAuthorized'),
             );
           },
           httpUnknownError: (String message) {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: message,
-              ),
+              MessageListState.failed(message),
             );
           },
         );
       },
       (r) {
-        emit(state.copyWith(status: BaseStateStatus.success, conversations: r));
+        emit(MessageListState.success(newConversations: r));
       },
     );
   }

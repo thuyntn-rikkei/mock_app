@@ -34,17 +34,15 @@ class ConversationRemoteDatasource {
   }
 
 
-  Future<List<ConversationModel>> fetch() async {
-    final snapshot = await conversationRef.once();
-    final data = snapshot.snapshot.value as Map<String, dynamic>?;
+  Future<List<ConversationModel>> fetchConversationsByUserId(String userId) async {
+    final query = conversationRef.orderByChild('members/$userId').equalTo(true);
+    final snapshot = await query.once();
 
-    if (data != null) {
-      final conversations = data.values
-          .map((json) =>
-          ConversationModel.fromJson(json as Map<String, dynamic>))
-          .toList();
-      return conversations;
+    if (snapshot.snapshot.exists) {
+      final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
+      return data.values.map((value) => ConversationModel.fromJson(value)).toList();
+    } else {
+      return [];
     }
-    return [];
   }
 }

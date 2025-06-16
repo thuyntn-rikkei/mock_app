@@ -4,6 +4,7 @@ class RouteName {
   static const String register = '/register';
   static const String example = '/example';
   static const String talkerScreen = '/talkerScreen';
+  static const String contactList = '/contactList';
 
   static const publicRoutes = [
     login,

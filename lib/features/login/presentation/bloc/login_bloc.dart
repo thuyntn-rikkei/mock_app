@@ -28,7 +28,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onStarted(Emitter<LoginState> emit) async {
-    emit(state.copyWith(status: BaseStateStatus.init));
+    emit(LoginState.init());
   }
 
   Future<void> _onLogin(
@@ -36,7 +36,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     String email,
     String password,
   ) async {
-    emit(state.copyWith(status: BaseStateStatus.loading));
+    emit(LoginState.loading());
 
     final result = await _userRepository.logIn(email, password);
 
@@ -47,36 +47,25 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         l.when(
           httpInternalServerError: (String errorBody) {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: errorBody,
-              ),
+              LoginState.failed(errorBody),
             );
           },
           httpUnAuthorizedError: () {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: 'Unauthorized',
-              ),
+              LoginState.failed('UnAuthorized Error'),
             );
           },
           httpUnknownError: (String message) {
-            emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: message,
-              ),
-            );
+            LoginState.failed(message);
           },
         );
       },
       (r) {
-        if(r == true) {
-          emit(state.copyWith(status: BaseStateStatus.success));
-        } else {
-          emit(state.copyWith(status: BaseStateStatus.failed, message: 'Email or password is incorrect'));
+        if(r == null) {
+          emit(LoginState.failed('Email or password is incorrect'));
+          return;
         }
+        emit(LoginState.success(r.userId));
       },
     );
   }

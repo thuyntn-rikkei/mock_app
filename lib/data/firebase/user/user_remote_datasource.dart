@@ -15,7 +15,7 @@ class UserRemoteDatasource {
     });
   }
 
-  Future<bool> logIn(String email, String password) async {
+  Future<UserEntity?> logIn(String email, String password) async {
     try {
       final query = userRef.orderByChild('email').equalTo(email);
       final snapshot = await query.once();
@@ -27,17 +27,23 @@ class UserRemoteDatasource {
           final user = entry.value as Map<dynamic, dynamic>;
 
           if (user['password'] == password) {
-            return true;
+            return UserEntity(
+              userId: user['userId'],
+              email: user['email'],
+              fullName: user['fullName'],
+              password: user['password'],
+              avatarUrl: user['avatarUrl'],
+            );
           }
         }
 
-        return false;
+        return null;
       } else {
-        return false;
+        return null;
       }
     } catch (e) {
       print('Login error: $e');
-      return false;
+      return null;
     }
   }
 

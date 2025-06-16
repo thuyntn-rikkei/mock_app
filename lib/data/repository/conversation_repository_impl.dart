@@ -28,9 +28,9 @@ class ConversationRepositoryImpl implements ConversationRepository {
   }
 
   @override
-  Future<Either<BaseError, List<ConversationEntity>>> fetchConversations() async {
+  Future<Either<BaseError, List<ConversationEntity>>> fetchConversations(String userId) async {
     try {
-      final result = await _conversationRemoteDatasource.fetch();
+      final result = await _conversationRemoteDatasource.fetchConversationsByUserId(userId);
       return right(result.map((e) => ConversationEntity.fromModel(e)).toList());
     } on FirebaseException catch (exception) {
       return left(BaseError.httpUnknownError(exception.message ?? S.current.error_unknown));

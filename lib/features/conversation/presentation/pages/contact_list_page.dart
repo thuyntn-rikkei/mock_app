@@ -1,28 +1,28 @@
 import 'package:base_bloc_3/base/base_widget.dart';
-import 'package:base_bloc_3/common/index.dart';
+import 'package:base_bloc_3/common/external_lib.dart';
+import 'package:base_bloc_3/common/widgets/base_appbar.dart';
+import 'package:base_bloc_3/common/widgets/base_scaffold.dart';
 import 'package:base_bloc_3/di/di_setup.dart';
-import 'package:base_bloc_3/features/dashboard/presentation/bloc/message_list_bloc.dart';
+import 'package:base_bloc_3/features/conversation/presentation/bloc/contact_list_bloc.dart';
 import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
-import 'package:base_bloc_3/features/setting_app/bloc/setting_bloc.dart';
-import 'package:base_bloc_3/routes/app_routes.dart';
 
-class MessageListScreen extends StatefulWidget {
-  const MessageListScreen({super.key});
+class ContactListPage extends StatefulWidget{
+  const ContactListPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _MessageListScreenState();
+    return _ContactListPageState();
   }
 }
 
-class _MessageListScreenState extends BaseState<MessageListScreen,
-    MessageListEvent, MessageListState, MessageListBloc> {
+class _ContactListPageState extends BaseState<ContactListPage,
+    ContactListEvent, ContactListState, ContactListBloc> {
 
   @override
   void initState() {
     super.initState();
     final authState = getIt<LoginBloc>().state;
-    bloc.add(MessageListEvent.fetch(userId: authState.userId));
+    bloc.add(ContactListEvent.loadContactList(userId: authState.userId));
   }
 
   @override
@@ -37,16 +37,13 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
 
   Widget _buildAppBar() {
     return BaseAppBar(
-      title: 'Message List',
+      title: 'Contact List',
       actions: [
         IconButton(
-          onPressed: () {
-            context.push(RouteName.contactList);
-          },
+          onPressed: () {},
           icon: const Icon(Icons.add_circle),
         ),
       ],
-      hasBack: false,
     );
   }
 
@@ -56,7 +53,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       child: Column(
         children: [
           _buildSearchBar(),
-          Expanded(child: _buildMessageList()),
+          Expanded(child: _buildContactList()),
         ],
       ),
     );
@@ -64,7 +61,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
 
   Widget _buildSearchBar() {
     return const SearchBar(
-      hintText: 'Search message',
+      hintText: 'Search contact',
       leading: Icon(Icons.search),
       padding: WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 16),
@@ -73,7 +70,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildContactList() {
     return blocBuilder((context, state) {
       return ListView.builder(
         itemCount: 0,
@@ -82,7 +79,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
     });
   }
 
-  Widget _buildMessageItem(BuildContext context, Message message) {
+  Widget _buildContactItem(BuildContext context, Message message) {
     return Container();
   }
 }

@@ -4,5 +4,5 @@ import 'package:dartz/dartz.dart';
 
 abstract class ConversationRepository {
   Future<Either<BaseError, ConversationEntity>> createConversation(ConversationEntity conversationEntity);
-  Future<Either<BaseError, List<ConversationEntity>>> fetchConversations();
+  Future<Either<BaseError, List<ConversationEntity>>> fetchConversations(String userId);
 }

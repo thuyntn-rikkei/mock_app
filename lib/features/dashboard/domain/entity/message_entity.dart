@@ -7,7 +7,6 @@ abstract class MessageEntity {
   String messageId;
   String conversationId;
   String senderId;
-  String receiverId;
   bool isRead;
   MessageType type;
 
@@ -15,7 +14,6 @@ abstract class MessageEntity {
     required this.messageId,
     required this.conversationId,
     required this.senderId,
-    required this.receiverId,
     required this.isRead,
     required this.type,
   });
@@ -28,7 +26,6 @@ class TextMessageEntity extends MessageEntity {
     required String messageId,
     required String conversationId,
     required String senderId,
-    required String receiverId,
     required bool isRead,
     required MessageType type,
     required this.text,
@@ -36,7 +33,6 @@ class TextMessageEntity extends MessageEntity {
           messageId: messageId,
           conversationId: conversationId,
           senderId: senderId,
-          receiverId: receiverId,
           isRead: isRead,
           type: type,
         );
@@ -47,7 +43,6 @@ class TextMessageEntity extends MessageEntity {
       messageId: model.messageId,
       conversationId: model.conversationId ?? "",
       senderId: model.senderId ?? "",
-      receiverId: model.receiverId ?? "",
       isRead: model.isRead ?? false,
       type: MessageType.text,
       text: model.text ?? "",
@@ -62,7 +57,6 @@ class ImageMessageEntity extends MessageEntity {
     required String messageId,
     required String conversationId,
     required String senderId,
-    required String receiverId,
     required bool isRead,
     required MessageType type,
     required this.imageUrl,
@@ -70,7 +64,6 @@ class ImageMessageEntity extends MessageEntity {
     messageId: messageId,
     conversationId: conversationId,
     senderId: senderId,
-    receiverId: receiverId,
     isRead: isRead,
     type: type,
   );
@@ -81,7 +74,6 @@ class ImageMessageEntity extends MessageEntity {
       messageId: model.messageId,
       conversationId: model.conversationId ?? "",
       senderId: model.senderId ?? "",
-      receiverId: model.receiverId ?? "",
       isRead: model.isRead ?? false,
       type: MessageType.image,
       imageUrl: model.imageUrl ?? "",

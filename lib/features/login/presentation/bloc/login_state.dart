@@ -2,9 +2,12 @@ part of 'login_bloc.dart';
 
 @CopyWith()
 class LoginState extends BaseBlocState {
+  final String userId;
+
   const LoginState({
     required super.status,
     super.message,
+    this.userId = '',
   });
 
   factory LoginState.init() {
@@ -13,9 +16,10 @@ class LoginState extends BaseBlocState {
     );
   }
 
-  factory LoginState.success() {
-    return const LoginState(
+  factory LoginState.success(String newUserId) {
+    return LoginState(
       status: BaseStateStatus.success,
+      userId: newUserId,
     );
   }
 
@@ -35,5 +39,5 @@ class LoginState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message];
+  List get props => [status, message, userId];
 }

@@ -17,9 +17,12 @@ class  MessageListState extends BaseBlocState {
     );
   }
 
-  factory  MessageListState.success() {
-    return const  MessageListState(
+  factory  MessageListState.success(
+  {required List<ConversationEntity> newConversations}
+      ) {
+    return MessageListState(
       status: BaseStateStatus.success,
+      conversations: newConversations,
     );
   }
 

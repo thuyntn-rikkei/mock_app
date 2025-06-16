@@ -20,7 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState
-    extends BaseState<LoginPage, LoginEvent, LoginState, LoginBloc> {
+    extends BaseShareState<LoginPage, LoginEvent, LoginState, LoginBloc> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -41,7 +41,7 @@ class _LoginPageState
     }
 
     if (state.status == BaseStateStatus.success) {
-      context.go(RouteName.example);
+      context.go(RouteName.home);
     }
   }
 
@@ -144,7 +144,7 @@ class _LoginPageState
 
   Widget _buildLoginButton() {
     return blocBuilder(
-      (context, state) {
+      builder: (context, state) {
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
             minimumSize: const Size.fromHeight(50),

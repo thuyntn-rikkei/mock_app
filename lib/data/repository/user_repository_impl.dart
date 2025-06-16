@@ -24,7 +24,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<BaseError, bool>> logIn(String email, String password) async {
+  Future<Either<BaseError, UserEntity?>> logIn(String email, String password) async {
     try {
       final result = await _userRemoteDatasource.logIn(email, password);
       return right(result);
