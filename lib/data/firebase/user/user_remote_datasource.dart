@@ -57,7 +57,7 @@ class UserRemoteDatasource {
         email: email,
         fullName: fullName,
         password: password,
-        avatarUrl: "",
+        avatarUrl: "https://cdn.iconscout.com/icon/free/png-256/free-flutter-logo-icon-download-in-svg-png-gif-file-formats--programming-language-coding-development-logos-icons-1720090.png?f=webp",
       );
 
       await newRef.set(newUser.toJson());
@@ -66,5 +66,30 @@ class UserRemoteDatasource {
       return null;
     }
   }
+
+  Future<List<UserModel>> fetchAllUsers() async {
+    final snapshot = await userRef.once();
+    if (snapshot.snapshot.exists) {
+      final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
+      return data.values
+          .whereType<Map<Object?, Object?>>()
+          .map((value) => Map<String, dynamic>.from(value))
+          .map(UserModel.fromJson)
+          .toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> fetchUsersByIds(Set<String> userIds) async {
+    final snapshot = await userRef.once();
+    final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
+
+    return data.values
+        .where((e) => e is Map && userIds.contains((e)['userId']))
+        .map((e) => UserModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
 
 }

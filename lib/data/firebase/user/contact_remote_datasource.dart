@@ -24,14 +24,15 @@ class ContactRemoteDatasource {
 
     if (snapshot.snapshot.exists) {
       final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
-      return data.values.map((value) => ContactModel.fromJson(value)).toList();
+      return data.values
+          .whereType<Map<Object?, Object?>>()
+          .map((value) => Map<String, dynamic>.from(value))
+          .map(ContactModel.fromJson)
+          .toList();
     } else {
       return [];
     }
   }
-
-
-
 }
 
 

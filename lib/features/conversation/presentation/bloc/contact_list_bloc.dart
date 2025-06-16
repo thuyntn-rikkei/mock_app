@@ -5,6 +5,8 @@ import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/features/conversation/domain/entity/contact_entity.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/contact_repository.dart';
+import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
+import 'package:base_bloc_3/features/login/domain/repository/user_repository.dart';
 
 part 'contact_list_event.dart';
 
@@ -17,8 +19,10 @@ part 'contact_list_bloc.g.dart';
 @lazySingleton
 class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
   final ContactRepository _contactRepository;
+  final UserRepository _userRepository;
 
-  ContactListBloc(this._contactRepository) : super(ContactListState.init()) {
+  ContactListBloc(this._contactRepository, this._userRepository)
+      : super(ContactListState.init()) {
     on<ContactListEvent>(
         (ContactListEvent event, Emitter<ContactListState> emit) async {
       await event.when(
@@ -29,51 +33,68 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
   }
 
   Future<void> _onStarted(Emitter<ContactListState> emit) async {
-    emit(state.copyWith(status: BaseStateStatus.init));
+    emit(ContactListState.init());
   }
 
   Future<void> _onLoadContactList(
     Emitter<ContactListState> emit,
     String userId,
   ) async {
-    emit(state.copyWith(status: BaseStateStatus.loading));
+    emit(ContactListState.loading());
 
     print(userId);
     final result = await _contactRepository.fetchContactsByUserId(userId);
 
     print(result);
 
-    result.fold(
+    await result.fold(
       (l) {
         l.when(
           httpInternalServerError: (String errorBody) {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: errorBody,
-              ),
+              ContactListState.failed(errorBody),
             );
           },
           httpUnAuthorizedError: () {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: 'Unauthorized',
-              ),
+              ContactListState.failed('UnAuthorized'),
             );
           },
           httpUnknownError: (String message) {
             emit(
-              state.copyWith(
-                status: BaseStateStatus.failed,
-                message: message,
-              ),
+              ContactListState.failed(message),
             );
           },
         );
       },
-      (r) {
-        emit(state.copyWith(status: BaseStateStatus.success, contactList: r));
+      (r) async {
+        final contactUserIds = r.map((c) => c.userId).toSet();
+        final contactUsersResult =
+            await _userRepository.fetchUsersByIds(contactUserIds);
+        contactUsersResult.fold(
+          (l) {
+            l.when(
+              httpInternalServerError: (String errorBody) {
+                emit(
+                  ContactListState.failed(errorBody),
+                );
+              },
+              httpUnAuthorizedError: () {
+                emit(
+                  ContactListState.failed('UnAuthorized'),
+                );
+              },
+              httpUnknownError: (String message) {
+                emit(
+                  ContactListState.failed(message),
+                );
+              },
+            );
+          },
+          (r) async {
+            emit(ContactListState.success(userList: r));
+          },
+        );
       },
     );
   }

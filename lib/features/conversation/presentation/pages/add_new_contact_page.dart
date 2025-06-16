@@ -1,36 +1,54 @@
 import 'package:base_bloc_3/base/base_widget.dart';
+import 'package:base_bloc_3/base/bloc/bloc_status.dart';
+import 'package:base_bloc_3/common/dialog/dialog_utils.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/common/widgets/base_appbar.dart';
 import 'package:base_bloc_3/common/widgets/base_scaffold.dart';
 import 'package:base_bloc_3/di/di_setup.dart';
-import 'package:base_bloc_3/features/conversation/domain/entity/contact_entity.dart';
-import 'package:base_bloc_3/features/conversation/presentation/bloc/contact_list_bloc.dart';
+import 'package:base_bloc_3/features/conversation/presentation/bloc/add_new_contact_bloc.dart';
 import 'package:base_bloc_3/features/conversation/presentation/widgets/user_item_widget.dart';
+import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
-import 'package:base_bloc_3/routes/app_routes.dart';
 
-class ContactListPage extends StatefulWidget {
-  const ContactListPage({super.key});
+class AddNewContactPage extends StatefulWidget {
+  const AddNewContactPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ContactListPageState();
+    return _AddNewContactPageState();
   }
 }
 
-class _ContactListPageState extends BaseShareState<ContactListPage,
-    ContactListEvent, ContactListState, ContactListBloc> {
+class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
+    AddNewContactEvent, AddNewContactState, AddNewContactBloc> {
   @override
   void initState() {
     super.initState();
-    final authState = getIt<LoginBloc>().state;
-    bloc.add(ContactListEvent.loadContactList(userId: authState.userId));
+    bloc.add(const AddNewContactEvent.started());
+  }
+
+  @override
+  void listener(BuildContext context, AddNewContactState state) {
+    if (state.status == BaseStateStatus.failed) {
+      if (state.message != null && state.message!.isNotEmpty) {
+        DialogUtils.showDialog(content: state.message!);
+      }
+    }
+    if (state.status == BaseStateStatus.loading) {
+      DialogUtils.showLoading();
+    } else {
+      DialogUtils.hideLoading();
+    }
+
+    if (state.status == BaseStateStatus.success) {
+      context.pop();
+    }
   }
 
   @override
   Widget renderUI(BuildContext context) {
     return blocBuilder(
-      builder: (context, state) {
+      builder: (BuildContext c, AddNewContactState s) {
         return BaseScaffold(
           appBar: _buildAppBar(),
           body: _buildBody(),
@@ -41,12 +59,10 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
 
   Widget _buildAppBar() {
     return BaseAppBar(
-      title: 'Contact List',
+      title: 'Add New Contact',
       actions: [
         IconButton(
-          onPressed: () {
-            context.push(RouteName.addContact);
-          },
+          onPressed: () {},
           icon: const Icon(Icons.add_circle),
         ),
       ],
@@ -59,7 +75,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
       child: Column(
         children: [
           _buildSearchBar(),
-          Expanded(child: _buildContactList()),
+          Expanded(child: _buildUserList()),
         ],
       ),
     );
@@ -67,7 +83,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
 
   Widget _buildSearchBar() {
     return const SearchBar(
-      hintText: 'Search contact',
+      hintText: 'Search user',
       leading: Icon(Icons.search),
       padding: WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 16),
@@ -76,8 +92,8 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
     );
   }
 
-  Widget _buildContactList() {
-    final users = bloc.state.userList;
+  Widget _buildUserList() {
+    final users = bloc.state.users;
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (BuildContext context, int index) {
@@ -85,7 +101,14 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
           context: context,
           user: users[index],
           onTap: () {
-
+            final userId = getIt<LoginBloc>().state.userId;
+            final user = users[index];
+            bloc.add(
+              AddNewContactEvent.addNewContact(
+                userId: userId,
+                contactUserId: user.userId,
+              ),
+            );
           },
         );
       },

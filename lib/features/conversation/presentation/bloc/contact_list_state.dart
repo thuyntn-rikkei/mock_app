@@ -2,12 +2,14 @@ part of 'contact_list_bloc.dart';
 
 @CopyWith()
 class ContactListState extends BaseBlocState {
-  final List<ContactEntity>? contactList;
+  final List<ContactEntity> contactList;
+  final List<UserEntity> userList;
 
   const ContactListState({
     required super.status,
     super.message,
     this.contactList = const [],
+    this.userList = const [],
   });
 
   factory ContactListState.init() {
@@ -16,9 +18,10 @@ class ContactListState extends BaseBlocState {
     );
   }
 
-  factory ContactListState.success() {
-    return const ContactListState(
+  factory ContactListState.success({required List<UserEntity> userList}) {
+    return ContactListState(
       status: BaseStateStatus.success,
+      userList: userList,
     );
   }
 
@@ -38,5 +41,5 @@ class ContactListState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message, contactList];
+  List get props => [status, message, contactList, userList];
 }

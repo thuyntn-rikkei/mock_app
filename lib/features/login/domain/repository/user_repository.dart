@@ -6,4 +6,6 @@ abstract class UserRepository {
   Future<Either<BaseError, void>> addNewUser(UserEntity userEntity);
   Future<Either<BaseError, UserEntity?>> logIn(String email, String password);
   Future<Either<BaseError, UserEntity>> signUp(String email, String password, String fullName);
+  Future<Either<BaseError, List<UserEntity>>> fetchAllUsers();
+  Future<Either<BaseError, List<UserEntity>>> fetchUsersByIds(Set<String> userIds);
 }

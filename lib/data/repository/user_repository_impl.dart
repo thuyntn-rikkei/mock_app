@@ -49,4 +49,30 @@ class UserRepositoryImpl implements UserRepository {
       return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
+
+  @override
+  Future<Either<BaseError, List<UserEntity>>> fetchAllUsers() async{
+    try {
+      final result = await _userRemoteDatasource.fetchAllUsers();
+      final users = result.map((user) => UserEntity.fromModel(user)).toList();
+      return right(users);
+      } on FirebaseException catch (exception) {
+      return left(BaseError.httpUnknownError(exception.message ?? S.current.error_unknown));
+    } catch (exception) {
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
+    }
+  }
+
+  @override
+  Future<Either<BaseError, List<UserEntity>>> fetchUsersByIds(Set<String> userIds) async {
+    try {
+      final result = await _userRemoteDatasource.fetchUsersByIds(userIds);
+      final users = result.map((user) => UserEntity.fromModel(user)).toList();
+      return right(users);
+    } on FirebaseException catch (exception) {
+      return left(BaseError.httpUnknownError(exception.message ?? S.current.error_unknown));
+    } catch (exception) {
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
+    }
+  }
 }
