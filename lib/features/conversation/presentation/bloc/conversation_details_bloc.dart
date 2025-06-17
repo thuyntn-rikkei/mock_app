@@ -19,10 +19,12 @@ part 'conversation_details_bloc.freezed.dart';
 
 part 'conversation_details_bloc.g.dart';
 
-@lazySingleton
+@injectable
 class ConversationDetailsBloc
     extends BaseBloc<ConversationDetailsEvent, ConversationDetailsState> {
   final MessageRepository _messageRepository;
+
+  StreamSubscription<MessageEntity>? messageSubscription;
 
   ConversationDetailsBloc(this._messageRepository)
       : super(ConversationDetailsState.init()) {
@@ -33,6 +35,10 @@ class ConversationDetailsBloc
             _onLoadConversationDetails(emit, conversationId),
         sendMessage: (String message, String conversationId, String senderId) =>
             _onSendMessage(emit, message, conversationId, senderId),
+        receivedMessage: (MessageEntity message) =>
+            _onReceivedMessage(emit, message),
+        listenToMessages: (String conversationId, String currentUserId) =>
+            _listenToMessages(emit, conversationId, currentUserId),
       );
     });
   }
@@ -45,31 +51,55 @@ class ConversationDetailsBloc
     Emitter<ConversationDetailsState> emit,
     String conversationId,
   ) async {
-    emit(ConversationDetailsState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
     print('conversationId: $conversationId');
-    final result = await _messageRepository.fetchMessagesByConversationId(conversationId);
-    result.fold((l) {
-      _handleError(emit, l);
-    }, (r) {
-      emit(ConversationDetailsState.loadedListMessage(conversationId, r));
-    });
+    final result =
+        await _messageRepository.fetchMessagesByConversationId(conversationId);
+    result.fold(
+      (l) {
+        _handleError(emit, l);
+      },
+      (r) {
+        r.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.init,
+            conversationId: conversationId,
+            messages: r,
+          ),
+        );
+      },
+    );
   }
 
   void _handleError(Emitter<ConversationDetailsState> emit, BaseError error) {
     error.when(
       httpInternalServerError: (String errorBody) {
         emit(
-          ConversationDetailsState.failed(errorBody),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: errorBody,
+          ),
         );
       },
       httpUnAuthorizedError: () {
         emit(
-          ConversationDetailsState.failed('UnAuthorized'),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: 'UnAuthorized',
+          ),
         );
       },
       httpUnknownError: (String message) {
         emit(
-          ConversationDetailsState.failed(message),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: message,
+          ),
         );
       },
     );
@@ -81,7 +111,11 @@ class ConversationDetailsBloc
     String conversationId,
     String senderId,
   ) async {
-    emit(ConversationDetailsState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
 
     MessageEntity newMessage = TextMessageEntity(
       messageId: '',
@@ -102,10 +136,44 @@ class ConversationDetailsBloc
         emit(
           state.copyWith(
             status: BaseStateStatus.success,
-            messages: [...state.messages, newMessage],
           ),
         );
       },
     );
+  }
+
+  Future<void> _onReceivedMessage(
+    Emitter<ConversationDetailsState> emit,
+    MessageEntity message,
+  ) async {
+    final updatedMessages = [...state.messages, message];
+    updatedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    emit(
+      state.copyWith(messages: updatedMessages),
+    );
+  }
+
+  Future<void> _listenToMessages(
+    Emitter<ConversationDetailsState> emit,
+    String conversationId,
+    String currentUserId,
+  ) async {
+    await messageSubscription?.cancel();
+
+    messageSubscription = _messageRepository
+        .listenToMessages(conversationId, currentUserId)
+        .listen(
+      (message) {
+        add(
+          ConversationDetailsEvent.receivedMessage(message: message),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    messageSubscription?.cancel();
+    return super.close();
   }
 }

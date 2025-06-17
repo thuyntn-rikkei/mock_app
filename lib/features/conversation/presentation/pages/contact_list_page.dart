@@ -30,7 +30,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   }
 
   @override
-  void listener(BuildContext context, ContactListState state) {
+  void listener(BuildContext context, ContactListState state) async{
     if (state.status == BaseStateStatus.failed) {
       if (state.message != null && state.message!.isNotEmpty) {
         DialogUtils.showDialog(content: state.message!);
@@ -43,7 +43,8 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
     }
 
     if (state.status == BaseStateStatus.success) {
-      context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
+      await context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
+      print(state.toString());
     }
   }
 

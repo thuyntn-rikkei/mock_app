@@ -47,7 +47,11 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
     Emitter<ContactListState> emit,
     String userId,
   ) async {
-    emit(ContactListState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
 
     print(userId);
     final result = await _contactRepository.fetchContactsByUserId(userId);
@@ -56,26 +60,12 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
 
     await result.fold(
       (l) {
-        l.when(
-          httpInternalServerError: (String errorBody) {
-            emit(
-              ContactListState.failed(errorBody),
-            );
-          },
-          httpUnAuthorizedError: () {
-            emit(
-              ContactListState.failed('UnAuthorized'),
-            );
-          },
-          httpUnknownError: (String message) {
-            emit(
-              ContactListState.failed(message),
-            );
-          },
-        );
+        _handleError(emit, l);
       },
       (r) async {
-        final contactUserIds = r.map((c) => (c.userId == userId) ? c.contactUserId : c.userId).toSet();
+        final contactUserIds = r
+            .map((c) => (c.userId == userId) ? c.contactUserId : c.userId)
+            .toSet();
         final contactUsersResult =
             await _userRepository.fetchUsersByIds(contactUserIds);
         contactUsersResult.fold(
@@ -83,7 +73,13 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
             _handleError(emit, l);
           },
           (r) async {
-            emit(ContactListState.loadedUserList(userList: r));
+            emit(
+              state.copyWith(
+                status: BaseStateStatus.init,
+                userList: r,
+              ),
+            );
+            print(state.toString());
           },
         );
       },
@@ -95,7 +91,11 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
     String userId1,
     String userId2,
   ) async {
-    emit(ContactListState.loading());
+    emit(
+      state.copyWith(
+        status:  BaseStateStatus.loading,
+      ),
+    );
 
     final result =
         await _conversationRepository.createIfNotExists(userId1, userId2);
@@ -104,9 +104,18 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
       _handleError(emit, l);
     }, (r) {
       if (r != null) {
-        emit(ContactListState.success(conversationId: r.conversationId));
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.success,
+            conversationId: r.conversationId,
+          ),
+        );
+        print(state.toString());
       } else {
-        emit(ContactListState.failed('Conversation not found'));
+        state.copyWith(
+          status: BaseStateStatus.failed,
+          message: 'Conversation not found',
+        );
       }
     });
   }
@@ -115,17 +124,26 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
     error.when(
       httpInternalServerError: (String errorBody) {
         emit(
-          ContactListState.failed(errorBody),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: errorBody,
+          ),
         );
       },
       httpUnAuthorizedError: () {
         emit(
-          ContactListState.failed('UnAuthorized'),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: 'UnAuthorized',
+          ),
         );
       },
       httpUnknownError: (String message) {
         emit(
-          ContactListState.failed(message),
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: message,
+          ),
         );
       },
     );

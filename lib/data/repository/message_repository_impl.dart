@@ -72,4 +72,11 @@ class MessageRepositoryImpl implements MessageRepository {
       return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
+
+  @override
+  Stream<MessageEntity> listenToMessages(String conversationId, String currentUserId) {
+    return _messageRemoteDatasource.listenToMessages(conversationId, currentUserId).map((event) {
+      return MessageEntity.fromModel(event);
+    });
+  }
 }

@@ -21,7 +21,7 @@ class ConversationDetailsPage extends StatefulWidget {
   }
 }
 
-class _ConversationDetailsPageState extends BaseShareState<
+class _ConversationDetailsPageState extends BaseState<
     ConversationDetailsPage,
     ConversationDetailsEvent,
     ConversationDetailsState,
@@ -30,38 +30,28 @@ class _ConversationDetailsPageState extends BaseShareState<
   void initState() {
     super.initState();
     bloc.add(
-      ConversationDetailsEvent.loadConversationDetails(
+      ConversationDetailsEvent.listenToMessages(
         conversationId: widget.conversationId,
+        currentUserId: getIt<LoginBloc>().state.userId,
       ),
     );
   }
 
   @override
   void listener(BuildContext context, ConversationDetailsState state) {
-    if (state.status == BaseStateStatus.failed) {
-      if (state.message != null && state.message!.isNotEmpty) {
-        DialogUtils.showDialog(content: state.message!);
-      }
-    }
-    if (state.status == BaseStateStatus.loading) {
-      DialogUtils.showLoading();
-    } else {
-      DialogUtils.hideLoading();
-    }
+    super.listener(context, state);
+  }
 
-    if (state.status == BaseStateStatus.success) {
-      bloc.add(
-        ConversationDetailsEvent.loadConversationDetails(
-          conversationId: widget.conversationId,
-        ),
-      );
-    }
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.messageSubscription?.cancel();
   }
 
   @override
   Widget renderUI(BuildContext context) {
     return blocBuilder(
-      builder: (context, state) {
+      (context, state) {
         return BaseScaffold(
           appBar: _buildAppBar(),
           body: _buildBody(),

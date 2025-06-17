@@ -7,4 +7,5 @@ abstract class MessageRepository {
   // Future<Either<BaseError, MessageEntity>> createMessage(MessageEntity messageEntity);
   Future<Either<BaseError, List<MessageEntity>>> fetchMessagesByConversationId(String conversationId);
   Future<Either<BaseError, MessageEntity>> sendMessage(MessageEntity messageEntity);
+  Stream<MessageEntity> listenToMessages(String conversationId, String currentUserId);
 }

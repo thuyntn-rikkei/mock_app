@@ -12,24 +12,29 @@ class MessageRemoteDatasource {
   DatabaseReference get messageRef => _firebaseDatabase.ref('messages/');
 
   Future<List<MessageModel>?> fetchMessagesByConversationId(
-    String conversationId,
-  ) async {
+      String conversationId,
+      ) async {
     final query = messageRef.orderByChild('conversationId').equalTo(conversationId);
     final snapshot = await query.once();
 
     if (snapshot.snapshot.exists) {
       final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
-      return data.values.map((value) {
-        if (value['type'] == 'text') {
-          return TextMessageModel.fromJson(Map<String, dynamic>.from(value));
+
+      final messages = data.values.map((value) {
+        final map = Map<String, dynamic>.from(value);
+        if (map['type'] == 'text') {
+          return TextMessageModel.fromJson(map);
         } else {
-          return ImageMessageModel.fromJson(Map<String, dynamic>.from(value));
+          return ImageMessageModel.fromJson(map);
         }
       }).toList();
+
+      return messages;
     } else {
       return [];
     }
   }
+
 
   Future<MessageModel?> sendMessage(MessageModel messageModel) async {
     final newRef = messageRef.push();
@@ -48,5 +53,25 @@ class MessageRemoteDatasource {
       default:
         return null;
     }
+  }
+
+  Stream<MessageModel> listenToMessages(String conversationId, String currentUserId) {
+    return messageRef
+        .orderByChild('conversationId')
+        .equalTo(conversationId)
+        .onChildAdded
+        .map((event) {
+      final map = Map<String, dynamic>.from(event.snapshot.value as Map);
+      final messageType = map['type'];
+
+      MessageModel message;
+      if (messageType == 'text') {
+        message = TextMessageModel.fromJson(map);
+      } else {
+        message = ImageMessageModel.fromJson(map);
+      }
+
+      return message;
+    });
   }
 }
