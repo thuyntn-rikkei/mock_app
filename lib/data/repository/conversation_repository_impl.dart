@@ -38,4 +38,16 @@ class ConversationRepositoryImpl implements ConversationRepository {
       return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
+
+  @override
+  Future<Either<BaseError, ConversationEntity?>> createIfNotExists(String userId1, String userId2) async {
+    try {
+      final result = await _conversationRemoteDatasource.createIfNotExists(userId1, userId2);
+      return right(ConversationEntity.fromModel(result));
+    }on FirebaseException catch (exception) {
+      return left(BaseError.httpUnknownError(exception.message ?? S.current.error_unknown));
+    } catch (exception) {
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
+    }
+  }
 }

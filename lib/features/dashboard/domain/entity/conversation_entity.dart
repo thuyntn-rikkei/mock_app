@@ -6,19 +6,19 @@ import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 class ConversationEntity {
   String conversationId;
   MessageEntity? lastMessage;
-  List<UserEntity>? members;
+  List<String>? memberIds;
 
   ConversationEntity({
     required this.conversationId,
     required this.lastMessage,
-    required this.members,
+    required this.memberIds,
   });
 
   factory ConversationEntity.fromModel(ConversationModel model) {
     return ConversationEntity(
       conversationId: model.conversationId,
       lastMessage: (model.lastMessage != null) ? TextMessageEntity.fromModel(model.lastMessage!) : null,
-      members: model.members?.map((e) => UserEntity.fromModel(e)).toList(),
+      memberIds: model.memberIds,
     );
   }
 }

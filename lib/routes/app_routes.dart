@@ -6,6 +6,10 @@ class RouteName {
   static const String talkerScreen = '/talkerScreen';
   static const String contactList = '/contactList';
   static const String addContact = '/addContact';
+  static const String conversationDetails = '/conversations/:conversationId';
+
+  static String conversationDetailsPath(String conversationId) =>
+      '/conversations/$conversationId';
 
   static const publicRoutes = [
     login,

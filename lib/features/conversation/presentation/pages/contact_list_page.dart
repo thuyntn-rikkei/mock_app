@@ -1,4 +1,6 @@
 import 'package:base_bloc_3/base/base_widget.dart';
+import 'package:base_bloc_3/base/bloc/bloc_status.dart';
+import 'package:base_bloc_3/common/dialog/dialog_utils.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/common/widgets/base_appbar.dart';
 import 'package:base_bloc_3/common/widgets/base_scaffold.dart';
@@ -25,6 +27,24 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
     super.initState();
     final authState = getIt<LoginBloc>().state;
     bloc.add(ContactListEvent.loadContactList(userId: authState.userId));
+  }
+
+  @override
+  void listener(BuildContext context, ContactListState state) {
+    if (state.status == BaseStateStatus.failed) {
+      if (state.message != null && state.message!.isNotEmpty) {
+        DialogUtils.showDialog(content: state.message!);
+      }
+    }
+    if (state.status == BaseStateStatus.loading) {
+      DialogUtils.showLoading();
+    } else {
+      DialogUtils.hideLoading();
+    }
+
+    if (state.status == BaseStateStatus.success) {
+      context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
+    }
   }
 
   @override
@@ -85,7 +105,14 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
           context: context,
           user: users[index],
           onTap: () {
-
+            final userId1 = getIt<LoginBloc>().state.userId;
+            final userId2 = users[index].userId;
+            bloc.add(
+              ContactListEvent.openConversation(
+                userId1: userId1,
+                userId2: userId2,
+              ),
+            );
           },
         );
       },

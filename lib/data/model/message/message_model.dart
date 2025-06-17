@@ -19,5 +19,7 @@ abstract class MessageModel {
         return ImageMessageModel.fromEntity(entity as ImageMessageEntity);
     }
   }
+
+
 }
 

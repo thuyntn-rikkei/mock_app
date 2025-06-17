@@ -29,6 +29,7 @@ class ImageMessageModel with _$ImageMessageModel implements MessageModel {
         isRead: entity.isRead,
         imageUrl: entity.imageUrl,
         type: entity.type,
+        timestamp: entity.timestamp
     );
   }
 }

@@ -9,6 +9,7 @@ abstract class MessageEntity {
   String senderId;
   bool isRead;
   MessageType type;
+  int timestamp;
 
   MessageEntity({
     required this.messageId,
@@ -16,7 +17,19 @@ abstract class MessageEntity {
     required this.senderId,
     required this.isRead,
     required this.type,
+    required this.timestamp,
   });
+
+  factory MessageEntity.fromModel(MessageModel model){
+    switch (model.type) {
+      case MessageType.text:
+        return TextMessageEntity.fromModel(model);
+      case MessageType.image:
+        return ImageMessageEntity.fromModel(model);
+      case null:
+        return TextMessageEntity.fromModel(model);
+    }
+  }
 }
 
 class TextMessageEntity extends MessageEntity {
@@ -28,6 +41,7 @@ class TextMessageEntity extends MessageEntity {
     required String senderId,
     required bool isRead,
     required MessageType type,
+    required int timestamp,
     required this.text,
   }) : super(
           messageId: messageId,
@@ -35,6 +49,7 @@ class TextMessageEntity extends MessageEntity {
           senderId: senderId,
           isRead: isRead,
           type: type,
+          timestamp: timestamp,
         );
 
   factory TextMessageEntity.fromModel(MessageModel textModel) {
@@ -45,6 +60,7 @@ class TextMessageEntity extends MessageEntity {
       senderId: model.senderId ?? "",
       isRead: model.isRead ?? false,
       type: MessageType.text,
+      timestamp: model.timestamp ?? 0,
       text: model.text ?? "",
     );
   }
@@ -59,12 +75,14 @@ class ImageMessageEntity extends MessageEntity {
     required String senderId,
     required bool isRead,
     required MessageType type,
+    required int timestamp,
     required this.imageUrl,
   }) : super(
     messageId: messageId,
     conversationId: conversationId,
     senderId: senderId,
     isRead: isRead,
+    timestamp: timestamp,
     type: type,
   );
 
@@ -76,6 +94,7 @@ class ImageMessageEntity extends MessageEntity {
       senderId: model.senderId ?? "",
       isRead: model.isRead ?? false,
       type: MessageType.image,
+      timestamp: model.timestamp ?? 0,
       imageUrl: model.imageUrl ?? "",
     );
   }

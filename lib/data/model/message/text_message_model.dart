@@ -30,6 +30,7 @@ class TextMessageModel with _$TextMessageModel implements MessageModel {
       isRead: entity.isRead,
       text: entity.text,
       type: entity.type,
+      timestamp: entity.timestamp,
     );
   }
 }

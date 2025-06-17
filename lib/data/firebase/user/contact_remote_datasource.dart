@@ -1,4 +1,3 @@
-
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/user/contact_model.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,43 +14,41 @@ class ContactRemoteDatasource {
     final newContact = contactModel.copyWith(contactId: newRef.key);
 
     await newRef.set(newContact.toJson());
+
     return newContact;
   }
 
   Future<List<ContactModel>> fetchContactsByUserId(String userId) async {
-    final query = contactRef.orderByChild('userId').equalTo(userId);
-    final snapshot = await query.once();
+    final query1 = contactRef.orderByChild('userId').equalTo(userId);
+    final snapshot1 = await query1.once();
 
-    if (snapshot.snapshot.exists) {
-      final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
-      return data.values
+    final query2 = contactRef.orderByChild('contactUserId').equalTo(userId);
+    final snapshot2 = await query2.once();
+
+    final allData = <ContactModel>[];
+
+    if (snapshot1.snapshot.exists && snapshot1.snapshot.value is Map) {
+      final data1 = snapshot1.snapshot.value as Map;
+      allData.addAll(data1.values
           .whereType<Map<Object?, Object?>>()
-          .map((value) => Map<String, dynamic>.from(value))
-          .map(ContactModel.fromJson)
-          .toList();
-    } else {
-      return [];
+          .map((e) => Map<String, dynamic>.from(e))
+          .map(ContactModel.fromJson));
     }
+
+    if (snapshot2.snapshot.exists && snapshot2.snapshot.value is Map) {
+      final data2 = snapshot2.snapshot.value as Map;
+      allData.addAll(
+        data2.values
+            .whereType<Map<Object?, Object?>>()
+            .map((e) => Map<String, dynamic>.from(e))
+            .map(ContactModel.fromJson),
+      );
+    }
+
+    final uniqueContacts = {
+      for (var contact in allData) contact.contactId: contact,
+    }.values.toList();
+
+    return uniqueContacts;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -15,7 +15,7 @@ class ConversationModel with _$ConversationModel {
     int? createdTimestamp,
     int? updatedTimestamp,
     @MessageModelConverter() MessageModel? lastMessage,
-    List<UserModel>? members,
+    List<String>? memberIds,
   }) = _ConversationModel;
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) =>
@@ -25,7 +25,7 @@ class ConversationModel with _$ConversationModel {
     return ConversationModel(
       entity.conversationId,
       lastMessage: entity.lastMessage != null ? MessageModel.fromEntity(entity.lastMessage!) : null,
-      members: entity.members?.map((e) => UserModel.fromEntity(e)).toList(),
+      memberIds: entity.memberIds,
     );
   }
 }

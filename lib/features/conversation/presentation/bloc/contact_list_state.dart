@@ -4,12 +4,14 @@ part of 'contact_list_bloc.dart';
 class ContactListState extends BaseBlocState {
   final List<ContactEntity> contactList;
   final List<UserEntity> userList;
+  final String? conversationId;
 
   const ContactListState({
     required super.status,
     super.message,
     this.contactList = const [],
     this.userList = const [],
+    this.conversationId,
   });
 
   factory ContactListState.init() {
@@ -18,10 +20,10 @@ class ContactListState extends BaseBlocState {
     );
   }
 
-  factory ContactListState.success({required List<UserEntity> userList}) {
+  factory ContactListState.success({required String conversationId}) {
     return ContactListState(
       status: BaseStateStatus.success,
-      userList: userList,
+      conversationId: conversationId,
     );
   }
 
@@ -37,6 +39,13 @@ class ContactListState extends BaseBlocState {
   factory ContactListState.loading() {
     return const ContactListState(
       status: BaseStateStatus.loading,
+    );
+  }
+
+  factory ContactListState.loadedUserList({required List<UserEntity> userList}) {
+    return ContactListState(
+      status: BaseStateStatus.init,
+      userList: userList,
     );
   }
 
