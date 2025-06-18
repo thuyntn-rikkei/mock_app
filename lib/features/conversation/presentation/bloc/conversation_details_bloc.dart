@@ -109,11 +109,11 @@ class ConversationDetailsBloc
     String conversationId,
     String senderId,
   ) async {
-    emit(
-      state.copyWith(
-        status: BaseStateStatus.loading,
-      ),
-    );
+    // emit(
+    //   state.copyWith(
+    //     status: BaseStateStatus.loading,
+    //   ),
+    // );
 
     MessageEntity newMessage = TextMessageEntity(
       messageId: '',

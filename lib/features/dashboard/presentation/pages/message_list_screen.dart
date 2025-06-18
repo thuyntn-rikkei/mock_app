@@ -2,14 +2,12 @@ import 'package:base_bloc_3/base/base_widget.dart';
 import 'package:base_bloc_3/common/index.dart';
 import 'package:base_bloc_3/common/utils/functions/date_time_formatter.dart';
 import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
-import 'package:base_bloc_3/data/model/message/text_message_model.dart';
 import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/conversation_entity.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/message_entity.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/bloc/message_list_bloc.dart';
 import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
-import 'package:base_bloc_3/features/setting_app/bloc/setting_bloc.dart';
 import 'package:base_bloc_3/routes/app_routes.dart';
 
 class MessageListScreen extends StatefulWidget {
@@ -45,8 +43,9 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       title: 'Message List',
       actions: [
         IconButton(
-          onPressed: () {
-            context.push(RouteName.contactList);
+          onPressed: () async {
+            await context.push(RouteName.contactList);
+            bloc.add(MessageListEvent.fetch(userId: getIt<LoginBloc>().state.userId));
           },
           icon: const Icon(Icons.add_circle),
         ),
@@ -98,7 +97,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       DateTime.fromMillisecondsSinceEpoch(conversation.lastMessage!.timestamp),
     );
 
-    final user = users.firstWhere((user) => user.userId != currentUserId);
+    final user = users.firstWhere((user) => user.userId != currentUserId && conversation.memberIds!.keys.contains(user.userId));
 
     final isText = conversation.lastMessage?.type == MessageType.text;
 
@@ -120,13 +119,17 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       subtitle: Row(
         children: [
           isText
-              ? Text(
-                  (conversation.lastMessage as TextMessageEntity).text,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+              ? Expanded(
+                child: Text(
+                    (conversation.lastMessage as TextMessageEntity).text,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+                      color: isRead ? Colors.grey : Colors.black,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                )
+              )
               : const Icon(Icons.image),
         ],
       ),
@@ -136,8 +139,9 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
             fontSize: 13,
           ),
       ),
-      onTap: () {
-        context.push(RouteName.conversationDetailsPath(conversation.conversationId));
+      onTap: () async {
+        await context.push(RouteName.conversationDetailsPath(conversation.conversationId));
+        bloc.add(MessageListEvent.fetch(userId: currentUserId));
       },
     );
   }

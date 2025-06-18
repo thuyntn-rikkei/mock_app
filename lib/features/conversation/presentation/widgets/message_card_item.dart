@@ -17,7 +17,7 @@ class OwnMessageCard extends StatelessWidget {
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: const Color(0xffdcf8c6),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.fromLTRB(64, 8, 16, 8),
           child: Stack(
             children: [
               Padding(
@@ -74,7 +74,7 @@ class OtherMessageCard extends StatelessWidget {
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: const Color(0xffcdcccc),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.fromLTRB(16, 8, 64, 8),
           child: Stack(
             children: [
               Padding(

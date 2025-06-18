@@ -31,17 +31,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
 
   @override
   void listener(BuildContext context, ContactListState state) async{
-    if (state.status == BaseStateStatus.failed) {
-      if (state.message != null && state.message!.isNotEmpty) {
-        DialogUtils.showDialog(content: state.message!);
-      }
-    }
-    if (state.status == BaseStateStatus.loading) {
-      DialogUtils.showLoading();
-    } else {
-      DialogUtils.hideLoading();
-    }
-
+    super.listener(context, state);
     if (state.status == BaseStateStatus.success) {
       await context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
       print(state.toString());
@@ -65,8 +55,9 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
       title: 'Contact List',
       actions: [
         IconButton(
-          onPressed: () {
-            context.push(RouteName.addContact);
+          onPressed: () async {
+            await context.push(RouteName.addContact);
+            bloc.add(ContactListEvent.loadContactList(userId: getIt<LoginBloc>().state.userId));
           },
           icon: const Icon(Icons.add_circle),
         ),

@@ -136,20 +136,24 @@ class ConversationRemoteDatasource {
                 Map<String, dynamic>.from(lastMessageData));
 
         if ((lastMessageModel.timestamp ?? 0) < (message.timestamp ?? 0)) {
-          final updatedConversation = ConversationModel(
-            conversationId,
+          final updatedConversation = ConversationModel.fromJson(
+            preprocessConversationData(conversationData),
+          ).copyWith(
             lastMessage: message,
+            updatedTimestamp: DateTime.now().millisecondsSinceEpoch,
           );
-          await conversationRef
-              .child(conversationKey)
-              .update(updatedConversation.toJson());
+
+          await conversationRef.child(conversationKey).update(
+            updatedConversation.toJson(),
+          );
+
           return updatedConversation;
         } else {
           return null;
         }
       } else {
-
-        final existingConversation = ConversationModel.fromJson(preprocessConversationData(conversationData));
+        final existingConversation = ConversationModel.fromJson(
+            preprocessConversationData(conversationData));
         final updatedConversation = existingConversation.copyWith(
           lastMessage: message,
         );
@@ -162,7 +166,6 @@ class ConversationRemoteDatasource {
       return null;
     }
   }
-
 
   dynamic convertFirebaseData(dynamic data) {
     if (data is Map) {
@@ -178,8 +181,8 @@ class ConversationRemoteDatasource {
     }
   }
 
-  Map<String, dynamic> preprocessConversationData(Map<dynamic, dynamic> firebaseData) {
+  Map<String, dynamic> preprocessConversationData(
+      Map<dynamic, dynamic> firebaseData) {
     return convertFirebaseData(firebaseData) as Map<String, dynamic>;
   }
-
 }
