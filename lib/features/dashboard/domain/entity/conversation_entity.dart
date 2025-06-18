@@ -6,7 +6,7 @@ import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 class ConversationEntity {
   String conversationId;
   MessageEntity? lastMessage;
-  List<String>? memberIds;
+  Map<String, bool>?  memberIds;
 
   ConversationEntity({
     required this.conversationId,

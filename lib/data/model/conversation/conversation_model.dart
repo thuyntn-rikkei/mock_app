@@ -15,7 +15,7 @@ class ConversationModel with _$ConversationModel {
     int? createdTimestamp,
     int? updatedTimestamp,
     @MessageModelConverter() MessageModel? lastMessage,
-    List<String>? memberIds,
+    Map<String, bool>? memberIds,
   }) = _ConversationModel;
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) =>
@@ -24,12 +24,10 @@ class ConversationModel with _$ConversationModel {
   factory ConversationModel.fromEntity(ConversationEntity entity) {
     return ConversationModel(
       entity.conversationId,
-      lastMessage: entity.lastMessage != null ? MessageModel.fromEntity(entity.lastMessage!) : null,
+      lastMessage: entity.lastMessage != null
+          ? MessageModel.fromEntity(entity.lastMessage!)
+          : null,
       memberIds: entity.memberIds,
     );
   }
-
-
 }
-
-

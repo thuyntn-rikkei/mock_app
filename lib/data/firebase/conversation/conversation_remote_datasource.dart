@@ -14,53 +14,80 @@ class ConversationRemoteDatasource {
       _firebaseDatabase.ref('conversations/');
 
   Future<ConversationModel?> create(ConversationModel conversation) async {
-    final newRef = conversationRef.push();
-    final newConversationId = newRef.key;
+    try {
+      final newRef = conversationRef.push();
+      final newConversationId = newRef.key;
 
-    if (newConversationId != null) {
-      final conversationKey = generateConversationKey(conversation.memberIds?[0] ?? '', conversation.memberIds?[1] ?? '');
+      if (newConversationId != null && conversation.memberIds != null) {
+        final memberIdsList = conversation.memberIds?.keys.toList();
 
-      final newConversation = ConversationModel(
-        conversationKey,
-        createdTimestamp: DateTime.now().millisecondsSinceEpoch,
-        updatedTimestamp: DateTime.now().millisecondsSinceEpoch,
-        lastMessage: null,
-        memberIds: conversation.memberIds,
-      );
+        if (memberIdsList!.isEmpty) {
+          print('Error: Cannot create conversation without members');
+          return null;
+        }
 
-      await newRef.set(newConversation.toJson());
-      return newConversation;
-    } else {
+        final conversationKey = memberIdsList.length >= 2
+            ? generateConversationKey(memberIdsList[0], memberIdsList[1])
+            : generateConversationKey(memberIdsList[0], '');
+
+        final newConversation = ConversationModel(
+          conversationKey,
+          createdTimestamp: DateTime.now().millisecondsSinceEpoch,
+          updatedTimestamp: DateTime.now().millisecondsSinceEpoch,
+          lastMessage: null,
+          memberIds: conversation.memberIds,
+        );
+
+        await newRef.set(newConversation.toJson());
+        return newConversation;
+      } else {
+        print(
+            'Error: Failed to generate conversation ID or no members provided');
+        return null;
+      }
+    } catch (e) {
+      print('Error creating conversation: $e');
       return null;
     }
   }
 
-
   Future<List<ConversationModel>> fetchConversationsByUserId(
-      String userId,) async {
-    final query = conversationRef.orderByChild('members/$userId').equalTo(true);
+    String userId,
+  ) async {
+    final query =
+        conversationRef.orderByChild('memberIds/$userId').equalTo(true);
     final snapshot = await query.once();
 
     if (snapshot.snapshot.exists) {
       final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
-      return data.values
-          .map((value) => ConversationModel.fromJson(value))
-          .toList();
+      return data.entries.map(
+        (entry) {
+          final rawData = entry.value as Map<dynamic, dynamic>;
+          final processedData = preprocessConversationData(rawData);
+          return ConversationModel.fromJson(processedData);
+        },
+      ).toList();
     } else {
       return [];
     }
   }
 
   Future<ConversationModel?> checkIfConversationExists(
-      String userId1, String userId2) async {
+    String userId1,
+    String userId2,
+  ) async {
     final key = generateConversationKey(userId1, userId2);
     final query = conversationRef.orderByChild('conversationId').equalTo(key);
     final snapshot = await query.once();
 
     if (snapshot.snapshot.exists) {
       final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
-      final first = data.values.first as Map<dynamic, dynamic>;
-      return ConversationModel.fromJson(Map<String, dynamic>.from(first));
+      final conversationEntry = data.entries.first;
+      final rawData = conversationEntry.value as Map<dynamic, dynamic>;
+
+      final processedData = preprocessConversationData(rawData);
+
+      return ConversationModel.fromJson(processedData);
     } else {
       return null;
     }
@@ -71,23 +98,25 @@ class ConversationRemoteDatasource {
     return '${sorted[0]}_${sorted[1]}';
   }
 
-  Future<ConversationModel> createIfNotExists(String userId1, String userId2) async {
-    final existingConversation = await checkIfConversationExists(userId1, userId2);
+  Future<ConversationModel> createIfNotExists(
+      String userId1, String userId2) async {
+    final existingConversation =
+        await checkIfConversationExists(userId1, userId2);
 
     if (existingConversation != null) {
       return existingConversation;
     } else {
-      final newConversation = ConversationModel(
-        "",
-        memberIds: [userId1, userId2],
-      );
+      final newConversation =
+          ConversationModel("", memberIds: {userId1: true, userId2: true});
       await create(newConversation);
       return newConversation;
     }
   }
 
-  Future<ConversationModel?> updateLastMessage(String conversationId, MessageModel message) async {
-    final query = conversationRef.orderByChild('conversationId').equalTo(conversationId);
+  Future<ConversationModel?> updateLastMessage(
+      String conversationId, MessageModel message) async {
+    final query =
+        conversationRef.orderByChild('conversationId').equalTo(conversationId);
     final snapshot = await query.once();
 
     if (snapshot.snapshot.exists) {
@@ -101,29 +130,62 @@ class ConversationRemoteDatasource {
       if (lastMessageData != null) {
         final messageType = lastMessageData['type'];
         final lastMessageModel = messageType == 'text'
-            ? TextMessageModel.fromJson(Map<String, dynamic>.from(lastMessageData))
-            : ImageMessageModel.fromJson(Map<String, dynamic>.from(lastMessageData));
+            ? TextMessageModel.fromJson(
+                Map<String, dynamic>.from(lastMessageData))
+            : ImageMessageModel.fromJson(
+                Map<String, dynamic>.from(lastMessageData));
 
         if ((lastMessageModel.timestamp ?? 0) < (message.timestamp ?? 0)) {
           final updatedConversation = ConversationModel(
             conversationId,
             lastMessage: message,
           );
-          await conversationRef.child(conversationKey).update(updatedConversation.toJson());
+          await conversationRef
+              .child(conversationKey)
+              .update(updatedConversation.toJson());
           return updatedConversation;
         } else {
           return null;
         }
       } else {
-        final existingConversation = ConversationModel.fromJson(conversationData);
+
+        final existingConversation = ConversationModel.fromJson(preprocessConversationData(conversationData));
         final updatedConversation = existingConversation.copyWith(
           lastMessage: message,
         );
-        await conversationRef.child(conversationKey).update(updatedConversation.toJson());
+        await conversationRef
+            .child(conversationKey)
+            .update(updatedConversation.toJson());
         return updatedConversation;
       }
     } else {
       return null;
     }
+  }
+
+  Map<String, dynamic> preprocessConversationData(
+    Map<dynamic, dynamic> firebaseData,
+  ) {
+    final processedData = <String, dynamic>{};
+
+    firebaseData.forEach((key, value) {
+      final stringKey = key.toString();
+
+      if (stringKey == 'memberIds' && value != null) {
+        if (value is Map) {
+          final memberIds = <String, dynamic>{};
+          (value as Map).forEach((memberId, memberValue) {
+            memberIds[memberId.toString()] = memberValue;
+          });
+          processedData[stringKey] = memberIds;
+        } else {
+          processedData[stringKey] = value;
+        }
+      } else {
+        processedData[stringKey] = value;
+      }
+    });
+
+    return processedData;
   }
 }
