@@ -1,9 +1,12 @@
 import 'package:base_bloc_3/base/bloc/base_bloc.dart';
 import 'package:base_bloc_3/base/bloc/base_bloc_state.dart';
 import 'package:base_bloc_3/base/bloc/bloc_status.dart';
+import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/conversation_entity.dart';
 import 'package:base_bloc_3/features/dashboard/domain/repository/conversation_repository.dart';
+import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
+import 'package:base_bloc_3/features/login/domain/repository/user_repository.dart';
 
 part 'message_list_event.dart';
 
@@ -16,8 +19,9 @@ part 'message_list_bloc.g.dart';
 @lazySingleton
 class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
   final ConversationRepository _conversationRepository;
+  final UserRepository _userRepository;
 
-  MessageListBloc(this._conversationRepository)
+  MessageListBloc(this._conversationRepository, this._userRepository)
       : super(MessageListState.init()) {
     on<MessageListEvent>(
         (MessageListEvent event, Emitter<MessageListState> emit) async {
@@ -33,34 +37,72 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
   }
 
   Future<void> _onFetch(Emitter<MessageListState> emit, String userId) async {
-    emit(MessageListState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
 
     final result = await _conversationRepository.fetchConversations(userId);
 
     print(result);
 
-    result.fold(
-      (l) {
-        l.when(
-          httpInternalServerError: (String errorBody) {
-            emit(
-              MessageListState.failed(errorBody),
-            );
+    await result.fold(
+      (l) async {
+        _handleError(emit, l);
+      },
+      (r) async {
+        Set<String> allMemberIds = {};
+        for (var conversation in r) {
+          if (conversation.memberIds != null) {
+            allMemberIds.addAll(conversation.memberIds!.keys);
+          }
+        }
+
+        final usersResult = await _userRepository.fetchUsersByIds(allMemberIds);
+        await usersResult.fold(
+          (error) async {
+            _handleError(emit, error);
           },
-          httpUnAuthorizedError: () {
+          (users) async {
             emit(
-              MessageListState.failed('UnAuthorized'),
-            );
-          },
-          httpUnknownError: (String message) {
-            emit(
-              MessageListState.failed(message),
+              state.copyWith(
+                status: BaseStateStatus.success,
+                conversations: r,
+                users: users,
+              ),
             );
           },
         );
       },
-      (r) {
-        emit(MessageListState.success(newConversations: r));
+    );
+  }
+
+  void _handleError(Emitter<MessageListState> emit, BaseError error) {
+    error.when(
+      httpInternalServerError: (String errorBody) {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: errorBody,
+          ),
+        );
+      },
+      httpUnAuthorizedError: () {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: 'UnAuthorized',
+          ),
+        );
+      },
+      httpUnknownError: (String message) {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: message,
+          ),
+        );
       },
     );
   }

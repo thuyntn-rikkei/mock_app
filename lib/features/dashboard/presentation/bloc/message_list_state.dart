@@ -3,11 +3,13 @@ part of 'message_list_bloc.dart';
 @CopyWith()
 class  MessageListState extends BaseBlocState {
   final List<ConversationEntity> conversations;
+  final List<UserEntity> users;
 
   const  MessageListState({
     required super.status,
     super.message,
     this.conversations = const [],
+    this.users = const [],
   });
 
   factory  MessageListState.init() {
@@ -42,5 +44,5 @@ class  MessageListState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message, conversations];
+  List get props => [status, message, conversations, users];
 }

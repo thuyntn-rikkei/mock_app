@@ -9,28 +9,12 @@ class MessageModelConverter implements JsonConverter<MessageModel, Map<String, d
 
   @override
   MessageModel fromJson(Map<String, dynamic> json) {
-    switch (json['type']) {
-      case MessageType.text:
-        return TextMessageModel(
-          messageId: json['messageId'],
-          conversationId: json['conversationId'],
-          senderId: json['senderId'],
-          isRead: json['isRead'],
-          timestamp: json['timestamp'],
-          text: json['text'],
-        );
-      case MessageType.image:
-        return ImageMessageModel(
-          messageId: json['messageId'],
-          conversationId: json['conversationId'],
-          senderId: json['senderId'],
-          isRead: json['isRead'],
-          timestamp: json['timestamp'],
-          imageUrl: json['imageUrl'],
-        );
-      default:
-        throw UnimplementedError('Unknown message type: ${json['type']}');
+    if(json["type"] == MessageType.text.name){
+      return TextMessageModel.fromJson(json);
+    } else if (json["type"] == MessageType.image.name) {
+      return ImageMessageModel.fromJson(json);
     }
+    throw UnimplementedError('Unknown message type: ${json['type']}');
   }
 
   @override

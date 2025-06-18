@@ -163,29 +163,23 @@ class ConversationRemoteDatasource {
     }
   }
 
-  Map<String, dynamic> preprocessConversationData(
-    Map<dynamic, dynamic> firebaseData,
-  ) {
-    final processedData = <String, dynamic>{};
 
-    firebaseData.forEach((key, value) {
-      final stringKey = key.toString();
-
-      if (stringKey == 'memberIds' && value != null) {
-        if (value is Map) {
-          final memberIds = <String, dynamic>{};
-          (value as Map).forEach((memberId, memberValue) {
-            memberIds[memberId.toString()] = memberValue;
-          });
-          processedData[stringKey] = memberIds;
-        } else {
-          processedData[stringKey] = value;
-        }
-      } else {
-        processedData[stringKey] = value;
-      }
-    });
-
-    return processedData;
+  dynamic convertFirebaseData(dynamic data) {
+    if (data is Map) {
+      final converted = <String, dynamic>{};
+      data.forEach((key, value) {
+        converted[key.toString()] = convertFirebaseData(value);
+      });
+      return converted;
+    } else if (data is List) {
+      return data.map((item) => convertFirebaseData(item)).toList();
+    } else {
+      return data;
+    }
   }
+
+  Map<String, dynamic> preprocessConversationData(Map<dynamic, dynamic> firebaseData) {
+    return convertFirebaseData(firebaseData) as Map<String, dynamic>;
+  }
+
 }
