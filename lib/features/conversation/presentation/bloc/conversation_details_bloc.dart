@@ -6,10 +6,6 @@ import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/message_repository.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/message_entity.dart';
-import 'package:base_bloc_3/features/dashboard/domain/repository/conversation_repository.dart';
-import 'package:bloc/bloc.dart';
-import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'conversation_details_event.dart';
 
