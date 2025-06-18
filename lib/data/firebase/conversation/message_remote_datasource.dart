@@ -43,12 +43,12 @@ class MessageRemoteDatasource {
 
     switch (messageModel.type) {
       case MessageType.text:
-        var newMessage = messageModel as TextMessageModel;
-        await newRef.set(newMessage.copyWith(messageId: newRef.key!).toJson());
+        var newMessage = (messageModel as TextMessageModel).copyWith(messageId: newRef.key!);
+        await newRef.set(newMessage.toJson());
         return newMessage;
       case MessageType.image:
-        var newMessage = messageModel as ImageMessageModel;
-        await newRef.set(newMessage.copyWith(messageId: newRef.key!).toJson());
+        var newMessage = (messageModel as ImageMessageModel).copyWith(messageId: newRef.key!);
+        await newRef.set(newMessage.toJson());
         return newMessage;
       default:
         return null;

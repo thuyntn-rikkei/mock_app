@@ -28,6 +28,8 @@ class ConversationModel with _$ConversationModel {
       memberIds: entity.memberIds,
     );
   }
+
+
 }
 
 

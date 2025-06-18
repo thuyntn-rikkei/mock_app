@@ -35,13 +35,12 @@ class MessageModelConverter implements JsonConverter<MessageModel, Map<String, d
 
   @override
   Map<String, dynamic> toJson(MessageModel object){
-    switch (object.runtimeType) {
-      case TextMessageModel:
-        return (object as TextMessageModel).toJson();
-      case ImageMessageModel:
-        return (object as ImageMessageModel).toJson();
-      default:
-        throw UnimplementedError('Unknown message type: ${object.runtimeType}');
+    if (object is TextMessageModel) {
+      return object.toJson();
+    } else if (object is ImageMessageModel) {
+      return object.toJson();
+    } else {
+      throw UnimplementedError('Unknown message type: ${object.runtimeType}');
     }
   }
 }

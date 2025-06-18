@@ -6,6 +6,7 @@ import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/message_repository.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/message_entity.dart';
+import 'package:base_bloc_3/features/dashboard/domain/repository/conversation_repository.dart';
 
 part 'conversation_details_event.dart';
 
@@ -19,10 +20,11 @@ part 'conversation_details_bloc.g.dart';
 class ConversationDetailsBloc
     extends BaseBloc<ConversationDetailsEvent, ConversationDetailsState> {
   final MessageRepository _messageRepository;
+  final ConversationRepository _conversationRepository;
 
   StreamSubscription<MessageEntity>? messageSubscription;
 
-  ConversationDetailsBloc(this._messageRepository)
+  ConversationDetailsBloc(this._messageRepository, this._conversationRepository)
       : super(ConversationDetailsState.init()) {
     on<ConversationDetailsEvent>((event, emit) async {
       await event.when(
@@ -124,15 +126,26 @@ class ConversationDetailsBloc
     );
 
     final result = await _messageRepository.sendMessage(newMessage);
-    result.fold(
-      (l) {
+    await result.fold(
+      (l) async {
         _handleError(emit, l);
       },
-      (r) {
-        emit(
-          state.copyWith(
-            status: BaseStateStatus.success,
-          ),
+      (r) async {
+        final updatedResult = await _conversationRepository.updateLastMessage(
+          conversationId,
+          r,
+        );
+        await updatedResult.fold(
+          (l) async {
+            _handleError(emit, l);
+          },
+          (r) async {
+            emit(
+              state.copyWith(
+                status: BaseStateStatus.success,
+              ),
+            );
+          },
         );
       },
     );

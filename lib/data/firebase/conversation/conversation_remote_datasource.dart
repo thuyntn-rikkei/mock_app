@@ -1,5 +1,8 @@
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/conversation/conversation_model.dart';
+import 'package:base_bloc_3/data/model/message/image_message_model.dart';
+import 'package:base_bloc_3/data/model/message/message_model.dart';
+import 'package:base_bloc_3/data/model/message/text_message_model.dart';
 import 'package:base_bloc_3/data/model/user/user_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -34,7 +37,7 @@ class ConversationRemoteDatasource {
 
 
   Future<List<ConversationModel>> fetchConversationsByUserId(
-      String userId) async {
+      String userId,) async {
     final query = conversationRef.orderByChild('members/$userId').equalTo(true);
     final snapshot = await query.once();
 
@@ -80,6 +83,47 @@ class ConversationRemoteDatasource {
       );
       await create(newConversation);
       return newConversation;
+    }
+  }
+
+  Future<ConversationModel?> updateLastMessage(String conversationId, MessageModel message) async {
+    final query = conversationRef.orderByChild('conversationId').equalTo(conversationId);
+    final snapshot = await query.once();
+
+    if (snapshot.snapshot.exists) {
+      final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
+
+      final conversationKey = data.keys.first;
+      final conversationData = Map<String, dynamic>.from(data[conversationKey]);
+
+      final lastMessageData = conversationData['lastMessage'];
+
+      if (lastMessageData != null) {
+        final messageType = lastMessageData['type'];
+        final lastMessageModel = messageType == 'text'
+            ? TextMessageModel.fromJson(Map<String, dynamic>.from(lastMessageData))
+            : ImageMessageModel.fromJson(Map<String, dynamic>.from(lastMessageData));
+
+        if ((lastMessageModel.timestamp ?? 0) < (message.timestamp ?? 0)) {
+          final updatedConversation = ConversationModel(
+            conversationId,
+            lastMessage: message,
+          );
+          await conversationRef.child(conversationKey).update(updatedConversation.toJson());
+          return updatedConversation;
+        } else {
+          return null;
+        }
+      } else {
+        final existingConversation = ConversationModel.fromJson(conversationData);
+        final updatedConversation = existingConversation.copyWith(
+          lastMessage: message,
+        );
+        await conversationRef.child(conversationKey).update(updatedConversation.toJson());
+        return updatedConversation;
+      }
+    } else {
+      return null;
     }
   }
 }
