@@ -20,6 +20,7 @@ part 'message_list_bloc.g.dart';
 class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
   final ConversationRepository _conversationRepository;
   final UserRepository _userRepository;
+  StreamSubscription<List<ConversationEntity>>? _conversationSubscription;
 
   MessageListBloc(this._conversationRepository, this._userRepository)
       : super(MessageListState.init()) {
@@ -28,6 +29,8 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
       await event.when(
         started: () => _onStarted(emit),
         fetch: (userId) => _onFetch(emit, userId),
+        listenConversation: (userId) => _listenToConversations(emit, userId),
+        addConversations: (conversations) => addConversations(emit, conversations),
       );
     });
   }
@@ -76,6 +79,72 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
         );
       },
     );
+  }
+
+  Future<void> _listenToConversations(
+    Emitter<MessageListState> emit,
+    String userId,
+  ) async {
+    await _conversationSubscription?.cancel();
+
+    _conversationSubscription =
+        _conversationRepository.listenToConversations(userId).listen(
+      (conversations) async {
+        add(MessageListEvent.addConversations(conversations: conversations));
+      },
+      onError: (error) {
+        if (!emit.isDone) {
+          _handleError(emit, error);
+        }
+      },
+    );
+  }
+
+  Future<void> addConversations(
+    Emitter<MessageListState> emit,
+    List<ConversationEntity> conversations,
+  ) async {
+    Set<String> allMemberIds = {};
+    for (var conversation in conversations) {
+      if (conversation.memberIds != null) {
+        allMemberIds.addAll(conversation.memberIds!.keys);
+      }
+    }
+
+    final usersResult = await _userRepository.fetchUsersByIds(allMemberIds);
+
+    if (emit.isDone) return;
+
+    await usersResult.fold(
+      (error) async {
+        if (!emit.isDone) {
+          emit(
+            state.copyWith(
+              status: BaseStateStatus.failed,
+              conversations: conversations,
+              message: error.toString(),
+            ),
+          );
+        }
+      },
+      (users) async {
+        if (!emit.isDone) {
+          emit(
+            state.copyWith(
+              status: BaseStateStatus.success,
+              conversations: conversations,
+              users: users,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _conversationSubscription?.cancel();
+    return super.close();
   }
 
   void _handleError(Emitter<MessageListState> emit, BaseError error) {

@@ -67,4 +67,11 @@ class ConversationRepositoryImpl implements ConversationRepository {
       return left(BaseError.httpUnknownError(S.current.error_unknown));
     }
   }
+
+  @override
+  Stream<List<ConversationEntity>> listenToConversations(String currentUserId) {
+    return _conversationRemoteDatasource.listenToConversations(currentUserId).map((event) {
+      return event.map((e) => ConversationEntity.fromModel(e)).toList();
+    });
+  }
 }

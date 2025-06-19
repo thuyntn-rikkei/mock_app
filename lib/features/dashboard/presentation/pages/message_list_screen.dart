@@ -25,7 +25,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
   void initState() {
     super.initState();
     final authState = getIt<LoginBloc>().state;
-    bloc.add(MessageListEvent.fetch(userId: authState.userId));
+    bloc.add(MessageListEvent.listenConversation(userId: authState.userId));
   }
 
   @override
@@ -45,7 +45,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
         IconButton(
           onPressed: () async {
             await context.push(RouteName.contactList);
-            bloc.add(MessageListEvent.fetch(userId: getIt<LoginBloc>().state.userId));
+            // bloc.add(MessageListEvent.fetch(userId: getIt<LoginBloc>().state.userId));
           },
           icon: const Icon(Icons.add_circle),
         ),
@@ -141,7 +141,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       ),
       onTap: () async {
         await context.push(RouteName.conversationDetailsPath(conversation.conversationId));
-        bloc.add(MessageListEvent.fetch(userId: currentUserId));
+        // bloc.add(MessageListEvent.fetch(userId: currentUserId));
       },
     );
   }

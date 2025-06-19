@@ -144,8 +144,8 @@ class ConversationRemoteDatasource {
           );
 
           await conversationRef.child(conversationKey).update(
-            updatedConversation.toJson(),
-          );
+                updatedConversation.toJson(),
+              );
 
           return updatedConversation;
         } else {
@@ -184,5 +184,23 @@ class ConversationRemoteDatasource {
   Map<String, dynamic> preprocessConversationData(
       Map<dynamic, dynamic> firebaseData) {
     return convertFirebaseData(firebaseData) as Map<String, dynamic>;
+  }
+
+  Stream<List<ConversationModel>> listenToConversations(String currentUserId) {
+    return conversationRef.onValue.map(
+      (event) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
+        return data.entries
+            .where(
+                (e) => (e.value['memberIds'] as Map?)!.containsKey(currentUserId),)
+            .map(
+          (entry) {
+            final rawData = entry.value as Map<dynamic, dynamic>;
+            final processedData = preprocessConversationData(rawData);
+            return ConversationModel.fromJson(processedData);
+          },
+        ).toList();
+      },
+    );
   }
 }
