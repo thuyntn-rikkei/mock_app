@@ -3,10 +3,12 @@ import 'package:base_bloc_3/base/bloc/base_bloc_state.dart';
 import 'package:base_bloc_3/base/bloc/bloc_status.dart';
 import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
+import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/conversation_entity.dart';
 import 'package:base_bloc_3/features/dashboard/domain/repository/conversation_repository.dart';
 import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 import 'package:base_bloc_3/features/login/domain/repository/user_repository.dart';
+import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
 
 part 'message_list_event.dart';
 
@@ -31,6 +33,8 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
         fetch: (userId) => _onFetch(emit, userId),
         listenConversation: (userId) => _listenToConversations(emit, userId),
         addConversations: (conversations) => addConversations(emit, conversations),
+        search: (query) => _search(emit, query),
+        addSearchQuery: (query) => _addSearchQuery(emit, query),
       );
     });
   }
@@ -87,8 +91,7 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
   ) async {
     await _conversationSubscription?.cancel();
 
-    _conversationSubscription =
-        _conversationRepository.listenToConversations(userId).listen(
+    _conversationSubscription = _conversationRepository.listenToConversations(userId).listen(
       (conversations) async {
         add(MessageListEvent.addConversations(conversations: conversations));
       },
@@ -104,6 +107,7 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
     Emitter<MessageListState> emit,
     List<ConversationEntity> conversations,
   ) async {
+
     Set<String> allMemberIds = {};
     for (var conversation in conversations) {
       if (conversation.memberIds != null) {
@@ -136,9 +140,51 @@ class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
               users: users,
             ),
           );
+          add(MessageListEvent.search(query: state.searchQuery));
         }
       },
     );
+  }
+
+  Future<void> _addSearchQuery(Emitter<MessageListState> emit, String query) async {
+    emit(
+      state.copyWith(
+        searchQuery: query,
+      ),
+    );
+  }
+
+  Future<void> _search(Emitter<MessageListState> emit, String query) async {
+    final searchedConversations = _searchConversationsByQuery(query);
+    emit(
+      state.copyWith(
+        searchedConversations: searchedConversations,
+      ),
+    );
+  }
+
+  List<ConversationEntity> _searchConversationsByQuery(String query) {
+    if (query.isEmpty) {
+      return state.conversations;
+    }
+
+    final lowerCaseQuery = query.toLowerCase();
+
+    final currentUserId = getIt<LoginBloc>().state.userId;
+
+    return state.conversations.where((conversation) {
+      final memberNames = state.users.where((user) {
+        return conversation.memberIds!.keys.contains(user.userId) && user.userId != currentUserId;
+      }).map((user) => user.fullName.toLowerCase()).toList();
+
+      for (var name in memberNames) {
+        if (name.contains(lowerCaseQuery)) {
+          return true;
+        }
+      }
+
+      return false;
+    }).toList();
   }
 
   @override

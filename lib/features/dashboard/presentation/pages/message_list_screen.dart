@@ -21,11 +21,29 @@ class MessageListScreen extends StatefulWidget {
 
 class _MessageListScreenState extends BaseState<MessageListScreen,
     MessageListEvent, MessageListState, MessageListBloc> {
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
+  final int _debounceDelay = 500;
+
   @override
   void initState() {
     super.initState();
     final authState = getIt<LoginBloc>().state;
+    _searchController.addListener(_onSearchChanged);
     bloc.add(MessageListEvent.listenConversation(userId: authState.userId));
+  }
+
+  void _onSearchChanged() {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+
+    _debounceTimer = Timer(
+      Duration(milliseconds: _debounceDelay),
+      () {
+        bloc.add(
+          MessageListEvent.search(query: _searchController.text),
+        );
+      },
+    );
   }
 
   @override
@@ -67,37 +85,48 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
   }
 
   Widget _buildSearchBar() {
-    return const SearchBar(
+    return SearchBar(
       hintText: 'Search message',
-      leading: Icon(Icons.search),
-      padding: WidgetStatePropertyAll<EdgeInsets>(
+      leading: const Icon(Icons.search),
+      padding: const WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 16),
       ),
-      elevation: WidgetStatePropertyAll(0),
+      elevation: const WidgetStatePropertyAll(0),
+      controller: _searchController,
     );
   }
 
   Widget _buildMessageList() {
     final currentUserId = getIt<LoginBloc>().state.userId;
     return blocBuilder((context, state) {
+      final conversations = state.searchedConversations;
+      final users = state.users;
       return ListView.builder(
-        itemCount: state.conversations.length,
+        itemCount: conversations.length,
         itemBuilder: (BuildContext context, int index) {
-          final conversation = state.conversations[index];
+          final conversation = conversations[index];
           return _buildConversationItem(
-              conversation, state.users, currentUserId);
+            conversation,
+            users,
+            currentUserId,
+          );
         },
       );
     });
   }
 
-  Widget _buildConversationItem(ConversationEntity conversation,
-      List<UserEntity> users, String currentUserId) {
+  Widget _buildConversationItem(
+    ConversationEntity conversation,
+    List<UserEntity> users,
+    String currentUserId,
+  ) {
     final formattedDateTime = formatMessageTime(
       DateTime.fromMillisecondsSinceEpoch(conversation.lastMessage!.timestamp),
     );
 
-    final user = users.firstWhere((user) => user.userId != currentUserId && conversation.memberIds!.keys.contains(user.userId));
+    final user = users.firstWhere((user) =>
+        user.userId != currentUserId &&
+        conversation.memberIds!.keys.contains(user.userId));
 
     final isText = conversation.lastMessage?.type == MessageType.text;
 
@@ -120,7 +149,7 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
         children: [
           isText
               ? Expanded(
-                child: Text(
+                  child: Text(
                     (conversation.lastMessage as TextMessageEntity).text,
                     style: TextStyle(
                       fontSize: 13,
@@ -129,18 +158,19 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-              )
+                )
               : const Icon(Icons.image),
         ],
       ),
       trailing: Text(
-          formattedDateTime,
-          style: const TextStyle(
-            fontSize: 13,
-          ),
+        formattedDateTime,
+        style: const TextStyle(
+          fontSize: 13,
+        ),
       ),
       onTap: () async {
-        await context.push(RouteName.conversationDetailsPath(conversation.conversationId));
+        await context.push(
+            RouteName.conversationDetailsPath(conversation.conversationId));
         // bloc.add(MessageListEvent.fetch(userId: currentUserId));
       },
     );
