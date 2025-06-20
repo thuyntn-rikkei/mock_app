@@ -4,9 +4,14 @@ import 'package:base_bloc_3/base/bloc/bloc_status.dart';
 import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/data/model/message/message_type_enum.dart';
+import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/message_repository.dart';
+import 'package:base_bloc_3/features/dashboard/domain/entity/conversation_entity.dart';
 import 'package:base_bloc_3/features/dashboard/domain/entity/message_entity.dart';
 import 'package:base_bloc_3/features/dashboard/domain/repository/conversation_repository.dart';
+import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
+import 'package:base_bloc_3/features/login/domain/repository/user_repository.dart';
+import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
 
 part 'conversation_details_event.dart';
 
@@ -21,10 +26,12 @@ class ConversationDetailsBloc
     extends BaseBloc<ConversationDetailsEvent, ConversationDetailsState> {
   final MessageRepository _messageRepository;
   final ConversationRepository _conversationRepository;
+  final UserRepository _userRepository;
 
   StreamSubscription<MessageEntity>? messageSubscription;
 
-  ConversationDetailsBloc(this._messageRepository, this._conversationRepository)
+  ConversationDetailsBloc(this._messageRepository, this._conversationRepository,
+      this._userRepository)
       : super(ConversationDetailsState.init()) {
     on<ConversationDetailsEvent>((event, emit) async {
       await event.when(
@@ -37,6 +44,9 @@ class ConversationDetailsBloc
             _onReceivedMessage(emit, message),
         listenToMessages: (String conversationId, String currentUserId) =>
             _listenToMessages(emit, conversationId, currentUserId),
+        getConversationDetails: (String conversationId) =>
+            _getConversationDetails(emit, conversationId),
+        getMembers: (Set<String> memberIds) => _getMembers(emit, memberIds),
       );
     });
   }
@@ -158,7 +168,9 @@ class ConversationDetailsBloc
     final updatedMessages = [...state.messages, message];
     updatedMessages.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     emit(
-      state.copyWith(messages: updatedMessages),
+      state.copyWith(
+          messages: updatedMessages,
+      ),
     );
   }
 
@@ -175,6 +187,51 @@ class ConversationDetailsBloc
       (message) {
         add(
           ConversationDetailsEvent.receivedMessage(message: message),
+        );
+      },
+    );
+  }
+
+  Future<void> _getConversationDetails(
+      Emitter<ConversationDetailsState> emit, String conversationId) async {
+    final result =
+        await _conversationRepository.getConversationDetails(conversationId);
+
+    result.fold(
+      (l) {
+        _handleError(emit, l);
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            conversation: r,
+          ),
+        );
+        add(
+          ConversationDetailsEvent.getMembers(
+            memberIds: r.memberIds?.keys.toSet() ?? {},
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _getMembers(
+      Emitter<ConversationDetailsState> emit, Set<String> memberIds) async {
+    final result = await _userRepository.fetchUsersByIds(memberIds);
+
+    result.fold(
+      (l) {
+        _handleError(emit, l);
+      },
+      (r) {
+        final currentUserId = getIt<LoginBloc>().state.userId;
+        final members = r.where((user) => user.userId != currentUserId).toList();
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.success,
+            members: members,
+          ),
         );
       },
     );

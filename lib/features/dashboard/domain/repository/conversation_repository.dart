@@ -9,4 +9,5 @@ abstract class ConversationRepository {
   Future<Either<BaseError, ConversationEntity?>> createIfNotExists(String userId1, String userId2);
   Future<Either<BaseError, ConversationEntity?>> updateLastMessage(String conversationId, MessageEntity message);
   Stream<List<ConversationEntity>> listenToConversations(String currentUserId);
+  Future<Either<BaseError, ConversationEntity>> getConversationDetails(String conversationId);
 }

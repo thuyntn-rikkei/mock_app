@@ -4,12 +4,16 @@ part of 'conversation_details_bloc.dart';
 class ConversationDetailsState extends BaseBlocState {
   final List<MessageEntity> messages;
   final String? conversationId;
+  final ConversationEntity? conversation;
+  final List<UserEntity> members;
 
   const ConversationDetailsState({
     required super.status,
     super.message,
     this.messages = const [],
     this.conversationId,
+    this.conversation,
+    this.members = const [],
   });
 
   factory ConversationDetailsState.init() {
@@ -51,5 +55,5 @@ class ConversationDetailsState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message, messages, conversationId];
+  List get props => [status, message, messages, conversationId, members];
 }

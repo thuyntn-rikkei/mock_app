@@ -203,4 +203,19 @@ class ConversationRemoteDatasource {
       },
     );
   }
+
+  Future<ConversationModel?> getConversationDetails(String conversationId) async {
+    final query = conversationRef.orderByChild('conversationId').equalTo(conversationId);
+    final snapshot = await query.once();
+
+    if (snapshot.snapshot.exists) {
+      final data = snapshot.snapshot.value as Map<dynamic, dynamic>;
+      final conversationEntry = data.entries.first;
+      final rawData = conversationEntry.value as Map<dynamic, dynamic>;
+      final processedData = preprocessConversationData(rawData);
+      return ConversationModel.fromJson(processedData);
+    } else {
+      return null;
+    }
+  }
 }

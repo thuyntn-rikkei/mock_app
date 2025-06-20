@@ -74,4 +74,19 @@ class ConversationRepositoryImpl implements ConversationRepository {
       return event.map((e) => ConversationEntity.fromModel(e)).toList();
     });
   }
+
+  @override
+  Future<Either<BaseError, ConversationEntity>> getConversationDetails(String conversationId) async {
+    try {
+      final result = await _conversationRemoteDatasource.getConversationDetails(conversationId);
+      if (result == null) {
+        return left(BaseError.httpUnknownError(S.current.not_found));
+      }
+      return right(ConversationEntity.fromModel(result));
+    }on FirebaseException catch (exception) {
+      return left(BaseError.httpUnknownError(exception.message ?? S.current.error_unknown));
+    } catch (exception) {
+      return left(BaseError.httpUnknownError(S.current.error_unknown));
+    }
+  }
 }

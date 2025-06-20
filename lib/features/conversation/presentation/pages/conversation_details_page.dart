@@ -8,6 +8,7 @@ import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/features/conversation/presentation/bloc/conversation_details_bloc.dart';
 import 'package:base_bloc_3/features/conversation/presentation/widgets/chat_input_item.dart';
 import 'package:base_bloc_3/features/conversation/presentation/widgets/message_item_widget.dart';
+import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
 
 class ConversationDetailsPage extends StatefulWidget {
@@ -35,6 +36,10 @@ class _ConversationDetailsPageState extends BaseState<
         currentUserId: getIt<LoginBloc>().state.userId,
       ),
     );
+    bloc.add(
+      ConversationDetailsEvent.getConversationDetails(
+          conversationId: widget.conversationId),
+    );
   }
 
   @override
@@ -53,16 +58,37 @@ class _ConversationDetailsPageState extends BaseState<
     return blocBuilder(
       (context, state) {
         return BaseScaffold(
-          appBar: _buildAppBar(),
+          appBar: _buildAppBar(state),
           body: _buildBody(),
         );
       },
     );
   }
 
-  Widget _buildAppBar() {
-    return const BaseAppBar(
-      title: 'Message',
+  Widget _buildAppBar(ConversationDetailsState state) {
+    if(state.status == BaseStateStatus.success){
+      return BaseAppBar(
+        appBarWidget: _buildMessageAppBar(state.members.first),
+      );
+    }
+    else{
+      return const BaseAppBar(
+        title: 'Conversation Details',
+      );
+    }
+  }
+
+  Widget _buildMessageAppBar(UserEntity user){
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(user.avatarUrl),
+      ),
+      title: Text(
+        user.fullName,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        )
+      ),
     );
   }
 
