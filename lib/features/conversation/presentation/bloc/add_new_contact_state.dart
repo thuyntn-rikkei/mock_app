@@ -5,6 +5,7 @@ class AddNewContactState extends BaseBlocState {
   final List<UserEntity> users;
   final List<UserEntity> searchedUsers;
   final List<ContactEntity> contacts;
+  final List<FriendRequestEntity> friendRequests;
 
   const AddNewContactState({
     required super.status,
@@ -12,6 +13,7 @@ class AddNewContactState extends BaseBlocState {
     this.users = const [],
     this.searchedUsers = const [],
     this.contacts = const [],
+    this.friendRequests = const [],
   });
 
   factory AddNewContactState.init() {
@@ -49,5 +51,5 @@ class AddNewContactState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message, users, searchedUsers, contacts];
+  List get props => [status, message, users, searchedUsers, contacts, friendRequests];
 }

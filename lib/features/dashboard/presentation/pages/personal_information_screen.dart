@@ -78,7 +78,9 @@ class _PersonalInformationScreenState extends BaseState<
         user: user,
         onTap: () {},
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            context.push(RouteName.editPersonalInformation);
+          },
           icon: const Icon(Icons.edit),
         ),
       ),

@@ -8,6 +8,7 @@ class RouteName {
   static const String addContact = '/addContact';
   static const String conversationDetails = '/conversations/:conversationId';
   static const String personalInformation = '/personalInformation';
+  static const String editPersonalInformation = '/editPersonalInformation';
 
   static String conversationDetailsPath(String conversationId) =>
       '/conversations/$conversationId';

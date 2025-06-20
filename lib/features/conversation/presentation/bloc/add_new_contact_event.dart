@@ -8,4 +8,6 @@ class AddNewContactEvent with _$AddNewContactEvent {
   const factory AddNewContactEvent.loadContactList({required String userId}) = _LoadContactList;
   const factory AddNewContactEvent.addMyself() = _AddMyself;
   const factory AddNewContactEvent.addExistingContact(String userName) = _AddExistingContact;
+  const factory AddNewContactEvent.loadFriendRequestList({required String userId}) = _LoadFriendRequestList;
+  const factory AddNewContactEvent.addFriendRequest({required String userId, required String contactUserId}) = _AddFriendRequest;
 }

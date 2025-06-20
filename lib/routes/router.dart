@@ -4,6 +4,7 @@ import 'package:base_bloc_3/features/conversation/presentation/pages/add_new_con
 import 'package:base_bloc_3/features/conversation/presentation/pages/contact_list_page.dart';
 import 'package:base_bloc_3/features/conversation/presentation/pages/conversation_details_page.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:base_bloc_3/features/dashboard/presentation/pages/edit_personal_information.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/message_list_screen.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/personal_information_screen.dart';
 import 'package:base_bloc_3/features/login/presentation/pages/login_page.dart';
@@ -69,6 +70,11 @@ final router = GoRouter(
       path: RouteName.personalInformation,
       pageBuilder: (BuildContext context, GoRouterState state) =>
           MaterialPage<void>(key: state.pageKey, child: const PersonalInformationScreen()),
+    ),
+    GoRoute(
+      path: RouteName.editPersonalInformation,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          MaterialPage<void>(key: state.pageKey, child: const EditPersonalInformationScreen()),
     ),
   ],
   redirect: (context, state) {

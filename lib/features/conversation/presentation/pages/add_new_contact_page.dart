@@ -1,5 +1,6 @@
 import 'package:base_bloc_3/base/base_widget.dart';
 import 'package:base_bloc_3/base/bloc/bloc_status.dart';
+import 'package:base_bloc_3/common/constants/friend_request_status.dart';
 import 'package:base_bloc_3/common/dialog/dialog_utils.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/common/widgets/base_appbar.dart';
@@ -111,28 +112,49 @@ class _AddNewContactPageState extends BaseState<AddNewContactPage,
   Widget _buildUserList() {
     final users = bloc.state.searchedUsers;
     final contacts = bloc.state.contacts;
+    final friendRequests = bloc.state.friendRequests;
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (BuildContext context, int index) {
         final user = users[index];
         final currentUserId = getIt<LoginBloc>().state.userId;
-        final trailingWidget = user.userId == currentUserId
-            ? const Text(
-                'You',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-              )
-            : (contacts.any((element) => element.contactUserId == user.userId)
-                ? const Text(
-                    'Friend',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green,
-                    ),
-                  )
-                : const Icon(Icons.add));
+        Widget? trailingWidget = const Icon(Icons.add);
+
+        if(user.userId == currentUserId){
+          trailingWidget = const Text(
+            'You',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+          );
+        }
+        else if(contacts.any((element) => element.contactUserId == user.userId)){
+          trailingWidget = const Text(
+            'Friend',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.green,
+            ),
+          );
+        }
+        else if(friendRequests.any((element) => element.friendRequestUserId == user.userId)){
+          if(friendRequests.firstWhere((element) => element.friendRequestUserId == user.userId).status == FriendRequestStatus.pending){
+            trailingWidget =  const Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.red,
+              ),
+            );
+          }
+          else if(friendRequests.firstWhere((element) => element.friendRequestUserId == user.userId).status == FriendRequestStatus.rejected){
+            trailingWidget = const Icon(Icons.add);
+          }
+        }
+        else{
+          trailingWidget = const Icon(Icons.add);
+        }
 
         final onTap = user.userId == currentUserId
             ? () {
@@ -150,7 +172,7 @@ class _AddNewContactPageState extends BaseState<AddNewContactPage,
                     final userId = getIt<LoginBloc>().state.userId;
                     final user = users[index];
                     bloc.add(
-                      AddNewContactEvent.addNewContact(
+                      AddNewContactEvent.addFriendRequest(
                         userId: userId,
                         contactUserId: user.userId,
                       ),
