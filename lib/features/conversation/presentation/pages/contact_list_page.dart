@@ -22,11 +22,30 @@ class ContactListPage extends StatefulWidget {
 
 class _ContactListPageState extends BaseShareState<ContactListPage,
     ContactListEvent, ContactListState, ContactListBloc> {
+
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
+  final int _debounceDelay = 500;
+
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
     final authState = getIt<LoginBloc>().state;
     bloc.add(ContactListEvent.loadContactList(userId: authState.userId));
+  }
+
+  void _onSearchChanged() {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+
+    _debounceTimer = Timer(
+      Duration(milliseconds: _debounceDelay),
+          () {
+        bloc.add(
+          ContactListEvent.search(query: _searchController.text),
+        );
+      },
+    );
   }
 
   @override
@@ -78,18 +97,19 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   }
 
   Widget _buildSearchBar() {
-    return const SearchBar(
+    return SearchBar(
       hintText: 'Search contact',
-      leading: Icon(Icons.search),
-      padding: WidgetStatePropertyAll<EdgeInsets>(
+      leading: const Icon(Icons.search),
+      padding: const WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 16),
       ),
-      elevation: WidgetStatePropertyAll(0),
+      elevation: const WidgetStatePropertyAll(0),
+      controller: _searchController,
     );
   }
 
   Widget _buildContactList() {
-    final users = bloc.state.userList;
+    final users = bloc.state.searchedUserList;
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (BuildContext context, int index) {

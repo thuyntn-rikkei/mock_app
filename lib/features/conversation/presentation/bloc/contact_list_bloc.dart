@@ -35,6 +35,7 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
         loadContactList: (String userId) => _onLoadContactList(emit, userId),
         openConversation: (String userId1, String userId2) =>
             _onOpenConversation(emit, userId1, userId2),
+        search: (String query) => _search(emit, query),
       );
     });
   }
@@ -93,7 +94,7 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
   ) async {
     emit(
       state.copyWith(
-        status:  BaseStateStatus.loading,
+        status: BaseStateStatus.loading,
       ),
     );
 
@@ -118,6 +119,30 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
         );
       }
     });
+  }
+
+  Future<void> _search(Emitter<ContactListState> emit, String query) async {
+    final searchedUsers = _searchUsersByQuery(query);
+    emit(
+      state.copyWith(
+        searchedUserList: searchedUsers,
+      ),
+    );
+  }
+
+  List<UserEntity> _searchUsersByQuery(String query) {
+    if (query.isEmpty) {
+      return state.userList;
+    }
+
+    final lowerCaseQuery = query.toLowerCase();
+
+    return state.userList.where(
+      (user) {
+        if (user.fullName.toLowerCase().contains(lowerCaseQuery)) return true;
+        return false;
+      },
+    ).toList();
   }
 
   void _handleError(Emitter<ContactListState> emit, BaseError error) {
