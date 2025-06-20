@@ -76,8 +76,9 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
           (r) async {
             emit(
               state.copyWith(
-                status: BaseStateStatus.init,
+                status: BaseStateStatus.success,
                 userList: r,
+                searchedUserList: r,
               ),
             );
             print(state.toString());
@@ -107,7 +108,7 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
       if (r != null) {
         emit(
           state.copyWith(
-            status: BaseStateStatus.success,
+            status: BaseStateStatus.redirecting,
             conversationId: r.conversationId,
           ),
         );
@@ -125,6 +126,7 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
     final searchedUsers = _searchUsersByQuery(query);
     emit(
       state.copyWith(
+        status: BaseStateStatus.success,
         searchedUserList: searchedUsers,
       ),
     );

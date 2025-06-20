@@ -1,6 +1,7 @@
 import 'package:base_bloc_3/base/bloc/base_bloc.dart';
 import 'package:base_bloc_3/base/bloc/base_bloc_state.dart';
 import 'package:base_bloc_3/base/bloc/bloc_status.dart';
+import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/features/conversation/domain/entity/contact_entity.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/contact_repository.dart';
@@ -31,12 +32,17 @@ class AddNewContactBloc
         started: () => _onStarted(emit),
         addNewContact: (String userId, String contactUserId) =>
             _onAddNewContact(emit, userId, contactUserId),
+        search: (String query) => _search(emit, query),
       );
     });
   }
 
   Future<void> _onStarted(Emitter<AddNewContactState> emit) async {
-    emit(AddNewContactState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
 
     final result = await _userRepository.fetchAllUsers();
 
@@ -44,26 +50,16 @@ class AddNewContactBloc
 
     result.fold(
       (l) {
-        l.when(
-          httpInternalServerError: (String errorBody) {
-            emit(
-              AddNewContactState.failed(errorBody),
-            );
-          },
-          httpUnAuthorizedError: () {
-            emit(
-              AddNewContactState.failed('UnAuthorized'),
-            );
-          },
-          httpUnknownError: (String message) {
-            emit(
-              AddNewContactState.failed(message),
-            );
-          },
-        );
+        _handleError(emit, l);
       },
       (r) {
-        emit(AddNewContactState.loadedListUsers(r));
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.init,
+            users: r,
+            searchedUsers: r
+          )
+        );
       },
     );
   }
@@ -73,7 +69,11 @@ class AddNewContactBloc
     String userId,
     String contactUserId,
   ) async {
-    emit(AddNewContactState.loading());
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
 
     print(userId);
     final result = await _contactRepository.createContact(
@@ -88,27 +88,69 @@ class AddNewContactBloc
 
     result.fold(
       (l) {
-        l.when(
-          httpInternalServerError: (String errorBody) {
-            emit(
-              AddNewContactState.failed(errorBody),
-            );
-          },
-          httpUnAuthorizedError: () {
-            emit(
-              AddNewContactState.failed('UnAuthorized'),
-            );
-          },
-          httpUnknownError: (String message) {
-            emit(
-              AddNewContactState.failed(message),
-            );
-          },
-        );
+        _handleError(emit, l);
       },
       (r) {
-        emit(AddNewContactState.success());
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.success,
+          ),
+        );
       },
     );
   }
+
+  Future<void> _search(Emitter<AddNewContactState> emit, String query) async {
+    final searchedUsers = _searchUsersByQuery(query);
+    emit(
+      state.copyWith(
+        searchedUsers: searchedUsers,
+      ),
+    );
+  }
+
+  List<UserEntity> _searchUsersByQuery(String query) {
+    if (query.isEmpty) {
+      return state.users;
+    }
+
+    final lowerCaseQuery = query.toLowerCase();
+
+    return state.users.where(
+          (user) {
+        if (user.fullName.toLowerCase().contains(lowerCaseQuery)) return true;
+        return false;
+      },
+    ).toList();
+  }
+
+  void _handleError(Emitter<AddNewContactState> emit, BaseError error) {
+    error.when(
+      httpInternalServerError: (String errorBody) {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: errorBody,
+          ),
+        );
+      },
+      httpUnAuthorizedError: () {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: 'UnAuthorized',
+          ),
+        );
+      },
+      httpUnknownError: (String message) {
+        emit(
+          state.copyWith(
+            status: BaseStateStatus.failed,
+            message: message,
+          ),
+        );
+      },
+    );
+  }
+
 }

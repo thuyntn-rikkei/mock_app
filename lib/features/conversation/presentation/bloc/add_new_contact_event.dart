@@ -4,4 +4,5 @@ part of 'add_new_contact_bloc.dart';
 class AddNewContactEvent with _$AddNewContactEvent {
   const factory AddNewContactEvent.started() = _Started;
   const factory AddNewContactEvent.addNewContact({required String userId, required String contactUserId}) = _AddNewContact;
+  const factory AddNewContactEvent.search({required String query}) = _Search;
 }

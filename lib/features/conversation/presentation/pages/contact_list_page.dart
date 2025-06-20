@@ -51,7 +51,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   @override
   void listener(BuildContext context, ContactListState state) async{
     super.listener(context, state);
-    if (state.status == BaseStateStatus.success) {
+    if (state.status == BaseStateStatus.redirecting) {
       await context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
       print(state.toString());
     }

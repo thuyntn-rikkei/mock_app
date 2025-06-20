@@ -3,11 +3,13 @@ part of 'add_new_contact_bloc.dart';
 @CopyWith()
 class AddNewContactState extends BaseBlocState {
   final List<UserEntity> users;
+  final List<UserEntity> searchedUsers;
 
   const AddNewContactState({
     required super.status,
     super.message,
     this.users = const [],
+    this.searchedUsers = const [],
   });
 
   factory AddNewContactState.init() {
@@ -45,5 +47,5 @@ class AddNewContactState extends BaseBlocState {
   }
 
   @override
-  List get props => [status, message, users];
+  List get props => [status, message, users, searchedUsers];
 }
