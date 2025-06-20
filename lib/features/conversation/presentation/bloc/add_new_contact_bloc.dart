@@ -58,7 +58,7 @@ class AddNewContactBloc
       (r) {
         emit(
           state.copyWith(
-            status: BaseStateStatus.init,
+            status: BaseStateStatus.success,
             users: r,
             searchedUsers: r,
           ),
@@ -98,7 +98,7 @@ class AddNewContactBloc
       (r) {
         emit(
           state.copyWith(
-            status: BaseStateStatus.success,
+            status: BaseStateStatus.redirecting,
           ),
         );
       },
@@ -109,6 +109,7 @@ class AddNewContactBloc
     final searchedUsers = _searchUsersByQuery(query);
     emit(
       state.copyWith(
+        status: BaseStateStatus.success,
         searchedUsers: searchedUsers,
       ),
     );
@@ -145,6 +146,7 @@ class AddNewContactBloc
       (r) async {
         emit(
           state.copyWith(
+            status: BaseStateStatus.success,
             contacts: r,
           ),
         );

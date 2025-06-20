@@ -93,6 +93,17 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       ),
       elevation: const WidgetStatePropertyAll(0),
       controller: _searchController,
+      trailing: _searchController.text.isNotEmpty
+          ? [
+              IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  bloc.add(const MessageListEvent.search(query: ''));
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ]
+          : null,
     );
   }
 

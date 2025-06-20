@@ -22,7 +22,6 @@ class ContactListPage extends StatefulWidget {
 
 class _ContactListPageState extends BaseShareState<ContactListPage,
     ContactListEvent, ContactListState, ContactListBloc> {
-
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounceTimer;
   final int _debounceDelay = 500;
@@ -40,7 +39,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
 
     _debounceTimer = Timer(
       Duration(milliseconds: _debounceDelay),
-          () {
+      () {
         bloc.add(
           ContactListEvent.search(query: _searchController.text),
         );
@@ -49,10 +48,11 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   }
 
   @override
-  void listener(BuildContext context, ContactListState state) async{
+  void listener(BuildContext context, ContactListState state) async {
     super.listener(context, state);
     if (state.status == BaseStateStatus.redirecting) {
-      await context.push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
+      await context
+          .push(RouteName.conversationDetailsPath(state.conversationId ?? ''));
       print(state.toString());
     }
   }
@@ -76,7 +76,8 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
         IconButton(
           onPressed: () async {
             await context.push(RouteName.addContact);
-            bloc.add(ContactListEvent.loadContactList(userId: getIt<LoginBloc>().state.userId));
+            bloc.add(ContactListEvent.loadContactList(
+                userId: getIt<LoginBloc>().state.userId));
           },
           icon: const Icon(Icons.add_circle),
         ),
@@ -105,6 +106,17 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
       ),
       elevation: const WidgetStatePropertyAll(0),
       controller: _searchController,
+      trailing: _searchController.text.isNotEmpty
+          ? [
+              IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  bloc.add(const ContactListEvent.search(query: ''));
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ]
+          : null,
     );
   }
 

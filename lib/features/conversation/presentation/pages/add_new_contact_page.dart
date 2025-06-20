@@ -50,7 +50,7 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
   void listener(BuildContext context, AddNewContactState state) {
     super.listener(context, state);
 
-    if (state.status == BaseStateStatus.success) {
+    if (state.status == BaseStateStatus.redirecting) {
       context.pop();
     }
   }
@@ -100,6 +100,17 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
       ),
       elevation: const WidgetStatePropertyAll(0),
       controller: _searchController,
+      trailing: _searchController.text.isNotEmpty
+          ? [
+              IconButton(
+                onPressed: () {
+                  _searchController.clear();
+                  bloc.add(const AddNewContactEvent.search(query: ''));
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ]
+          : null,
     );
   }
 
