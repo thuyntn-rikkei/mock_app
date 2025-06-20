@@ -23,6 +23,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         started: () => _onStarted(emit),
         login: (String email, String password) =>
             _onLogin(emit, email, password),
+        logout: () => _onLogout(emit),
       );
     });
   }
@@ -68,5 +69,9 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
         emit(LoginState.success(r.userId));
       },
     );
+  }
+
+  Future<void> _onLogout(Emitter<LoginState> emit) async {
+    emit(LoginState.init());
   }
 }

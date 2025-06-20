@@ -11,7 +11,7 @@ part 'dashboard_state.dart';
 part 'dashboard_bloc.freezed.dart';
 part 'dashboard_bloc.g.dart';
 
-@lazySingleton
+@injectable
 class  DashboardBloc extends BaseBloc< DashboardEvent,  DashboardState> {
   DashboardBloc() : super( DashboardState.init()) {
     on< DashboardEvent>(( DashboardEvent event, Emitter< DashboardState> emit) async {

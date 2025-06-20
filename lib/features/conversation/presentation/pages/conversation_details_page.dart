@@ -42,10 +42,6 @@ class _ConversationDetailsPageState extends BaseState<
     );
   }
 
-  @override
-  void listener(BuildContext context, ConversationDetailsState state) {
-    super.listener(context, state);
-  }
 
   @override
   void dispose() {
