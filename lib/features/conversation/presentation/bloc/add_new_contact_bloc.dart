@@ -18,7 +18,7 @@ part 'add_new_contact_bloc.freezed.dart';
 
 part 'add_new_contact_bloc.g.dart';
 
-@lazySingleton
+@injectable
 class AddNewContactBloc
     extends BaseBloc<AddNewContactEvent, AddNewContactState> {
   final ContactRepository _contactRepository;

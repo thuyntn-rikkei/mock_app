@@ -4,6 +4,7 @@ import 'package:base_bloc_3/common/widgets/base_scaffold.dart';
 import 'package:base_bloc_3/features/conversation/presentation/pages/contact_list_page.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/message_list_screen.dart';
+import 'package:base_bloc_3/features/dashboard/presentation/pages/personal_information_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -19,7 +20,7 @@ class _DashboardScreenState extends BaseState<DashboardScreen, DashboardEvent,
   final List<Widget> _pages = const <Widget>[
     MessageListScreen(),
     ContactListPage(),
-    MessageListScreen(),
+    PersonalInformationScreen(),
   ];
 
   List<NavigationDestination> destinations = const <NavigationDestination>[

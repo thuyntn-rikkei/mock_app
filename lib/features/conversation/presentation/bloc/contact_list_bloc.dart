@@ -17,7 +17,7 @@ part 'contact_list_bloc.freezed.dart';
 
 part 'contact_list_bloc.g.dart';
 
-@lazySingleton
+@injectable
 class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
   final ContactRepository _contactRepository;
   final UserRepository _userRepository;

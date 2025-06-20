@@ -19,7 +19,7 @@ class AddNewContactPage extends StatefulWidget {
   }
 }
 
-class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
+class _AddNewContactPageState extends BaseState<AddNewContactPage,
     AddNewContactEvent, AddNewContactState, AddNewContactBloc> {
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounceTimer;
@@ -58,7 +58,7 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
   @override
   Widget renderUI(BuildContext context) {
     return blocBuilder(
-      builder: (BuildContext c, AddNewContactState s) {
+      (BuildContext c, AddNewContactState s) {
         return BaseScaffold(
           appBar: _buildAppBar(),
           body: _buildBody(),

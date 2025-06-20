@@ -5,6 +5,7 @@ import 'package:base_bloc_3/features/conversation/presentation/pages/contact_lis
 import 'package:base_bloc_3/features/conversation/presentation/pages/conversation_details_page.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/message_list_screen.dart';
+import 'package:base_bloc_3/features/dashboard/presentation/pages/personal_information_screen.dart';
 import 'package:base_bloc_3/features/login/presentation/pages/login_page.dart';
 import 'package:base_bloc_3/features/signup/pages/signup_page.dart';
 import 'package:base_bloc_3/import.dart';
@@ -63,6 +64,11 @@ final router = GoRouter(
           child: ConversationDetailsPage(conversationId: conversationId),
         );
       },
+    ),
+    GoRoute(
+      path: RouteName.personalInformation,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          MaterialPage<void>(key: state.pageKey, child: const PersonalInformationScreen()),
     ),
   ],
   redirect: (context, state) {
