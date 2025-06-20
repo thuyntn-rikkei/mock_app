@@ -3,13 +3,12 @@ import 'package:base_bloc_3/base/bloc/base_bloc_state.dart';
 import 'package:base_bloc_3/base/bloc/bloc_status.dart';
 import 'package:base_bloc_3/base/network/errors/error.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
+import 'package:base_bloc_3/di/di_setup.dart';
 import 'package:base_bloc_3/features/conversation/domain/entity/contact_entity.dart';
 import 'package:base_bloc_3/features/conversation/domain/repository/contact_repository.dart';
 import 'package:base_bloc_3/features/login/domain/entity/user_entity.dart';
 import 'package:base_bloc_3/features/login/domain/repository/user_repository.dart';
-import 'package:bloc/bloc.dart';
-import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:base_bloc_3/features/login/presentation/bloc/login_bloc.dart';
 
 part 'add_new_contact_event.dart';
 
@@ -27,12 +26,16 @@ class AddNewContactBloc
 
   AddNewContactBloc(this._contactRepository, this._userRepository)
       : super(AddNewContactState.init()) {
-    on<AddNewContactEvent>((AddNewContactEvent event, Emitter<AddNewContactState> emit) async {
+    on<AddNewContactEvent>(
+        (AddNewContactEvent event, Emitter<AddNewContactState> emit) async {
       await event.when(
         started: () => _onStarted(emit),
         addNewContact: (String userId, String contactUserId) =>
             _onAddNewContact(emit, userId, contactUserId),
         search: (String query) => _search(emit, query),
+        loadContactList: (String userId) => _onLoadContactList(emit, userId),
+        addMyself: () => _onAddMyself(emit),
+        addExistingContact: (String userName) => _onAddExistingContact(emit, userName),
       );
     });
   }
@@ -57,9 +60,11 @@ class AddNewContactBloc
           state.copyWith(
             status: BaseStateStatus.init,
             users: r,
-            searchedUsers: r
-          )
+            searchedUsers: r,
+          ),
         );
+        final currentUserId = getIt<LoginBloc>().state.userId;
+        add(AddNewContactEvent.loadContactList(userId: currentUserId));
       },
     );
   }
@@ -117,11 +122,52 @@ class AddNewContactBloc
     final lowerCaseQuery = query.toLowerCase();
 
     return state.users.where(
-          (user) {
+      (user) {
         if (user.fullName.toLowerCase().contains(lowerCaseQuery)) return true;
         return false;
       },
     ).toList();
+  }
+
+  Future<void> _onLoadContactList(
+    Emitter<AddNewContactState> emit,
+    String userId,
+  ) async {
+    print(userId);
+    final result = await _contactRepository.fetchContactsByUserId(userId);
+
+    print(result);
+
+    await result.fold(
+      (l) {
+        _handleError(emit, l);
+      },
+      (r) async {
+        emit(
+          state.copyWith(
+            contacts: r,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _onAddMyself(Emitter<AddNewContactState> emit) async {
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.failed,
+        message: 'You cannot add yourself',
+      ),
+    );
+  }
+
+  Future<void> _onAddExistingContact(Emitter<AddNewContactState> emit, String userName) async {
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.failed,
+        message: '$userName is already in your contact list. You cannot add existing contact',
+      ),
+    );
   }
 
   void _handleError(Emitter<AddNewContactState> emit, BaseError error) {
@@ -152,5 +198,4 @@ class AddNewContactBloc
       },
     );
   }
-
 }

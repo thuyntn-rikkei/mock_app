@@ -18,3 +18,20 @@ Widget buildUserItem({
     onTap: onTap,
   );
 }
+
+Widget buildUserItem2({
+  required BuildContext context,
+  required UserEntity user,
+  required VoidCallback onTap,
+  required Widget trailing,
+}) {
+  return ListTile(
+    leading: CircleAvatar(
+      backgroundImage: NetworkImage(user.avatarUrl),
+    ),
+    title: Text(user.fullName),
+    subtitle: Text(user.email),
+    trailing: trailing,
+    onTap: onTap,
+  );
+}

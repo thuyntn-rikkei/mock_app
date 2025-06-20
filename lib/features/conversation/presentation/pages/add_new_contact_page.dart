@@ -21,7 +21,6 @@ class AddNewContactPage extends StatefulWidget {
 
 class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
     AddNewContactEvent, AddNewContactState, AddNewContactBloc> {
-
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounceTimer;
   final int _debounceDelay = 500;
@@ -39,7 +38,7 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
 
     _debounceTimer = Timer(
       Duration(milliseconds: _debounceDelay),
-          () {
+      () {
         bloc.add(
           AddNewContactEvent.search(query: _searchController.text),
         );
@@ -49,16 +48,7 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
 
   @override
   void listener(BuildContext context, AddNewContactState state) {
-    if (state.status == BaseStateStatus.failed) {
-      if (state.message != null && state.message!.isNotEmpty) {
-        DialogUtils.showDialog(content: state.message!);
-      }
-    }
-    if (state.status == BaseStateStatus.loading) {
-      DialogUtils.showLoading();
-    } else {
-      DialogUtils.hideLoading();
-    }
+    super.listener(context, state);
 
     if (state.status == BaseStateStatus.success) {
       context.pop();
@@ -115,22 +105,58 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
 
   Widget _buildUserList() {
     final users = bloc.state.searchedUsers;
+    final contacts = bloc.state.contacts;
     return ListView.builder(
       itemCount: users.length,
       itemBuilder: (BuildContext context, int index) {
-        return buildUserItem(
+        final user = users[index];
+        final currentUserId = getIt<LoginBloc>().state.userId;
+        final trailingWidget = user.userId == currentUserId
+            ? const Text(
+                'You',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              )
+            : (contacts.any((element) => element.contactUserId == user.userId)
+                ? const Text(
+                    'Friend',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                  )
+                : const Icon(Icons.add));
+
+        final onTap = user.userId == currentUserId
+            ? () {
+                bloc.add(const AddNewContactEvent.addMyself());
+              }
+            : (contacts.any((element) => element.contactUserId == user.userId)
+                ? () {
+                    bloc.add(
+                      AddNewContactEvent.addExistingContact(
+                        user.fullName,
+                      ),
+                    );
+                  }
+                : () {
+                    final userId = getIt<LoginBloc>().state.userId;
+                    final user = users[index];
+                    bloc.add(
+                      AddNewContactEvent.addNewContact(
+                        userId: userId,
+                        contactUserId: user.userId,
+                      ),
+                    );
+                  });
+
+        return buildUserItem2(
           context: context,
           user: users[index],
-          onTap: () {
-            final userId = getIt<LoginBloc>().state.userId;
-            final user = users[index];
-            bloc.add(
-              AddNewContactEvent.addNewContact(
-                userId: userId,
-                contactUserId: user.userId,
-              ),
-            );
-          },
+          onTap: onTap,
+          trailing: trailingWidget,
         );
       },
     );
