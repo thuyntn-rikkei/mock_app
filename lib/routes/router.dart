@@ -18,7 +18,7 @@ final router = GoRouter(
     GoRoute(
       path: RouteName.home,
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          MaterialPage<void>(key: state.pageKey, child: const MessageListScreen()),
+          MaterialPage<void>(key: state.pageKey, child: const DashboardScreen()),
     ),
     GoRoute(
       path: RouteName.login,

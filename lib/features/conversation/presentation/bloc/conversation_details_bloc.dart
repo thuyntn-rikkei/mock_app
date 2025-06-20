@@ -31,7 +31,7 @@ class ConversationDetailsBloc
   StreamSubscription<MessageEntity>? messageSubscription;
 
   ConversationDetailsBloc(this._messageRepository, this._conversationRepository,
-      this._userRepository)
+      this._userRepository,)
       : super(ConversationDetailsState.init()) {
     on<ConversationDetailsEvent>((event, emit) async {
       await event.when(

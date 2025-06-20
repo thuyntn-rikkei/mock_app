@@ -68,14 +68,8 @@ class _AddNewContactPageState extends BaseShareState<AddNewContactPage,
   }
 
   Widget _buildAppBar() {
-    return BaseAppBar(
+    return const BaseAppBar(
       title: 'Add New Contact',
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.add_circle),
-        ),
-      ],
     );
   }
 

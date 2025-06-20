@@ -25,6 +25,7 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounceTimer;
   final int _debounceDelay = 500;
+  bool _isFromMessageList = false;
 
   @override
   void initState() {
@@ -70,18 +71,22 @@ class _ContactListPageState extends BaseShareState<ContactListPage,
   }
 
   Widget _buildAppBar() {
+    _isFromMessageList = (GoRouterState.of(context).extra as Map?)?['fromMessageList'] == true;
     return BaseAppBar(
       title: 'Contact List',
       actions: [
         IconButton(
           onPressed: () async {
             await context.push(RouteName.addContact);
-            bloc.add(ContactListEvent.loadContactList(
-                userId: getIt<LoginBloc>().state.userId));
+            bloc.add(
+              ContactListEvent.loadContactList(
+                  userId: getIt<LoginBloc>().state.userId),
+            );
           },
           icon: const Icon(Icons.add_circle),
         ),
       ],
+      hasBack: _isFromMessageList,
     );
   }
 

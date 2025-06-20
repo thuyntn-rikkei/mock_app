@@ -48,11 +48,11 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
     Emitter<ContactListState> emit,
     String userId,
   ) async {
-    emit(
-      state.copyWith(
-        status: BaseStateStatus.loading,
-      ),
-    );
+    // emit(
+    //   state.copyWith(
+    //     status: BaseStateStatus.loading,
+    //   ),
+    // );
 
     print(userId);
     final result = await _contactRepository.fetchContactsByUserId(userId);
@@ -64,7 +64,9 @@ class ContactListBloc extends BaseBloc<ContactListEvent, ContactListState> {
         _handleError(emit, l);
       },
       (r) async {
+
         final contactUserIds = r
+
             .map((c) => (c.userId == userId) ? c.contactUserId : c.userId)
             .toSet();
         final contactUsersResult =

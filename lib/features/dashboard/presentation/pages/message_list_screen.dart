@@ -62,7 +62,12 @@ class _MessageListScreenState extends BaseState<MessageListScreen,
       actions: [
         IconButton(
           onPressed: () async {
-            await context.push(RouteName.contactList);
+            await context.push(
+              RouteName.contactList,
+              extra: {
+                'fromMessageList': true,
+              },
+            );
             // bloc.add(MessageListEvent.fetch(userId: getIt<LoginBloc>().state.userId));
           },
           icon: const Icon(Icons.add_circle),

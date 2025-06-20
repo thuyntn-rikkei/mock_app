@@ -18,7 +18,7 @@ part 'message_list_bloc.freezed.dart';
 
 part 'message_list_bloc.g.dart';
 
-@lazySingleton
+@injectable
 class MessageListBloc extends BaseBloc<MessageListEvent, MessageListState> {
   final ConversationRepository _conversationRepository;
   final UserRepository _userRepository;

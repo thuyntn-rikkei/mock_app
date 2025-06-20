@@ -1,6 +1,7 @@
 import 'package:base_bloc_3/base/base_widget.dart';
 import 'package:base_bloc_3/common/external_lib.dart';
 import 'package:base_bloc_3/common/widgets/base_scaffold.dart';
+import 'package:base_bloc_3/features/conversation/presentation/pages/contact_list_page.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:base_bloc_3/features/dashboard/presentation/pages/message_list_screen.dart';
 
@@ -17,7 +18,7 @@ class _DashboardScreenState extends BaseState<DashboardScreen, DashboardEvent,
     DashboardState, DashboardBloc> {
   final List<Widget> _pages = const <Widget>[
     MessageListScreen(),
-    MessageListScreen(),
+    ContactListPage(),
     MessageListScreen(),
   ];
 
