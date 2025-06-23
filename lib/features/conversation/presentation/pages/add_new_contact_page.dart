@@ -119,8 +119,9 @@ class _AddNewContactPageState extends BaseState<AddNewContactPage,
         final user = users[index];
         final currentUserId = getIt<LoginBloc>().state.userId;
         Widget? trailingWidget = const Icon(Icons.add);
+        VoidCallback onTap = () {};
 
-        if(user.userId == currentUserId){
+        if (user.userId == currentUserId) {
           trailingWidget = const Text(
             'You',
             style: TextStyle(
@@ -128,8 +129,11 @@ class _AddNewContactPageState extends BaseState<AddNewContactPage,
               fontSize: 14,
             ),
           );
-        }
-        else if(contacts.any((element) => element.contactUserId == user.userId)){
+          onTap = () {
+            bloc.add(const AddNewContactEvent.addMyself());
+          };
+        } else if (contacts
+            .any((element) => element.contactUserId == user.userId)) {
           trailingWidget = const Text(
             'Friend',
             style: TextStyle(
@@ -137,47 +141,86 @@ class _AddNewContactPageState extends BaseState<AddNewContactPage,
               color: Colors.green,
             ),
           );
-        }
-        else if(friendRequests.any((element) => element.friendRequestUserId == user.userId)){
-          if(friendRequests.firstWhere((element) => element.friendRequestUserId == user.userId).status == FriendRequestStatus.pending){
-            trailingWidget =  const Text(
+          onTap = () {
+            bloc.add(
+              AddNewContactEvent.addExistingContact(
+                user.fullName,
+              ),
+            );
+          };
+        } else if (friendRequests.any(
+          (element) => element.friendRequestUserId == user.userId,
+        )) {
+          if (friendRequests
+                  .firstWhere(
+                      (element) => element.friendRequestUserId == user.userId)
+                  .status ==
+              FriendRequestStatus.pending) {
+            trailingWidget = const Text(
               'Cancel',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.red,
               ),
             );
-          }
-          else if(friendRequests.firstWhere((element) => element.friendRequestUserId == user.userId).status == FriendRequestStatus.rejected){
+          } else if (friendRequests
+                  .firstWhere(
+                      (element) => element.friendRequestUserId == user.userId)
+                  .status ==
+              FriendRequestStatus.rejected) {
             trailingWidget = const Icon(Icons.add);
           }
-        }
-        else{
+        } else if (friendRequests
+            .any((element) => element.userId == user.userId)) {
+          if (friendRequests
+                  .firstWhere((element) => element.userId == user.userId)
+                  .status ==
+              FriendRequestStatus.pending) {
+            trailingWidget = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Accept',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Reject',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else if (friendRequests
+                  .firstWhere((element) => element.userId == user.userId)
+                  .status ==
+              FriendRequestStatus.rejected) {
+            trailingWidget = const Icon(Icons.add);
+          }
+        } else {
           trailingWidget = const Icon(Icons.add);
+          onTap = () {
+            final userId = getIt<LoginBloc>().state.userId;
+            final user = users[index];
+            bloc.add(
+              AddNewContactEvent.addFriendRequest(
+                userId: userId,
+                contactUserId: user.userId,
+              ),
+            );
+          };
         }
-
-        final onTap = user.userId == currentUserId
-            ? () {
-                bloc.add(const AddNewContactEvent.addMyself());
-              }
-            : (contacts.any((element) => element.contactUserId == user.userId)
-                ? () {
-                    bloc.add(
-                      AddNewContactEvent.addExistingContact(
-                        user.fullName,
-                      ),
-                    );
-                  }
-                : () {
-                    final userId = getIt<LoginBloc>().state.userId;
-                    final user = users[index];
-                    bloc.add(
-                      AddNewContactEvent.addFriendRequest(
-                        userId: userId,
-                        contactUserId: user.userId,
-                      ),
-                    );
-                  });
 
         return buildUserItem2(
           context: context,

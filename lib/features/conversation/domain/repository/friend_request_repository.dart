@@ -5,5 +5,5 @@ import 'package:dartz/dartz.dart';
 abstract class FriendRequestRepository {
   Future<Either<BaseError, FriendRequestEntity>> createFriendRequest(FriendRequestEntity friendRequestEntity);
   Future<Either<BaseError, List<FriendRequestEntity>>> fetchFriendRequestsByUserId(String userId);
-
+  Future<Either<BaseError, FriendRequestEntity>> updateFriendRequest(String friendRequestId, FriendRequestEntity friendRequestEntity);
 }

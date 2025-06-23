@@ -61,4 +61,23 @@ class FriendRequestRemoteDatasource {
 
     return uniqueFriendRequests;
   }
+
+  Future<FriendRequestModel?> updateFriendRequest(
+    String friendRequestId,
+    FriendRequestModel friendRequest,
+  ) async {
+    final query = friendRequestRef
+        .orderByChild('friendRequestId')
+        .equalTo(friendRequestId);
+    final snapshot = await query.once();
+
+    if (snapshot.snapshot.exists) {
+      await friendRequestRef.child(friendRequestId).update(
+            friendRequest.toJson(),
+          );
+      return friendRequest;
+    } else {
+      return null;
+    }
+  }
 }

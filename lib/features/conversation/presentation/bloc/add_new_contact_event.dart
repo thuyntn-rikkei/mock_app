@@ -10,4 +10,5 @@ class AddNewContactEvent with _$AddNewContactEvent {
   const factory AddNewContactEvent.addExistingContact(String userName) = _AddExistingContact;
   const factory AddNewContactEvent.loadFriendRequestList({required String userId}) = _LoadFriendRequestList;
   const factory AddNewContactEvent.addFriendRequest({required String userId, required String contactUserId}) = _AddFriendRequest;
+  const factory AddNewContactEvent.updateFriendRequest({required String friendRequestId, required FriendRequestStatus status, required FriendRequestEntity friendRequestEntity}) = _UpdateFriendRequest;
 }

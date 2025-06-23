@@ -28,7 +28,8 @@ class AddNewContactBloc
   final UserRepository _userRepository;
   final FriendRequestRepository _friendRequestRepository;
 
-  AddNewContactBloc(this._contactRepository, this._userRepository, this._friendRequestRepository)
+  AddNewContactBloc(this._contactRepository, this._userRepository,
+      this._friendRequestRepository)
       : super(AddNewContactState.init()) {
     on<AddNewContactEvent>(
         (AddNewContactEvent event, Emitter<AddNewContactState> emit) async {
@@ -39,9 +40,17 @@ class AddNewContactBloc
         search: (String query) => _search(emit, query),
         loadContactList: (String userId) => _onLoadContactList(emit, userId),
         addMyself: () => _onAddMyself(emit),
-        addExistingContact: (String userName) => _onAddExistingContact(emit, userName),
-        loadFriendRequestList: (String userId) => _onLoadFriendRequestList(emit, userId),
-        addFriendRequest: (String userId, String contactUserId) => _onAddFriendRequest(emit, userId, contactUserId),
+        addExistingContact: (String userName) =>
+            _onAddExistingContact(emit, userName),
+        loadFriendRequestList: (String userId) =>
+            _onLoadFriendRequestList(emit, userId),
+        addFriendRequest: (String userId, String contactUserId) =>
+            _onAddFriendRequest(emit, userId, contactUserId),
+        updateFriendRequest: (String friendRequestId,
+                FriendRequestStatus status,
+                FriendRequestEntity friendRequestEntity) =>
+            _onUpdateFriendRequest(
+                emit, friendRequestId, status, friendRequestEntity),
       );
     });
   }
@@ -175,31 +184,35 @@ class AddNewContactBloc
     );
   }
 
-  Future<void> _onAddExistingContact(Emitter<AddNewContactState> emit, String userName) async {
+  Future<void> _onAddExistingContact(
+      Emitter<AddNewContactState> emit, String userName) async {
     emit(
       state.copyWith(
         status: BaseStateStatus.failed,
-        message: '$userName is already in your contact list. You cannot add existing contact',
+        message:
+            '$userName is already in your contact list. You cannot add existing contact',
       ),
     );
   }
 
-  Future<void> _onLoadFriendRequestList(Emitter<AddNewContactState> emit, String userId) async {
+  Future<void> _onLoadFriendRequestList(
+      Emitter<AddNewContactState> emit, String userId) async {
     emit(
       state.copyWith(
         status: BaseStateStatus.loading,
       ),
     );
 
-    final result = await _friendRequestRepository.fetchFriendRequestsByUserId(userId);
+    final result =
+        await _friendRequestRepository.fetchFriendRequestsByUserId(userId);
 
     print(result);
 
     await result.fold(
-          (l) {
+      (l) {
         _handleError(emit, l);
       },
-          (r) async {
+      (r) async {
         emit(
           state.copyWith(
             status: BaseStateStatus.success,
@@ -210,7 +223,8 @@ class AddNewContactBloc
     );
   }
 
-  Future<void> _onAddFriendRequest(Emitter<AddNewContactState> emit, String userId, String contactUserId) async {
+  Future<void> _onAddFriendRequest(Emitter<AddNewContactState> emit,
+      String userId, String contactUserId) async {
     emit(
       state.copyWith(
         status: BaseStateStatus.loading,
@@ -230,11 +244,42 @@ class AddNewContactBloc
     print(result);
 
     result.fold(
-          (l) {
+      (l) {
         _handleError(emit, l);
       },
-          (r) {
+      (r) {
         add(AddNewContactEvent.loadFriendRequestList(userId: userId));
+      },
+    );
+  }
+
+  Future<void> _onUpdateFriendRequest(
+      Emitter<AddNewContactState> emit,
+      String friendRequestId,
+      FriendRequestStatus status,
+      FriendRequestEntity friendRequestEntity) async {
+    emit(
+      state.copyWith(
+        status: BaseStateStatus.loading,
+      ),
+    );
+
+    friendRequestEntity.status = status;
+
+    final result = await _friendRequestRepository.updateFriendRequest(
+      friendRequestId,
+      friendRequestEntity,
+    );
+
+    print(result);
+
+    result.fold(
+      (l) {
+        _handleError(emit, l);
+      },
+      (r) {
+        add(AddNewContactEvent.loadFriendRequestList(
+            userId: friendRequestEntity.userId));
       },
     );
   }
